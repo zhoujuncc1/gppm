@@ -1,0 +1,464 @@
+Grammar
+
+    0 $accept: expr $end
+
+    1 expr: '(' expr ')'
+    2     | predicate
+    3     | logical
+    4     | temporal
+
+    5 predicate: VAR
+
+    6 logical: NOT expr
+    7        | expr AND expr
+    8        | expr OR expr
+
+    9 temporal: F expr
+   10         | F TIME expr
+   11         | G expr
+   12         | G TIME expr
+   13         | expr U expr
+   14         | expr U TIME expr
+   15         | X expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 1
+')' (41) 1
+error (256)
+VAR (258) 5
+F (259) 9 10
+G (260) 11 12
+U (261) 13 14
+X (262) 15
+NOT (263) 6
+AND (264) 7
+OR (265) 8
+TIME (266) 10 12 14
+
+
+Nonterminals, with rules where they appear
+
+$accept (14)
+    on left: 0
+expr (15)
+    on left: 1 2 3 4, on right: 0 1 6 7 8 9 10 11 12 13 14 15
+predicate (16)
+    on left: 5, on right: 2
+logical (17)
+    on left: 6 7 8, on right: 3
+temporal (18)
+    on left: 9 10 11 12 13 14 15, on right: 4
+
+
+State 0
+
+    0 $accept: . expr $end
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 7
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 1
+
+    5 predicate: VAR .
+
+    $default  reduce using rule 5 (predicate)
+
+
+State 2
+
+    9 temporal: F . expr
+   10         | F . TIME expr
+
+    VAR   shift, and go to state 1
+    F     shift, and go to state 2
+    G     shift, and go to state 3
+    X     shift, and go to state 4
+    NOT   shift, and go to state 5
+    TIME  shift, and go to state 11
+    '('   shift, and go to state 6
+
+    expr       go to state 12
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 3
+
+   11 temporal: G . expr
+   12         | G . TIME expr
+
+    VAR   shift, and go to state 1
+    F     shift, and go to state 2
+    G     shift, and go to state 3
+    X     shift, and go to state 4
+    NOT   shift, and go to state 5
+    TIME  shift, and go to state 13
+    '('   shift, and go to state 6
+
+    expr       go to state 14
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 4
+
+   15 temporal: X . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 15
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 5
+
+    6 logical: NOT . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 16
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 6
+
+    1 expr: '(' . expr ')'
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 17
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 7
+
+    0 $accept: expr . $end
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+
+    $end  shift, and go to state 18
+    U     shift, and go to state 19
+    AND   shift, and go to state 20
+    OR    shift, and go to state 21
+
+
+State 8
+
+    2 expr: predicate .
+
+    $default  reduce using rule 2 (expr)
+
+
+State 9
+
+    3 expr: logical .
+
+    $default  reduce using rule 3 (expr)
+
+
+State 10
+
+    4 expr: temporal .
+
+    $default  reduce using rule 4 (expr)
+
+
+State 11
+
+   10 temporal: F TIME . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 22
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 12
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+    9 temporal: F expr .
+   13         | expr . U expr
+   14         | expr . U TIME expr
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 9 (temporal)
+
+
+State 13
+
+   12 temporal: G TIME . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 23
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 14
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   11 temporal: G expr .
+   13         | expr . U expr
+   14         | expr . U TIME expr
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 11 (temporal)
+
+
+State 15
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+   15         | X expr .
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 15 (temporal)
+
+
+State 16
+
+    6 logical: NOT expr .
+    7        | expr . AND expr
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+
+    $default  reduce using rule 6 (logical)
+
+
+State 17
+
+    1 expr: '(' expr . ')'
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+
+    U    shift, and go to state 19
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+    ')'  shift, and go to state 24
+
+
+State 18
+
+    0 $accept: expr $end .
+
+    $default  accept
+
+
+State 19
+
+   13 temporal: expr U . expr
+   14         | expr U . TIME expr
+
+    VAR   shift, and go to state 1
+    F     shift, and go to state 2
+    G     shift, and go to state 3
+    X     shift, and go to state 4
+    NOT   shift, and go to state 5
+    TIME  shift, and go to state 25
+    '('   shift, and go to state 6
+
+    expr       go to state 26
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 20
+
+    7 logical: expr AND . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 27
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 21
+
+    8 logical: expr OR . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 28
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 22
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   10 temporal: F TIME expr .
+   13         | expr . U expr
+   14         | expr . U TIME expr
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 10 (temporal)
+
+
+State 23
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   12 temporal: G TIME expr .
+   13         | expr . U expr
+   14         | expr . U TIME expr
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 12 (temporal)
+
+
+State 24
+
+    1 expr: '(' expr ')' .
+
+    $default  reduce using rule 1 (expr)
+
+
+State 25
+
+   14 temporal: expr U TIME . expr
+
+    VAR  shift, and go to state 1
+    F    shift, and go to state 2
+    G    shift, and go to state 3
+    X    shift, and go to state 4
+    NOT  shift, and go to state 5
+    '('  shift, and go to state 6
+
+    expr       go to state 29
+    predicate  go to state 8
+    logical    go to state 9
+    temporal   go to state 10
+
+
+State 26
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   13         | expr U expr .
+   14         | expr . U TIME expr
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 13 (temporal)
+
+
+State 27
+
+    7 logical: expr . AND expr
+    7        | expr AND expr .
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+
+    $default  reduce using rule 7 (logical)
+
+
+State 28
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+    8        | expr OR expr .
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+
+    $default  reduce using rule 8 (logical)
+
+
+State 29
+
+    7 logical: expr . AND expr
+    8        | expr . OR expr
+   13 temporal: expr . U expr
+   14         | expr . U TIME expr
+   14         | expr U TIME expr .
+
+    AND  shift, and go to state 20
+    OR   shift, and go to state 21
+
+    $default  reduce using rule 14 (temporal)
