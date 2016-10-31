@@ -1,0 +1,86 @@
+%{
+#include <cstdio>
+#include <iostream>
+#include <string>
+#include "time_variable.h"
+#include "Bltl.h"
+
+typedef struct yy_buffer_state * YY_BUFFER_STATE;
+extern YY_BUFFER_STATE yy_scan_string(const char * str);
+
+extern int yyparse();
+extern "C" int yylex();
+extern void yyerror(const char *s);
+
+%}
+
+%union {
+    char *strval;
+    TimeVariable *timval;
+    Bltl *bltl;
+}
+
+%token <strval> VAR
+%token F G U X
+%token NOT AND OR
+%token <timval> TIME
+%token LPAREN RPAREN
+
+
+%left U
+%right F G
+%nonassoc TIME
+%right X
+%left OR AND
+%right NOT
+
+%start expr
+%type <bltl> expr
+%type <bltl> temporal
+%type <bltl> logical
+%type <bltl> predicate
+
+
+%%
+
+expr:
+LPAREN expr RPAREN {$$=$2;}
+| predicate 
+| logical 
+| temporal 
+;
+
+predicate:
+VAR {$$=new Bltl(op_PRD, $1);}
+;
+
+logical:
+NOT expr { $$=new Bltl(op_NOT); $$->setChild1($2); }
+| expr AND expr {$$=new Bltl(op_AND); $$->setChild1($1); $$->setChild2($3);}
+| expr OR expr {$$=new Bltl(op_OR); $$->setChild1($1); $$->setChild2($3);}
+;
+
+temporal:
+F expr {$$=new Bltl(op_F, new TimeVariable()); $$->setChild1($2);}
+| F TIME expr {$$=new Bltl(op_F, $2); $$->setChild1($3);}
+| G expr {$$=new Bltl(op_G, new TimeVariable()); $$->setChild1($2);}
+| G TIME expr {$$=new Bltl(op_G, $2); $$->setChild1($3);}
+| expr U expr {$$=new Bltl(op_U, new TimeVariable()); $$->setChild1($1); $$->setChild2($3);}
+| expr U TIME expr {$$=new Bltl(op_U, $3); $$->setChild1($1); $$->setChild2($4);}
+| X expr {$$=new Bltl(op_X); $$->setChild1($2);}
+;
+
+
+%%
+
+Bltl* bltl_parse(std::string str){
+
+	yy_scan_string(str.c_str());
+  	yyparse();
+  	std::cout<<yylval.bltl->to_string()<<'\n';
+	return yylval.bltl;
+}
+void yyerror(const char *s)
+{
+    fprintf(stderr, "%s\n", s);
+}
