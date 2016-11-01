@@ -30,7 +30,7 @@ private:
 	TimeVariable *time;
 	Bltl* child1;
 	Bltl* child2;
-	std::string prd="";
+	std::string prd;
 
 };
 

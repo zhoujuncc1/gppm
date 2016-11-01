@@ -9,8 +9,7 @@
 #define BLTL_PARSER_H_
 #include <map>
 #include "Bltl.h"
-
-
+#include "Prd.h"
 Bltl* parse_bltl(std::string str);
 
 std::map<std::string, Prd*> parse_prd(std::string str);

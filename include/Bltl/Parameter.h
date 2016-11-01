@@ -18,7 +18,7 @@ public:
 	std::string name;
 	double value;
 	bool isfix;
-	std::pair range;
+	std::pair<double, double> range;
 
 };
 
