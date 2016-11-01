@@ -1,4 +1,6 @@
 CC=g++
 all: parser
 parser:
-	make -C bltl parser
+	make -C src/Bltl lexyacc
+
+test_parser: src/

@@ -9,8 +9,8 @@
 #include "bltl_parser.h"
 
 int main(int argc, char** argv){
-	std::string input = "F(p1 U p2)";
-	Bltl* bltl = bltl_parse(input);
+	std::string input = "F(p1 U p2);";
+	Bltl* bltl = parse_bltl(input);
 	std::cout << bltl->to_string();
 	return 0;
 }

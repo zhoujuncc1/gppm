@@ -3,14 +3,12 @@
 
 #include <string>
 #include <unordered_set>
-class TimeVariable
+class TimeVariable:Parameter
 {
 public:
     TimeVariable();
     TimeVariable(char* str);
-    std::string name;
     int value;
-    bool isfix;
     auto operator+=(const TimeVariable &rhs) -> TimeVariable &;
 private:
     auto get_name() -> std::string;

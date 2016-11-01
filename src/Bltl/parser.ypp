@@ -11,7 +11,7 @@ extern YY_BUFFER_STATE yy_scan_string(const char * str);
 extern int yyparse();
 extern "C" int yylex();
 extern void yyerror(const char *s);
-
+Bltl* result;
 %}
 
 %union {
@@ -25,6 +25,7 @@ extern void yyerror(const char *s);
 %token NOT AND OR
 %token <timval> TIME
 %token LPAREN RPAREN
+%token END
 
 
 %left U
@@ -34,7 +35,7 @@ extern void yyerror(const char *s);
 %left OR AND
 %right NOT
 
-%start expr
+%start input
 %type <bltl> expr
 %type <bltl> temporal
 %type <bltl> logical
@@ -42,7 +43,8 @@ extern void yyerror(const char *s);
 
 
 %%
-
+input: expr END {result=$1;}
+;
 expr:
 LPAREN expr RPAREN {$$=$2;}
 | predicate 
@@ -73,12 +75,11 @@ F expr {$$=new Bltl(op_F, new TimeVariable()); $$->setChild1($2);}
 
 %%
 
-Bltl* bltl_parse(std::string str){
+Bltl* parse_bltl(std::string str){
 
 	yy_scan_string(str.c_str());
   	yyparse();
-  	std::cout<<yylval.bltl->to_string()<<'\n';
-	return yylval.bltl;
+	return result;
 }
 void yyerror(const char *s)
 {

@@ -24,7 +24,6 @@ TimeVariable::TimeVariable(char* str) {
 		isfix=true;
 	} else {
 		name = newStr.substr(1, newStr.length()-1);
-		value=-1;
 		isfix=false;
 	}
 

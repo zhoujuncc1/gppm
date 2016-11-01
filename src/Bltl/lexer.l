@@ -19,12 +19,13 @@ X       return X;
 \|      return OR;
 \(		return LPAREN;
 \)		return RPAREN;
+;		return END;
 [a-z][a-zA-Z0-9]+     {yylval.strval = strdup(yytext); return VAR;}
 [ \t]+        /* ignore whitespace */
 [\n]          /* ignore newline */
 
 \[[a-z0-9_=]+\] {yylval.timval =  new TimeVariable(strdup(yytext)); return TIME;}
-;
+
 
 
 %%
