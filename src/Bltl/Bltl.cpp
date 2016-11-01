@@ -6,7 +6,7 @@
  */
 #include <sstream>
 
-#include "Bltl.h"
+#include "Bltl/Bltl.h"
 
 Bltl::Bltl(Operation op, TimeVariable *t){
 	operation=op;

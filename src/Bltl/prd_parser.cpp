@@ -5,8 +5,8 @@
  *      Author: zhoujun
  */
 #include <sstream>
-#include "bltl_parser.h"
-
+#include <map>
+#include "Bltl/Prd.h"
 std::map<std::string, Prd*> parse_prd(std::string str) {
 	std::map<std::string, Prd*> map;
 	std::stringstream ss;
@@ -19,13 +19,14 @@ std::map<std::string, Prd*> parse_prd(std::string str) {
 
 		begin = found + 1;
 		found = item.find(":", begin);
-		std::string v = item.substr(begin, found);
+		std::string v = item.substr(begin, found-begin);
 
 		begin = found + 1;
 		found = item.find(":", begin);
-		std::string l = item.substr(begin, found);
+		std::string l = item.substr(begin, found-begin);
 		std::string r = item.substr(found+1);
 		map[k]=new Prd(k,v,l,r);
 	}
+	return map;
 }
 
