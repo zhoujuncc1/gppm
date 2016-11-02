@@ -4,9 +4,12 @@
  *  Created on: 1 Nov 2016
  *      Author: zhoujun
  */
-#include <sstream>
+
 #include <map>
-#include "Bltl/Prd.h"
+#include <sstream>
+
+#include "../../include/Bltl/Prd.h"
+
 std::map<std::string, Prd*> parse_prd(std::string str) {
 	std::map<std::string, Prd*> map;
 	std::stringstream ss;

@@ -5,9 +5,15 @@
  *      Author: zhoujun
  */
 
+#include <iostream>
+#include <map>
 #include <string>
-#include "gtest/gtest.h"
-#include "Bltl/bltl_parser.h"
+
+#include "../../include/Bltl/bltl_parser.h"
+#include "../../include/Bltl/Parameter.h"
+#include "../../include/Bltl/Prd.h"
+#include "../gtest/include/gtest/gtest.h"
+
 TEST(PrdParserTest, AllUnknown){
 	std::string input = std::string("p1:x1::");
 	std::map<std::string, Prd*> map = parse_prd(input);

@@ -7,9 +7,14 @@
 
 #ifndef BLTL_PARSER_H_
 #define BLTL_PARSER_H_
+
+#include <iostream>
 #include <map>
-#include "Bltl.h"
+
 #include "Prd.h"
+
+class Bltl;
+
 Bltl* parse_bltl(std::string str);
 
 std::map<std::string, Prd*> parse_prd(std::string str);

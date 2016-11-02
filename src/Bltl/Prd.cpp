@@ -5,7 +5,9 @@
  *      Author: zhoujun
  */
 
-#include "Bltl/Prd.h"
+#include "../../include/Bltl/Prd.h"
+
+#include <iostream>
 
 Prd::Prd(const std::string k, const std::string v, const std::string l,
 		const std::string r) {

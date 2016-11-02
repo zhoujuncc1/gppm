@@ -7,8 +7,11 @@
 
 #ifndef PRD_H_
 #define PRD_H_
-#include <string>
-#include "Parameter.h"
+
+#include <iostream>
+
+class Parameter;
+
 class Prd {
 public:
 	Prd(std::string k, std::string v, std::string l, std::string r);

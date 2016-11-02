@@ -4,7 +4,7 @@
 #include <string>
 
 
-#include "Bltl/time_variable.h"
+#include "../../include/Bltl/TimeVariable.h"
 
 std::unordered_set<std::string> TimeVariable::pool=std::unordered_set<std::string>();
 TimeVariable::TimeVariable() :

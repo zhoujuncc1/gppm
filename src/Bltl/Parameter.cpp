@@ -5,7 +5,9 @@
  *      Author: zhoujun
  */
 
-#include "Bltl/Parameter.h"
+#include "../../include/Bltl/Parameter.h"
+
+#include <iostream>
 
 Parameter::Parameter(std::string k):name(k) {
 	isfix=false;

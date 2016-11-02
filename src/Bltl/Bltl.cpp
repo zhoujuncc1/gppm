@@ -4,9 +4,10 @@
  *  Created on: 27 Oct 2016
  *      Author: zhoujun
  */
-#include <sstream>
 
-#include "Bltl/Bltl.h"
+#include "../../include/Bltl/Bltl.h"
+
+#include <sstream>
 
 Bltl::Bltl(Operation op, TimeVariable *t){
 	operation=op;
