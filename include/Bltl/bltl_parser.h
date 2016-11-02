@@ -12,8 +12,7 @@
 #include <map>
 
 #include "Prd.h"
-
-class Bltl;
+#include "Bltl.h"
 
 Bltl* parse_bltl(std::string str);
 

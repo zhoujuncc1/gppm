@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "Node.h"
-
+#include "TimeVariable.h"
 using namespace std;
 
 class ModelChecker {
@@ -13,7 +13,6 @@ public:
 	ModelChecker(Bltl* bltl) {
 		roots.push_back(buildTree(bltl));
 		nTime = 0;
-		this->formulaString = formulaString;
 	}
 	~ModelChecker() {
 		for (vector<Node*>::iterator it = roots.begin(); it != roots.end();

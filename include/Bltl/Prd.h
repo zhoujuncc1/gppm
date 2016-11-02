@@ -9,8 +9,7 @@
 #define PRD_H_
 
 #include <iostream>
-
-class Parameter;
+#include "Parameter.h"
 
 class Prd {
 public:
