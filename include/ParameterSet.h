@@ -21,7 +21,7 @@ public:
 
 
 private:
-	void findParameters(Bltl* bltl);
+	void findParameters(Bltl* bltl, Model* model);
 	Model* model;
 };
 
