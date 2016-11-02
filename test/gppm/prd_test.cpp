@@ -15,10 +15,10 @@
 #include "../gtest/include/gtest/gtest.h"
 
 TEST(PrdParserTest, AllUnknown){
-	std::string input = std::string("p1:x1::");
+	std::string input = std::string("p1:1::");
 	std::map<std::string, Prd*> map = parse_prd(input);
 	Prd* prd = map["p1"];
-	ASSERT_STREQ(prd->variable.c_str(), "x1");
+	ASSERT_EQ(prd->varId, 1);
 	ASSERT_FALSE(prd->left->isfix);
 	ASSERT_FALSE(prd->right->isfix);
 }

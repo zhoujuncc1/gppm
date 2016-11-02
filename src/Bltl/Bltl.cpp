@@ -16,7 +16,7 @@ Bltl::Bltl(Operation op, TimeVariable *t){
 }
 
 Bltl::Bltl(Operation op, char* p) :
-		prd(std::string(p)), operation(op) {
+		prd_name(std::string(p)), operation(op) {
 	child1=child2=NULL;
 }
 
@@ -31,9 +31,19 @@ void Bltl::setChild2(Bltl* c2) {
 	child2 = c2;
 }
 
-std::string Bltl::getPrd() {
+void Bltl::setPrd(Prd* p){
+	prd=p;
+}
+
+
+std::string Bltl::getPrdName() {
+	return prd_name;
+}
+
+Prd* Bltl::getPrd() {
 	return prd;
 }
+
 std::string Bltl::getOpString() {
 	switch (operation) {
 	case op_PRD:
@@ -61,11 +71,16 @@ Bltl* Bltl::getChild1() {
 Bltl* Bltl::getChild2() {
 	return child2;
 }
+
+TimeVariable* Bltl::getTime(){
+	return time;
+}
+
 std::string Bltl::to_string() {
 	std::stringstream ss;
 	switch (operation) {
 	case op_PRD:
-		ss << prd;
+		ss << prd_name;
 		break;
 	case op_F:
 	case op_G:
@@ -84,3 +99,5 @@ std::string Bltl::to_string() {
 	}
 	return ss.str();
 }
+
+

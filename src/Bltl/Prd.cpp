@@ -7,12 +7,14 @@
 
 #include "../../include/Bltl/Prd.h"
 
-#include <iostream>
+#include <string>
+
+#include "../../include/Bltl/Parameter.h"
 
 Prd::Prd(const std::string k, const std::string v, const std::string l,
 		const std::string r) {
 	name = k;
-	variable = v;
+	varId = std::stoi(v);
 	if (l.compare("") == 0)
 		left = new Parameter(v + ".left");
 	else

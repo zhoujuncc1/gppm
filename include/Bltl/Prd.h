@@ -17,7 +17,7 @@ public:
 	Prd(std::string k, std::string v, std::string l, std::string r);
 	virtual ~Prd();
 	std::string name;
-	std::string variable;
+	int varId;
 	Parameter* left;
 	Parameter* right;
 };

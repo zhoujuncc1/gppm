@@ -23,17 +23,23 @@ public:
 
 	void setChild1(Bltl* c1);
 	void setChild2(Bltl* c2);
+	void setPrd(Prd* p);
 	Bltl* getChild1();
 	Bltl* getChild2();
-	std::string getPrd();
+	std::string getPrdName();
+	Prd* getPrd();
 	std::string getOpString();
+	TimeVariable* getTime();
 	std::string to_string();
+
+
 private:
 	Operation operation;
 	TimeVariable *time;
 	Bltl* child1;
 	Bltl* child2;
-	std::string prd;
+	std::string prd_name;
+	Prd* prd;
 
 };
 
