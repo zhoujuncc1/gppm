@@ -7,7 +7,7 @@
 
 #include "../include/ParameterSet.h"
 #include "../include/Bltl/Bltl.h"
-#include "../include/Model/Model.h"
+#include "../include/Model.h"
 
 
 ParameterSet::ParameterSet(Bltl* bltl, Model* model) {

@@ -31,7 +31,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = prd_test
+TESTS = prd_test model_test
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -87,4 +87,8 @@ prd_test.o : $(USER_DIR)/test/gppm/prd_test.cpp \
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test/gppm/prd_test.cpp
 
 prd_test : prd_parser.o Prd.o prd_test.o Parameter.o gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	
+
+model_test: $(USER_DIR)/test/gppm/model_test.cpp $(USER_HEADERS)/Model.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
