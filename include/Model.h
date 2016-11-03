@@ -18,29 +18,13 @@ typedef boost::uniform_int<> NumberDistribution;
 typedef boost::mt19937 RandomNumberGenerator;
 typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-struct push_back_state_and_time {
-	std::vector<state_type>& m_states;
-	std::vector<double>& m_times;
-
-	push_back_state_and_time(std::vector<state_type> &states,
-			std::vector<double> &times) :
-			m_states(states), m_times(times) {
-	}
-
-	void operator()(const state_type &x, double t) {
-		m_states.push_back(x);
-		m_times.push_back(t);
-	}
-};
-
 class Model {
 public:
 	Model() {
-		resolution = 1.0;
 		x_variation = 0.05;
 	}
 	void simulate(std::vector<state_type>& m_states,
-			std::vector<double>& m_times) {
+			std::vector<double>& m_times, double dt) {
 
 		NumberDistribution distribution(1.0 - x_variation, 1.0 + x_variation);
 		RandomNumberGenerator generator;
@@ -48,19 +32,24 @@ public:
 		generator.seed(std::time(0)); // seed with the current time
 
 		state_type x0;
-		runge_kutta4<state_type> stepper;
 		for (int i = 0; i < N_SPECIES; i++) {
 			x0[i] = x_init[i] *= numberGenerator();
 		}
-		integrate_const(stepper, odefun, x0, 0.0, end_time, resolution,
-				push_back_state_and_time(m_states, m_times));
+		m_times.push_back(0.0);
+		m_state.push_back(x0);
+		std::vector<state_type> output;
+		for (double i = dt; i <= end_time; i += dt) {
+			integrate(odefun, x0, 0.0, dt, 0.1);
+			output=x0;
+			m_times.push_back(i);
+			m_state.push_back(output);
+		}
 	}
 
 protected:
 	const int N_SPECIES;
 	const int N_PARAMS;
 
-	const double resolution;
 	const double end_time;
 	const double x_variation;
 
