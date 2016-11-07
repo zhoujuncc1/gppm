@@ -14,6 +14,8 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
+CXX=g++
+
 GTEST_DIR = gtest
 
 # Where to find user code.
@@ -21,13 +23,14 @@ USER_DIR = ..
 
 USER_SRC = ../src
 USER_HEADERS = ../include
+BOOST_HEADERS=/usr/local/include
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
-CPPFLAGS += -isystem $(GTEST_DIR)/include -I$(USER_HEADERS)
+CPPFLAGS += -isystem $(GTEST_DIR)/include -I$(USER_HEADERS) -I$(BOOST_HEADERS)
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -73,6 +76,9 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
+$(MODEL).o: $(USER_SRC)/Models/$(MODEL).cpp $(USER_HEADERS)/Model.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_SRC)/Models/$(MODEL).cpp
+	
 prd_parser.o : $(USER_SRC)/Bltl/prd_parser.cpp $(USER_HEADERS)/Bltl/Prd.h 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_SRC)/Bltl/prd_parser.cpp
 
@@ -88,7 +94,9 @@ prd_test.o : $(USER_DIR)/test/gppm/prd_test.cpp \
 
 prd_test : prd_parser.o Prd.o prd_test.o Parameter.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
-	
 
-model_test: $(USER_DIR)/test/gppm/model_test.cpp $(USER_HEADERS)/Model.h
+model_test.o: $(USER_DIR)/test/gppm/model_test.cpp $(USER_HEADERS)/Model.h
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test/gppm/model_test.cpp
+	
+model_test: model_test.o $(MODEL).o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
