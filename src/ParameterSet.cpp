@@ -10,8 +10,7 @@
 #include "../include/Model.h"
 
 
-ParameterSet::ParameterSet(Bltl* bltl, Model* model) {
-	this->model=model;
+ParameterSet::ParameterSet(Bltl* bltl) {
 	findParameters(bltl);
 }
 

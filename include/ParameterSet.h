@@ -21,8 +21,7 @@ public:
 
 
 private:
-	void findParameters(Bltl* bltl, Model* model);
-	Model* model;
+	void findParameters(Bltl* bltl);
 };
 
 #endif /* SRC_PARAMETERSET_H_ */
