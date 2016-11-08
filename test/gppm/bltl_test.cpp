@@ -14,6 +14,7 @@
 #include "../../include/Bltl/Prd.h"
 #include "../gtest/include/gtest/gtest.h"
 
+#include "../../include/ParameterSet.h"
 TEST(PrdParserTest, AllUnknown){
 	std::string input = std::string("p1:1::");
 	std::map<std::string, Prd*> map = parse_prd(input);
@@ -23,3 +24,10 @@ TEST(PrdParserTest, AllUnknown){
 	ASSERT_FALSE(prd->right->isfix);
 }
 
+Test(ParameterSetTest, ParameterParse){
+	std::string prd_input = std::string("p1:1::");
+	std::string bltl_input = std::string("F[k1]G[k2]p1");
+	std::map<std::string, Prd*> map = parse_prd(prd_input);
+
+
+}

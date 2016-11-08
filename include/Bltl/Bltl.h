@@ -32,6 +32,7 @@ public:
 	TimeVariable* getTime();
 	std::string to_string();
 
+	Operation getOperation();
 
 private:
 	Operation operation;

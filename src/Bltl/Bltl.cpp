@@ -44,6 +44,10 @@ Prd* Bltl::getPrd() {
 	return prd;
 }
 
+Operation Bltl::getOperation() {
+		return operation;
+	}
+
 std::string Bltl::getOpString() {
 	switch (operation) {
 	case op_PRD:

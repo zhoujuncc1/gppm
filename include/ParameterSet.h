@@ -21,7 +21,9 @@ public:
 
 
 private:
+	Bltl* bltl;
 	void findParameters(Bltl* bltl);
+	void init_time_range();
 };
 
 #endif /* SRC_PARAMETERSET_H_ */

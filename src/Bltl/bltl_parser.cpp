@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "../../include/Bltl/Prd.h"
+#include "../../include/Bltl/Bltl.h"
 
 std::map<std::string, Prd*> parse_prd(std::string str) {
 	std::map<std::string, Prd*> map;
@@ -31,5 +32,16 @@ std::map<std::string, Prd*> parse_prd(std::string str) {
 		map[k]=new Prd(k,v,l,r);
 	}
 	return map;
+}
+
+void linkPrds(Bltl* bltl, std::map<std::string, Prd*> &prds){
+	if(bltl->getOperation()==op_PRD)
+		bltl->setPrd(prds[bltl->getPrdName()]);
+	else{
+		if(bltl->getChild1())
+			linkPrds(bltl->getChild1(), prds);
+		if(bltl->getChild2())
+			linkPrds(bltl->getChild2(), prds);
+	}
 }
 

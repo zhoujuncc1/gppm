@@ -7,11 +7,15 @@
 
 #include "../include/ParameterSet.h"
 #include "../include/Bltl/Bltl.h"
+#include "../include/Bltl/TimeVariable.h"
+#include "../include/Bltl/Parameter.h"
 #include "../include/Model.h"
 
 
 ParameterSet::ParameterSet(Bltl* bltl) {
+	this->bltl = bltl;
 	findParameters(bltl);
+
 }
 
 ParameterSet::~ParameterSet() {

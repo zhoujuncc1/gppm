@@ -17,4 +17,6 @@
 Bltl* parse_bltl(std::string str);
 
 std::map<std::string, Prd*> parse_prd(std::string str);
+
+void linkPrds(Bltl* bltl, std::map<std::string, Prd*> &prds);
 #endif /* BLTL_PARSER_H_ */
