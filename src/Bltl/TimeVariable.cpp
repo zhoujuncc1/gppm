@@ -8,7 +8,7 @@
 
 std::unordered_set<std::string> TimeVariable::pool=std::unordered_set<std::string>();
 TimeVariable::TimeVariable() :
-		name(get_name()), value(10000000) {
+		Parameter(get_name()), value(10000000) {
 }
 
 TimeVariable::TimeVariable(char* str) {

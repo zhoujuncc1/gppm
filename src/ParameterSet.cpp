@@ -8,7 +8,6 @@
 #include "../include/ParameterSet.h"
 #include "../include/Bltl/Bltl.h"
 #include "../include/Bltl/TimeVariable.h"
-#include "../include/Bltl/Parameter.h"
 #include "../include/Model.h"
 
 
@@ -31,7 +30,7 @@ void ParameterSet::findParameters(Bltl* bltl){
 		all_set[bltl->getTime()->name]=bltl->getTime();
 	}
 
-	if(bltl->operation==op_PRD){
+	if(bltl->getOperation()==op_PRD){
 		if(bltl->getPrd()->left->isfix)
 			known_prd_set[bltl->getPrd()->left->name]=bltl->getPrd()->left;
 		else

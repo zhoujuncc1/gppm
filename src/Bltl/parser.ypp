@@ -2,8 +2,8 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
-#include "time_variable.h"
-#include "Bltl.h"
+#include "../../include/Bltl/TimeVariable.h"
+#include "../../include/Bltl/Bltl.h"
 
 typedef struct yy_buffer_state * YY_BUFFER_STATE;
 extern YY_BUFFER_STATE yy_scan_string(const char * str);

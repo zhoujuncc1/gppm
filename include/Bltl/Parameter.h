@@ -11,6 +11,7 @@
 #include <utility>
 class Parameter {
 public:
+	Parameter();
 	Parameter(std::string k);
 	Parameter(std::string k, double v);
 

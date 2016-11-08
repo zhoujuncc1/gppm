@@ -1,17 +1,21 @@
 CC=g++
 LEX=flex
 YACC=bison
-SOURCES=$(wildcard *.c) $(wildcard *.cpp)
-INCLUDES=$(wildcard *.h) $(wildcard *.hpp) 
-OBJECTS=$(SOURCES:.cpp=.o)
+SOURCES=$(wildcard *.cpp) lex.yy.c parser.tab.cpp
+OBJECTS=$(SOURCES:.cpp=.o) 
+TARGET_DIR=../../bin/Bltl
 
-all: $(OBJECTS) lexyacc
-	$(CC)  $(OBJECTS) 
+all: $(TARGET_DIR) $(OBJECTS)
+	@echo "Done"
 
-lexyacc: parser.ypp lexer.l
+parser.tab.cpp: parser.ypp
 	$(YACC) -v -d parser.ypp -o parser.tab.cpp
+	
+lex.yy.c:  lexer.l
 	$(LEX) lexer.l 
 
-obj: lexyacc $(SOURCES) $(INCLUDES)
-	@$(CC) $(CFLAGS) $(SOURCES)
-    @echo "Compilation complete!"
+%.o: %.cpp
+	$(CC) -c -o $(TARGET_DIR)/$@ $^
+	
+$(TARGET_DIR):
+	mkdir -p $(TARGET_DIR)

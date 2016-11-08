@@ -7,17 +7,18 @@
 
 #ifndef SRC_PARAMETERSET_H_
 #define SRC_PARAMETERSET_H_
-
+#include "Bltl/Bltl.h"
+#include <map>
 class ParameterSet {
 public:
 	ParameterSet(Bltl* bltl);
 	virtual ~ParameterSet();
 
-	std::map<std::string, Prd*> unknown_prd_set;
-	std::map<std::string, Prd*> known_prd_set;
-	std::map<std::string, Prd*> unknown_time_set;
-	std::map<std::string, Prd*> known_time_set;
-	std::map<std::string, Prd*> all_set;
+	std::map<std::string, Parameter*> unknown_prd_set;
+	std::map<std::string, Parameter*> known_prd_set;
+	std::map<std::string, TimeVariable*> unknown_time_set;
+	std::map<std::string, TimeVariable*> known_time_set;
+	std::map<std::string, Parameter*> all_set;
 
 
 private:

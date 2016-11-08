@@ -16,13 +16,18 @@
 # Remember to tweak this if you move this file.
 CXX=g++
 
-GTEST_DIR = gtest
-
-# Where to find user code.
 USER_DIR = ..
 
-USER_SRC = ../src
-USER_HEADERS = ../include
+GTEST_DIR = $(USER_DIR)/test/gtest
+
+TARGET_DIR = $(USER_DIR)/bin/test
+
+GTEST_OBJ_DIR = $(TARGET_DIR)/gtest
+
+# Where to find user code.
+
+USER_OBJ_DIR = $(USER_DIR)/bin
+USER_HEADERS = $(USER_DIR)/include
 BOOST_HEADERS=/usr/local/include
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -59,44 +64,33 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 # conservative and not optimized.  This is fine as Google Test
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c -o $(GTEST_OBJ_DIR)/$@ \
             $(GTEST_DIR)/src/gtest-all.cc
 
 gtest_main.o : $(GTEST_SRCS_)
-	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
+	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c -o $(GTEST_OBJ_DIR)/$@\
             $(GTEST_DIR)/src/gtest_main.cc
 
-gtest.a : gtest-all.o
-	$(AR) $(ARFLAGS) $@ $^
+gtest.a : $(GTEST_OBJ_DIR)/gtest-all.o
+	$(AR) $(ARFLAGS) $(GTEST_OBJ_DIR)/$@ $^
 
-gtest_main.a : gtest-all.o gtest_main.o
-	$(AR) $(ARFLAGS) $@ $^
+gtest_main.a : $(GTEST_OBJ_DIR)/gtest-all.o $(GTEST_OBJ_DIR)/gtest_main.o
+	$(AR) $(ARFLAGS) $(GTEST_OBJ_DIR)/$@ $^
 
 # Builds a sample test.  A test should link with either gtest.a or
 # gtest_main.a, depending on whether it defines its own main()
 # function.
-
-$(MODEL).o: $(USER_SRC)/Models/$(MODEL).cpp $(USER_HEADERS)/Model.h
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_SRC)/Models/$(MODEL).cpp
+bltl_test.o: $(USER_DIR)/test/gppm/bltl_test.cpp
+	$(CC) -c -o $(TARGET_DIR)/gppm/$@ $^
 	
-prd_parser.o : $(USER_SRC)/Bltl/prd_parser.cpp $(USER_HEADERS)/Bltl/Prd.h 
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_SRC)/Bltl/prd_parser.cpp
-
-Prd.o : $(USER_SRC)/Bltl/Prd.cpp $(USER_HEADERS)/Bltl/Prd.h 
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_SRC)/Bltl/Prd.cpp 
-	
-Parameter.o : $(USER_SRC)/Bltl/Parameter.cpp $(USER_HEADERS)/Bltl/Parameter.h 
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_SRC)/Bltl/Parameter.cpp 
-
-bltl_test.o : $(USER_DIR)/test/gppm/bltl_test.cpp \
-                     $(USER_HEADERS)/Bltl/bltl_parser.h $(USER_HEADERS)/Bltl/Prd.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test/gppm/bltl_test.cpp
-
-bltl_test : prd_parser.o Prd.o bltl_test.o Parameter.o gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+bltl_test : $(USER_OBJ_DIR)/Bltl/prd_parser.o $(USER_OBJ_DIR)/Bltl/Prd.o $(TARGET_DIR)/gppm/bltl_test.o $(USER_OBJ_DIR)/Bltl/Parameter.o $(GTEST_OBJ_DIR)/gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $(TARGET_DIR)/gppm/$@
 
 model_test.o: $(USER_DIR)/test/gppm/model_test.cpp $(USER_HEADERS)/Model.h
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test/gppm/model_test.cpp
+	$(CC) -c -o $(TARGET_DIR)/gppm/$@ $^
 	
 model_test: model_test.o $(MODEL).o gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $(TARGET_DIR)/gppm/$@
+	
+%.o: 
+	

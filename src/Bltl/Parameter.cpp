@@ -8,6 +8,7 @@
 #include "../../include/Bltl/Parameter.h"
 
 #include <iostream>
+Parameter::Parameter(){}
 
 Parameter::Parameter(std::string k):name(k) {
 	isfix=false;

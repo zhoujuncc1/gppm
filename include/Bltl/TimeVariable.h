@@ -7,7 +7,7 @@
 
 #include "Parameter.h"
 
-class TimeVariable: Parameter
+class TimeVariable: public Parameter
 {
 public:
     TimeVariable();

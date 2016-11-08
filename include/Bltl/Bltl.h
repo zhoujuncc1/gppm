@@ -12,7 +12,7 @@
 #include <iostream>
 
 #include "TimeVariable.h"
-
+#include "Prd.h"
 enum Operation {op_F, op_G, op_U, op_X, op_NOT, op_AND, op_OR, op_PRD};
 class Bltl {
 public:
