@@ -1,9 +1,9 @@
 %{
 #include <string.h>
 #include <stdlib.h>
-#include "Bltl.h"
-#include "time_variable.h"
-#include "parser.tab.hpp"
+#include <Bltl/Bltl.h>
+#include <Bltl/TimeVariable.h>
+#include "parser.hpp"
 void yyerror(const char *);
 extern "C" int yylex();
 %}

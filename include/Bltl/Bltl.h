@@ -9,7 +9,6 @@
 #define BLTL_BLTL_H_
 
 #include <cstdlib>
-#include <iostream>
 
 #include "TimeVariable.h"
 #include "Prd.h"

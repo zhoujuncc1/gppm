@@ -9,8 +9,8 @@
 #include <map>
 #include <string>
 
-#include "../../include/Model.h"
-#include "../gtest/include/gtest/gtest.h"
+#include <Model.h>
+#include <gtest/gtest.h>
 
 TEST(ModelTest, ProduceTraj){
 	std::vector<state_type> m_states;

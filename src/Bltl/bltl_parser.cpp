@@ -8,8 +8,8 @@
 #include <map>
 #include <sstream>
 
-#include "../../include/Bltl/Prd.h"
-#include "../../include/Bltl/Bltl.h"
+#include <Bltl/Prd.h>
+#include <Bltl/Bltl.h>
 
 std::map<std::string, Prd*> parse_prd(std::string str) {
 	std::map<std::string, Prd*> map;

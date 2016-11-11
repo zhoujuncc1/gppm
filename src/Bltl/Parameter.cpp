@@ -5,7 +5,7 @@
  *      Author: zhoujun
  */
 
-#include "../../include/Bltl/Parameter.h"
+#include <Bltl/Parameter.h>
 
 #include <iostream>
 Parameter::Parameter(){}

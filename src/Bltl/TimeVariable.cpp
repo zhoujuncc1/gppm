@@ -4,7 +4,7 @@
 #include <string>
 
 
-#include "../../include/Bltl/TimeVariable.h"
+#include <Bltl/TimeVariable.h>
 
 std::unordered_set<std::string> TimeVariable::pool=std::unordered_set<std::string>();
 TimeVariable::TimeVariable() :
@@ -18,7 +18,7 @@ TimeVariable::TimeVariable(char* str) {
 		name = newStr.substr(1, equal);
 		value = std::stoi(newStr.substr(equal + 1, newStr.length() - 1));
 		isfix=true;
-	} else if ('0' < newStr[1] < '9') {
+	} else if ('0' < newStr[1] && newStr[1] < '9') {
 		name = get_name();
 		value = std::stoi(newStr.substr(1, newStr.length()-1));
 		isfix=true;

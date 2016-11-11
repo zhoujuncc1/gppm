@@ -5,11 +5,11 @@
  *      Author: zhoujun
  */
 
-#include "../../include/Bltl/Prd.h"
+#include <Bltl/Prd.h>
+#include <Bltl/Parameter.h>
 
 #include <string>
 
-#include "../../include/Bltl/Parameter.h"
 
 Prd::Prd(const std::string k, const std::string v, const std::string l,
 		const std::string r) {

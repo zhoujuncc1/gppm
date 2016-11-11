@@ -5,7 +5,7 @@
  *      Author: zhoujun
  */
 
-#include "../../include/Bltl/Bltl.h"
+#include <Bltl/Bltl.h>
 
 #include <sstream>
 
