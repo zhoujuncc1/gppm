@@ -12,16 +12,27 @@
 #include <Bltl/bltl_parser.h>
 #include <Bltl/Parameter.h>
 #include <Bltl/Prd.h>
+#include <Bltl/Bltl.h>
 
 #include <gtest/gtest.h>
 
-TEST(PrdParserTest, AllUnknown){
+class BltlTest : public ::testing::Test{
+public:
+	Bltl* bltl;
+	std::map<std::string, Prd*> map;
+};
+TEST(BltlTest, PrdAllUnknown){
 	std::string input = std::string("p1:1::");
-	std::map<std::string, Prd*> map = parse_prd(input);
+	map = parse_prd(input);
 	Prd* prd = map["p1"];
 	ASSERT_EQ(prd->varId, 1);
 	ASSERT_FALSE(prd->left->isfix);
 	ASSERT_FALSE(prd->right->isfix);
+}
+
+Test(BltlTest, BltlParser){
+	bltl= parse_bltl("F[k1]G[k2]p1");
+	ASSERT_STREQ(bltl->to_string(), "F[k1](G[k2](p1))");
 }
 
 
