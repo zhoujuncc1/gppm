@@ -34,14 +34,14 @@ std::map<std::string, Prd*> parse_prd(std::string str) {
 	return map;
 }
 
-void linkPrds(Bltl* bltl, std::map<std::string, Prd*> &prds){
+void link_prd(Bltl* bltl, std::map<std::string, Prd*> &prds){
 	if(bltl->getOperation()==op_PRD)
 		bltl->setPrd(prds[bltl->getPrdName()]);
 	else{
 		if(bltl->getChild1())
-			linkPrds(bltl->getChild1(), prds);
+			link_prd(bltl->getChild1(), prds);
 		if(bltl->getChild2())
-			linkPrds(bltl->getChild2(), prds);
+			link_prd(bltl->getChild2(), prds);
 	}
 }
 
