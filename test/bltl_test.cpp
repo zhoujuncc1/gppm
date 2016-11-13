@@ -24,14 +24,14 @@ public:
         std::string input = std::string("p1:1::");
         map = parse_prd(input);
 
-        bltl= parse_bltl("F[k1]G[k2]p1");
+        bltl= parse_bltl("F[k1]G[k2]p1;");
 
         link_prd(bltl, map);
     }
 };
 
 TEST_F(BltlTest, BltlParser){
-    ASSERT_EQ(bltl->to_string(), "F[k1](G[k2](p1))");
+    ASSERT_EQ(bltl->to_string(), "F(G(p1))");
 
 }
 
