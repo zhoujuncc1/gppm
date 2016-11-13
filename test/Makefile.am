@@ -3,7 +3,10 @@ libgtest_la_SOURCES = ../gtest/src/gtest-all.cc ../gtest/src/gtest_main.cc
 libgtest_la_CPPFLAGS = -I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest/
 libgtest_la_LDFLAGS = -pthread
 
-check_PROGRAMS = bltl_test model_test
+check_PROGRAMS = bltl_test model_test miner_test
+
+TESTS = bltl_test model_test miner_test
+
 
 bltl_test_SOURCES = bltl_test.cpp ../include
 
@@ -22,4 +25,14 @@ model_test_LDFLAGS = -pthread
 
 model_test_CPPFLAGS = -I/usr/local/include/ -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
 
-TESTS = bltl_test model_test
+
+miner_test_SOURCES = miner_test.cpp ../src/ParameterSet.cpp ../src/Constraint.cpp ../src/Models/Egfngf.cpp ../include
+
+miner_test_LDADD = libgtest.la ../src/libbltl.a
+
+miner_test_LDFLAGS = -pthread
+
+miner_test_CPPFLAGS = -I/usr/local/include/ -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
+
+
+

@@ -16,13 +16,13 @@ Prd::Prd(const std::string k, const std::string v, const std::string l,
 	name = k;
 	varId = std::stoi(v);
 	if (l.compare("") == 0)
-		left = new Parameter(v + ".left");
+		left = new Parameter(k + ".left");
 	else
-		left = new Parameter(v + ".left", std::stod(l));
+		left = new Parameter(k + ".left", std::stod(l));
 	if (r.compare("") == 0)
-		right = new Parameter(v + ".right");
+		right = new Parameter(k + ".right");
 	else
-		right = new Parameter(v + ".right", std::stod(l));
+		right = new Parameter(k + ".right", std::stod(l));
 }
 
 Prd::~Prd() {

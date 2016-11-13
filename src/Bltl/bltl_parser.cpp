@@ -34,7 +34,7 @@ std::map<std::string, Prd*> parse_prd(std::string str) {
 	return map;
 }
 
-void link_prd(Bltl* bltl, std::map<std::string, Prd*> &prds){
+void link_prd(Bltl* bltl, std::map<std::string, Prd*> prds){
 	if(bltl->getOperation()==op_PRD)
 		bltl->setPrd(prds[bltl->getPrdName()]);
 	else{

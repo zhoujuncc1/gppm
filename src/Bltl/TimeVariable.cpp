@@ -15,15 +15,15 @@ TimeVariable::TimeVariable(char* str) {
 	std::string newStr(str);
 	size_t equal = newStr.find('=');
 	if (equal != std::string::npos) {
-		name = newStr.substr(1, equal);
-		value = std::stoi(newStr.substr(equal + 1, newStr.length() - 1));
+		name = newStr.substr(1, equal-1);
+		value = std::stoi(newStr.substr(equal + 1, newStr.length() - 2));
 		isfix=true;
 	} else if ('0' < newStr[1] && newStr[1] < '9') {
 		name = get_name();
-		value = std::stoi(newStr.substr(1, newStr.length()-1));
+		value = std::stoi(newStr.substr(1, newStr.length()-2));
 		isfix=true;
 	} else {
-		name = newStr.substr(1, newStr.length()-1);
+		name = newStr.substr(1, newStr.length()-2);
 		isfix=false;
 	}
 

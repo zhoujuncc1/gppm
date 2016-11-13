@@ -9,6 +9,7 @@
 #define PARAMETER_H_
 #include <string>
 #include <utility>
+#include <list>
 class Parameter {
 public:
 	Parameter();
@@ -20,6 +21,9 @@ public:
 	double value;
 	bool isfix;
 	std::pair<double, double> range;
+
+	std::list<Parameter*> parents;
+	std::list<Parameter*> children;
 
 };
 

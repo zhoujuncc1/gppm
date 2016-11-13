@@ -32,17 +32,37 @@ public:
 
 TEST_F(BltlTest, BltlParser){
     ASSERT_EQ(bltl->to_string(), "F(G(p1))");
+    ASSERT_NE(bltl->getChild1()->getChild1()->getPrd(),nullptr);
+    ASSERT_EQ(bltl->getChild1()->getChild1()->getPrd(), map["p1"]);
+    ASSERT_STREQ(bltl->getTime()->name.c_str(), "k1");
+
+    bltl= parse_bltl("F[k1=10]G[10]p1;");
+    ASSERT_STREQ(bltl->getTime()->name.c_str(), "k1");
+    ASSERT_EQ(bltl->getTime()->value, 10);
+    ASSERT_EQ(bltl->getChild1()->getTime()->value, 10);
+
+
 
 }
+
 
 TEST_F(BltlTest, PrdAllUnknown){
 
 	Prd* prd = map["p1"];
 	ASSERT_EQ(prd->varId, 1);
 	ASSERT_FALSE(prd->left->isfix);
+    ASSERT_STREQ(prd->left->name.c_str(), "p1.left");
 	ASSERT_FALSE(prd->right->isfix);
+    ASSERT_STREQ(prd->right->name.c_str(), "p1.right");
 }
 
+TEST_F(BltlTest, LinkPrd){
+
+Prd* prd = map["p1"];
+ASSERT_EQ(prd->varId, 1);
+ASSERT_FALSE(prd->left->isfix);
+ASSERT_FALSE(prd->right->isfix);
+}
 
 
 

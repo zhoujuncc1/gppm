@@ -18,6 +18,7 @@ Bltl::Bltl(Operation op, TimeVariable *t){
 Bltl::Bltl(Operation op, char* p) :
 		prd_name(std::string(p)), operation(op) {
 	child1=child2=NULL;
+	time=NULL;
 }
 
 Bltl::~Bltl() {
