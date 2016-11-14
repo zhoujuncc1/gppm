@@ -23,6 +23,8 @@ Prd::Prd(const std::string k, const std::string v, const std::string l,
 		right = new Parameter(k + ".right");
 	else
 		right = new Parameter(k + ".right", std::stod(l));
+	left->varId = varId;
+	right->varId=varId;
 }
 
 Prd::~Prd() {

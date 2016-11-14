@@ -21,11 +21,25 @@ typedef boost::uniform_real<> NumberDistribution;
 typedef boost::mt19937 RandomNumberGenerator;
 typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
+
+class Trajectory{
+public:
+	Trajectory(int N_SPECIES, double dt){
+		this->N_SPECIES=N_SPECIES;
+		this->dt=dt;
+		m_states = std::vector<std::vector<double> >(this->N_SPECIES);
+	}
+	double dt;
+	int N_SPECIES;
+	std::vector<std::vector<double> > m_states;
+	std::vector<double> m_times;
+};
+
+
 class Model {
 public:
-	static void simulate(std::vector<state_type>& m_states,
-			std::vector<double>& m_times, double dt) {
-
+	static Trajectory simulate(double dt) {
+		Trajectory traj = Trajectory(Model::N_SPECIES, dt);
 		NumberDistribution distribution(1.0 - Model::x_variation,
 				1.0 + Model::x_variation);
 		RandomNumberGenerator generator;
@@ -36,15 +50,16 @@ public:
 		for (int i = 0; i < Model::N_SPECIES; i++) {
 			x0.push_back(Model::x[i] * numberGenerator());
 		}
-
 		for (double i = 0; i < Model::end_time; i += dt) {
-			m_times.push_back(i);
-			m_states.push_back(x0);
+			traj.m_times.push_back(i);
+            for(int j = 0; j < Model::N_SPECIES; j++)
+                traj.m_states[j].push_back(x0[j]);
 			integrate(Model::odefun, x0, 0.0, dt, 0.001);
 		}
-		m_times.push_back(Model::end_time);
-		m_states.push_back(x0);
-
+		traj.m_times.push_back(Model::end_time);
+        for(int j = 0; j < Model::N_SPECIES; j++)
+            traj.m_states[j].push_back(x0[j]);
+        return traj;
 	}
 
 	static void odefun ( const state_type &x , state_type &dxdt , const double /* t */ );

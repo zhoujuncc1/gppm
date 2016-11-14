@@ -8,6 +8,7 @@
 #ifndef SRC_PARAMETERSET_H_
 #define SRC_PARAMETERSET_H_
 #include "Bltl/Bltl.h"
+#include "Model.h"
 #include <map>
 class ParameterSet {
 public:
@@ -20,6 +21,12 @@ public:
 	std::map<std::string, TimeVariable*> known_time_set;
 	std::map<std::string, Parameter*> all_set;
 
+	std::vector<std::pair<double, double> > ranges;
+    void init_prd_range();
+    //prase to trees where smallest are roots
+    void parse_constraint_tree(std::string input);
+    //Smallest are roots
+    std::vector<Parameter*> tree_roots;
 
 private:
 	Bltl* bltl;

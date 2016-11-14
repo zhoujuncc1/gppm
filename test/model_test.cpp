@@ -13,10 +13,9 @@
 #include <gtest/gtest.h>
 
 TEST(ModelTest, ProduceTraj){
-	std::vector<state_type> m_states;
-	std::vector<double> m_times;
-	Model::simulate(m_states, m_times, 1.0);
+    ASSERT_EQ(Model::N_SPECIES, 32);
+	Trajectory traj = Model::simulate(1.0);
 	for(int t = 0; t < Model::end_time; t++)
-		printf("%lf ", m_states[t][10]);
+		printf("%lf ", traj.m_states[10][t]);
 }
 

@@ -9,7 +9,7 @@
 #define PARAMETER_H_
 #include <string>
 #include <utility>
-#include <list>
+#include <vector>
 class Parameter {
 public:
 	Parameter();
@@ -21,9 +21,10 @@ public:
 	double value;
 	bool isfix;
 	std::pair<double, double> range;
+	int varId;
 
-	std::list<Parameter*> parents;
-	std::list<Parameter*> children;
+	std::vector<Parameter*> parents;
+	std::vector<Parameter*> children;
 
 };
 

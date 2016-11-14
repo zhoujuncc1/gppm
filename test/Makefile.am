@@ -26,7 +26,7 @@ model_test_LDFLAGS = -pthread
 model_test_CPPFLAGS = -I/usr/local/include/ -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
 
 
-miner_test_SOURCES = miner_test.cpp ../src/ParameterSet.cpp ../src/Constraint.cpp ../src/Models/Egfngf.cpp ../include
+miner_test_SOURCES = miner_test.cpp ../src/ParameterSet.cpp ../src/parse_constraint.cpp ../src/Models/Egfngf.cpp ../include
 
 miner_test_LDADD = libgtest.la ../src/libbltl.a
 
