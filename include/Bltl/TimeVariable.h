@@ -13,7 +13,8 @@ public:
     TimeVariable();
     TimeVariable(char* str);
     int value;
-	std::pair<int, int> range;
+    std::pair<int, int> range;
+    double weight_sign;
 private:
     std::string get_name();
     static std::unordered_set<std::string> pool;

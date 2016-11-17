@@ -64,7 +64,7 @@ public:
 		time = t;
 	}
 
-	virtual void update(int* levels, int isLast) {
+	virtual void update(double* levels, int isLast) {
 		//printf("-> Update generic node\n");
 		this->isLast = isLast;
 		if (child1)

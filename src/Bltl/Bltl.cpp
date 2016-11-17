@@ -12,6 +12,8 @@
 Bltl::Bltl(Operation op, TimeVariable *t){
 	operation=op;
 	time=t;
+    if(time!=NULL)
+	    set_weight_sign();
 	child1=child2=NULL;
 }
 
@@ -105,4 +107,9 @@ std::string Bltl::to_string() {
 	return ss.str();
 }
 
-
+void Bltl::set_weight_sign(){
+	if(operation==op_G ||operation==op_U)
+		time->weight_sign=-1.0;
+	else
+		time->weight_sign=1.0;
+}

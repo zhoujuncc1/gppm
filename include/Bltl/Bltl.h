@@ -40,6 +40,7 @@ private:
 	Bltl* child2;
 	std::string prd_name;
 	Prd* prd;
+	void set_weight_sign();
 
 };
 

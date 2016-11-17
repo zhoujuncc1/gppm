@@ -1,14 +1,15 @@
-#ifndef MODELCHECKER_H
-#define MODELCHECKER_H
+#ifndef BLTLCHECKER_H
+#define BLTLCHECKER_H
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include "Node.h"
 #include "TimeVariable.h"
+#include "../Model.h"
 using namespace std;
 
-class ModelChecker {
+class BltlChecker {
 public:
 	ModelChecker(Bltl* bltl) {
 		roots.push_back(buildTree(bltl));
@@ -22,7 +23,23 @@ public:
 		roots.clear();
 	}
 
-	int update(int *levels, int isLast) {
+	vector<int> check(vector<Trajectory> trajs){
+		vector<int> sat;
+		for(auto itr = trajs.begin(); itr!= trajs.end(); itr++) {
+			int value = update(itr->m_state[0],0);
+			i=1;
+			while(value==-1&&i<itr->m_state.size()-1){
+				value=update(itr->m_state[i++],0);
+			}
+			if(value==-1)
+				value=update(itr->m_state[i],1);
+			sat.push_back(value);
+		}
+		return sat;
+
+	}
+
+	int update(double *levels, int isLast) {
 		roots[nTime]->update(levels, isLast);
 		int tf = roots[0]->evalNode();
 
@@ -82,4 +99,4 @@ private:
 	int nTime;
 };
 
-#endif
+#endif // BLTLCHECKER_H

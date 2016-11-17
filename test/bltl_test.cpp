@@ -64,5 +64,9 @@ ASSERT_FALSE(prd->left->isfix);
 ASSERT_FALSE(prd->right->isfix);
 }
 
+TEST_F(BltlTest, WeightSign){
+    ASSERT_EQ(bltl->getTime()->weight_sign, 1.0);
+    ASSERT_EQ(bltl->getChild1()->getTime()->weight_sign, -1.0);
 
+}
 
