@@ -2,7 +2,7 @@
 // Created by Zhou Jun on 16/11/16.
 //
 
-#include "../../include/Mining/ModelChecking.h"
+#include "../../include/ModelChecking.h"
 #include <vector>
 #include <cmath>
 double bayes_factor(vector<int> satArray, double theta=0.9, double alpha=1.0, double beta=1.0){

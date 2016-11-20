@@ -4,7 +4,7 @@
 
 #ifndef GPPM_MODELCHECKING_H
 #define GPPM_MODELCHECKING_H
-#include "../Model.h"
+#include "Model.h"
 #define N_SIM=100;
 #define MAX_SIM=1000;
 #define BAYES_MIN=0.01;

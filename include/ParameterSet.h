@@ -22,15 +22,17 @@ class ParameterSet {
     std::map<std::string, Parameter*> all_set;
 
     std::vector<std::pair<double, double> > ranges;
+    //Smallest are roots
+    std::vector<Parameter*> tree_roots;
+    std::map<std::string, double> weights;
+    map<std::string, Prd*> prds;
+
     void init_prd_range();
     void init_time_range();
 
     //prase to trees where smallest are roots
     void parse_constraint_tree(std::string input);
-    //Smallest are roots
-    std::vector<Parameter*> tree_roots;
-    std::map<std::string, double> weights;
-    map<std::string, Prd*> prds
+
     void parse_weight(std::string input);
 
  private:

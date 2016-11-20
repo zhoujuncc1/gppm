@@ -1,5 +1,7 @@
 #include "../../include/miner_utils.h"
-#include "../../include/Mining.Modelchecking.h"
+#include "../../include/Modelchecking.h"
+#include "../../include/Mining.h"
+
 #include <gsl/gsl_siman.h>
 
 /* how many points do we try before stepping */
@@ -78,7 +80,7 @@ void sa_destroy (void *xp){
     delete state;
 }
 
-void SA(State* state) {
+void do_mine(State* state) {
     const gsl_rng_type * T;
     gsl_rng * r;
     gsl_rng_env_setup();
