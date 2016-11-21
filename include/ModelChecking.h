@@ -5,13 +5,14 @@
 #ifndef GPPM_MODELCHECKING_H
 #define GPPM_MODELCHECKING_H
 #include "Model.h"
-#define N_SIM=100;
-#define MAX_SIM=1000;
-#define BAYES_MIN=0.01;
-#define BAYES_MAX=100;
-#define LOSS_MAX=1000000;
 
+#define N_SIM 100
+#define MAX_SIM 1000
+#define BAYES_MIN 0.01
+#define BAYES_MAX 100
+#define LOSS_MAX 1000000
 
+class State;
 
 double modelchecking(State *state);
 double loss(State* state);

@@ -5,9 +5,9 @@
  *      Author: zhoujun
  */
 
-#include "../include/ParameterSet.h"
-#include "../include/Bltl/TimeVariable.h"
-#include "../include/miner_utils.h"
+#include "../../include/ParameterSet.h"
+#include "../../include/Bltl/TimeVariable.h"
+#include "../../include/miner_utils.h"
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
@@ -75,6 +75,7 @@ void ParameterSet::init_time_range() {
     for (auto itr = unknown_time_set.begin(); itr != unknown_time_set.end(); itr++) {
         itr->second->range.first = 1;
         itr->second->range.second = (int) Model::end_time;
+
     }
 }
 

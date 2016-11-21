@@ -13,11 +13,18 @@ LT_INIT
 AC_PROG_CXX
 AC_PROG_LEX
 AC_PROG_YACC
+AC_PROG_LIBTOOL
 
 AC_CONFIG_MACRO_DIRS([m4])
 
-AC_SEARCH_LIBS([boost])
-AC_CONFIG_FILES(Makefile src/Makefile test/Makefile)
+BOOST_REQUIRE([1.60])
+
+AC_CHECK_LIB([m],[cos])
+AC_CHECK_LIB([gslcblas],[cblas_dgemm])
+AC_CHECK_LIB([gsl],[gsl_blas_dgemm])
+
+AC_CONFIG_FILES(Makefile src/Makefile test/Makefile examples/Makefile)
 AC_CONFIG_SRCDIR(src)
 AC_OUTPUT
+
 

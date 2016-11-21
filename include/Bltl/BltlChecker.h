@@ -11,11 +11,11 @@ using namespace std;
 
 class BltlChecker {
 public:
-	ModelChecker(Bltl* bltl) {
+	BltlChecker(Bltl* bltl) {
 		roots.push_back(buildTree(bltl));
 		nTime = 0;
 	}
-	~ModelChecker() {
+	~BltlChecker() {
 		for (vector<Node*>::iterator it = roots.begin(); it != roots.end();
 				++it) {
 			delete *it;
@@ -26,21 +26,21 @@ public:
 	vector<int> check(vector<Trajectory> trajs){
 		vector<int> sat;
 		for(auto itr = trajs.begin(); itr!= trajs.end(); itr++) {
-			int value = update(itr->m_state[0],0);
-			i=1;
-			while(value==-1&&i<itr->m_state.size()-1){
-				value=update(itr->m_state[i++],0);
+			int value = update(itr->m_states[0],0);
+			int i=1;
+			while(value==-1&&i<itr->m_states.size()-1){
+				value=update(itr->m_states[i++],0);
 			}
 			if(value==-1)
-				value=update(itr->m_state[i],1);
+				value=update(itr->m_states[i],1);
 			sat.push_back(value);
 		}
 		return sat;
 
 	}
 
-	int update(double *levels, int isLast) {
-		roots[nTime]->update(levels, isLast);
+	int update(state_type levels, int isLast) {
+		roots[nTime]->update(&(levels[0]), isLast);
 		int tf = roots[0]->evalNode();
 
 		if (tf == -1) {
@@ -54,39 +54,38 @@ public:
 
 	Node* buildTree(Bltl* bltl) {
 		Node* node;
-		switch (bltl->operation) {
+		switch (bltl->getOperation()) {
 		case op_PRD:
-			Prd* prd = bltl->getPrd();
-			return new AtomicNode(prd->varId, &(prd->left->value),
-					&(prd->right->value));
+			return new AtomicNode(bltl->getPrd()->varId, &(bltl->getPrd()->left->value),
+					&(bltl->getPrd()->right->value));
 		case op_F:
-			Node* node = new FNode(&(bltl->getTime()->value));
+			node = new FNode(&(bltl->getTime()->value));
 			node->setChild1(buildTree(bltl->getChild1()));
 			return node;
 		case op_G:
-			Node* node = new GNode(&(bltl->getTime()->value));
+			node = new GNode(&(bltl->getTime()->value));
 			node->setChild1(buildTree(bltl->getChild1()));
 			return node;
 		case op_NOT:
-			Node* node = new NotNode();
+			node = new NotNode();
 			node->setChild1(buildTree(bltl->getChild1()));
 			return node;
 		case op_X:
-			Node* node = new XNode();
+			node = new XNode();
 			node->setChild1(buildTree(bltl->getChild1()));
 			return node;
 		case op_AND:
-			Node* node = new AndNode();
+			node = new AndNode();
 			node->setChild1(buildTree(bltl->getChild1()));
 			node->setChild2(buildTree(bltl->getChild2()));
 			return node;
 		case op_OR:
-			Node* node = new OrNode();
+			node = new OrNode();
 			node->setChild1(buildTree(bltl->getChild1()));
 			node->setChild2(buildTree(bltl->getChild2()));
 			return node;
 		case op_U:
-			Node* node = new UNode(&(bltl->getTime()->value));
+			node = new UNode(&(bltl->getTime()->value));
 			node->setChild1(buildTree(bltl->getChild1()));
 			node->setChild2(buildTree(bltl->getChild2()));
 			return node;

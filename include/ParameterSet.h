@@ -12,7 +12,7 @@
 #include <map>
 class ParameterSet {
  public:
-    ParameterSet(Bltl* bltl, map<std::string, Prd*> prds);
+    ParameterSet(Bltl* bltl, std::map<std::string, Prd*> prds);
     virtual ~ParameterSet();
 
     std::map<std::string, Parameter*> unknown_prd_set;
@@ -25,7 +25,7 @@ class ParameterSet {
     //Smallest are roots
     std::vector<Parameter*> tree_roots;
     std::map<std::string, double> weights;
-    map<std::string, Prd*> prds;
+    std::map<std::string, Prd*> prds;
 
     void init_prd_range();
     void init_time_range();
@@ -34,9 +34,9 @@ class ParameterSet {
     void parse_constraint_tree(std::string input);
 
     void parse_weight(std::string input);
+    Bltl* bltl;
 
  private:
-    Bltl* bltl;
     void findParameters(Bltl* bltl);
 };
 

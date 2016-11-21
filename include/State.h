@@ -1,6 +1,12 @@
-#ifdef STATE_H_
+#ifndef STATE_H_
 #define STATE_H_
-struct State{
+#include "ParameterSet.h"
+#include <map>
+#include <string>
+#include <sstream>
+
+class State{
+public:
     State(ParameterSet* params){
         paramset=params;
     }
@@ -11,9 +17,7 @@ struct State{
     }
     ~State(){
         paramset=NULL;
-        delete prd_values;
-        delete time_values;
-    };
+    }
     void assignValues(){
         for(auto itr = prd_values.begin(); itr!=prd_values.end(); itr++){
             paramset->all_set[itr->first]->value = itr->second;
@@ -23,9 +27,9 @@ struct State{
         }
     }
 
-    std::string Bltl::to_string() {
+    std::string to_string() {
 	    std::stringstream ss;
-	    ss<<"{"
+	    ss<<"{";
 	    for(auto itr=prd_values.begin();itr!=prd_values.end();itr++)
 	        ss<<itr->first<<": "<<itr->second<<", ";
 	    for(auto itr=time_values.begin();itr!=time_values.end();itr++)
@@ -34,7 +38,7 @@ struct State{
 	    return ss.str();
 	}
     ParameterSet* paramset;
-    map<std::string, double> prd_values;
-    map<std::string, int> time_values;
+    std::map<std::string, double> prd_values;
+    std::map<std::string, int> time_values;
 };
 #endif // !STATE_H_

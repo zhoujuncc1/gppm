@@ -2,7 +2,7 @@
 // Created by Zhou Jun on 14/11/16.
 //
 
-#include "../include/miner_utils.h"
+#include "../../include/miner_utils.h"
 #include <sstream>
 #include <random>
 

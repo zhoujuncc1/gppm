@@ -9,13 +9,14 @@ public:
     std::map<std::string, Prd*> map;
     ParameterSet *params;
     virtual void SetUp(){
-        std::string input = std::string("p1:1::\np2:10::");
-        map = parse_prd(input);
+        std::string bltl_input = "p1 & F[k1]G[k2]p2;";
+        std::string prd_input = "p1:26::\np2:26::";
+        map = parse_prd(prd_input);
 
-        bltl= parse_bltl("F[k1]G[k2](p1&p2);");
+        bltl= parse_bltl(bltl_input);
 
         link_prd(bltl, map);
-        params = new ParameterSet(bltl);
+        params = new ParameterSet(bltl, map);
 
 
     }
@@ -35,8 +36,19 @@ TEST_F(MinerTest, InitPrdRange){
     params->init_prd_range();
     printf("%s: %lf, %lf\n", "p1.left", params->all_set["p1.left"]->range.first, params->all_set["p1.left"]->range.second);
     printf("%s: %lf, %lf\n", "p2.left", params->all_set["p2.left"]->range.first, params->all_set["p2.left"]->range.second);
+}
+
+TEST_F(MinerTest, InitTimeRange){
+params->init_time_range();
+ASSERT_NE(params->unknown_time_set.size(), 0);
+ASSERT_EQ(((TimeVariable*)params->all_set["k1"])->range.second, 62);
+ASSERT_EQ(((TimeVariable*)params->all_set["k1"])->range.first, 1);
+ASSERT_EQ(((TimeVariable*)params->all_set["k2"])->range.first, 1);
+ASSERT_EQ(((TimeVariable*)params->all_set["k2"])->range.second, 62);
+
 
 }
+
 
 TEST_F(MinerTest, BuildTree){
     params->parse_constraint_tree("p1.left<p2.right\np2.left>p1.right");
@@ -48,7 +60,7 @@ TEST_F(MinerTest, BuildTree){
 }
 
 TEST_F(MinerTest, ParseWeight){
-params->parse_weight("p1:0.2\nk1:0.3");
+params->parse_weight("p1:0.2\np2:0.2\nk1:0.3\nk2:0.2");
 ASSERT_EQ(params->weights["p1"],0.2);
 ASSERT_EQ(params->weights["k1"],0.3);
 

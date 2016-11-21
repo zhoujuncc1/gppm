@@ -421,7 +421,7 @@ public:
 	}
 private:
 	int varID;
-	double *left, *right
+	double *left, *right;
 };
 
 #endif
