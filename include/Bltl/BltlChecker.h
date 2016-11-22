@@ -23,19 +23,15 @@ public:
 		roots.clear();
 	}
 
-	vector<int> check(vector<Trajectory> trajs){
-		vector<int> sat;
-		for(auto itr = trajs.begin(); itr!= trajs.end(); itr++) {
-			int value = update(itr->m_states[0],0);
-            int i=1;
-			while(value==-1&&i<itr->m_states.size()-1){
-				value=update(itr->m_states[i++],0);
-			}
-			if(value==-1)
-				value=update(itr->m_states[i],1);
-			sat.push_back(value);
+	int check(Trajectory traj){
+		int value = update(traj.m_states[0],0);
+        int i=1;
+		while(value==-1&&i<traj.m_states.size()-1){
+			value=update(traj.m_states[i++],0);
 		}
-		return sat;
+		if(value==-1)
+			value=update(traj.m_states[i],1);
+		return value;
 
 	}
 

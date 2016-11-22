@@ -24,12 +24,10 @@ double modelchecking(State *state){
     vector<int> result;
     while(bayes>BAYES_MIN && bayes < BAYES_MAX && result.size()<=MAX_SIM) {
         BltlChecker bltlchecker(state->paramset->bltl);
-        vector <Trajectory> trajectories;
-        for (int i = 0; i < N_SIM; i++)
-            trajectories.push_back(Model::simulate(1.0));
-        vector<int> temp = bltlchecker.check(trajectories);
-
-        result.insert(result.end(), temp.begin(), temp.end());
+        for (int i = 0; i < N_SIM; i++){
+            Trajectory traj = Model::simulate(1.0);
+            result.push_back(bltlchecker.check(traj));
+        }
         bayes = bayes_factor(result);
     }
     return bayes;
