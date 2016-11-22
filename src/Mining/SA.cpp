@@ -30,8 +30,6 @@ gsl_siman_params_t params
 double sa_loss (void *xp){
     State* state = (State*)xp;
     loss(state);
-    printf("After Loss\n");
-
 }
 
 
