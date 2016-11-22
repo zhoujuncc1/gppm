@@ -27,7 +27,7 @@ public:
 		vector<int> sat;
 		for(auto itr = trajs.begin(); itr!= trajs.end(); itr++) {
 			int value = update(itr->m_states[0],0);
-			int i=1;
+            int i=1;
 			while(value==-1&&i<itr->m_states.size()-1){
 				value=update(itr->m_states[i++],0);
 			}

@@ -37,7 +37,7 @@ TEST_F(BltlTest, BltlParser){
     ASSERT_EQ(bltl->to_string(), "(p1)&(F(G(p2)))");
     ASSERT_NE(bltl->getChild1()->getPrd(),nullptr);
     ASSERT_EQ(bltl->getChild1()->getPrd(), map["p1"]);
-    ASSERT_STREQ(bltl->getChild1()->getTime()->name.c_str(), "k1");
+    ASSERT_STREQ(bltl->getChild2()->getTime()->name.c_str(), "k1");
 
     bltl= parse_bltl("F[k1=10]G[10]p1;");
     ASSERT_STREQ(bltl->getTime()->name.c_str(), "k1");
@@ -68,8 +68,8 @@ ASSERT_FALSE(prd->right->isfix);
 }
 
 TEST_F(BltlTest, WeightSign){
-    ASSERT_EQ(bltl->getTime()->weight_sign, 1.0);
-    ASSERT_EQ(bltl->getChild1()->getTime()->weight_sign, -1.0);
+    ASSERT_EQ(bltl->getChild2()->getChild1()->getTime()->weight_sign, -1.0);
+    ASSERT_EQ(bltl->getChild2()->getTime()->weight_sign, 1.0);
 
 }
 

@@ -1,5 +1,5 @@
 #include "../../include/miner_utils.h"
-#include "../../include/Modelchecking.h"
+#include "../../include/ModelChecking.h"
 #include "../../include/Mining.h"
 #include "../../include/State.h"
 #include <gsl/gsl_siman.h>

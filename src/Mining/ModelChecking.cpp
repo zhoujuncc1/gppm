@@ -20,10 +20,10 @@ double bayes_factor(vector<int> satArray, double theta=0.9, double alpha=1.0, do
 
 double modelchecking(State *state){
     state->assignValues();
-    BltlChecker bltlchecker(state->paramset->bltl);
     double bayes = 1;
     vector<int> result;
     while(bayes>BAYES_MIN && bayes < BAYES_MAX && result.size()<=MAX_SIM) {
+        BltlChecker bltlchecker(state->paramset->bltl);
         vector <Trajectory> trajectories;
         for (int i = 0; i < N_SIM; i++)
             trajectories.push_back(Model::simulate(1.0));
