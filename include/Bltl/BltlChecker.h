@@ -40,7 +40,7 @@ public:
 	}
 
 	int update(state_type levels, int isLast) {
-		roots[nTime]->update(&(levels[0]), isLast);
+		roots[nTime]->update(levels, isLast);
 		int tf = roots[0]->evalNode();
 
 		if (tf == -1) {

@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+typedef std::vector<double> state_type;
 class Node {
 public:
 	Node() {
@@ -64,7 +65,7 @@ public:
 		time = t;
 	}
 
-	virtual void update(double* levels, int isLast) {
+	virtual void update(state_type levels, int isLast) {
 		//printf("-> Update generic node\n");
 		this->isLast = isLast;
 		if (child1)
@@ -398,7 +399,7 @@ public:
 	AtomicNode(int v, double* l, double* r) :
 			varID(v), left(l), right(r) {
 	}
-	void update(double* levels, int isLast) {
+	void update(state_type levels, int isLast) {
 		//printf("--> Update atomic node\n");
 		this->known = 1;
 		if (levels[varID] >= *left && levels[varID] <= *right)

@@ -14,7 +14,7 @@ bltl_test_LDADD = libgtest.la ../src/libbltl.a
 
 bltl_test_LDFLAGS = -pthread
 
-bltl_test_CPPFLAGS = -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
+bltl_test_CPPFLAGS = $(BOOST_CPPFLAGS) -g -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
 
 
 model_test_SOURCES = model_test.cpp ../src/Models/Egfngf.cpp
@@ -23,7 +23,7 @@ model_test_LDADD = libgtest.la
 
 model_test_LDFLAGS = -pthread
 
-model_test_CPPFLAGS = $(BOOST_CPPFLAGS) -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
+model_test_CPPFLAGS = $(BOOST_CPPFLAGS) -g -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
 
 
 miner_test_SOURCES = miner_test.cpp ../src/Mining/ParameterSet.cpp ../src/Mining/miner_utils.cpp ../src/Models/Egfngf.cpp ../include
@@ -32,7 +32,7 @@ miner_test_LDADD = libgtest.la ../src/libbltl.a
 
 miner_test_LDFLAGS = -pthread
 
-miner_test_CPPFLAGS = $(BOOST_CPPFLAGS) -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
+miner_test_CPPFLAGS = $(BOOST_CPPFLAGS) -g -I$(top_srcdir)/gtest/include/ -I$(top_srcdir)/include -pthread
 
 
 

@@ -2,7 +2,6 @@
 #include<ParameterSet.h>
 #include <Bltl/bltl_parser.h>
 #include<miner_utils.h>
-
 class MinerTest : public testing::Test{
 public:
     Bltl* bltl;
