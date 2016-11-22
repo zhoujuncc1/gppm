@@ -61,7 +61,7 @@ void sa_print (void *xp){
     for(auto itr = state->time_values.begin(); itr!=state->time_values.end(); itr++){
         printf("%s: %d,", itr->first.c_str(), itr->second);
     }
-    printf("{\n");
+    printf("}");
 }
 
 void sa_copy (void *source, void *dest){

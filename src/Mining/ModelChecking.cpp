@@ -15,6 +15,8 @@ double bayes_factor(vector<int> satArray, double theta=0.9, double alpha=1.0, do
     double total = satArray.size();
     for(int i =0; i < total; i++)
         safe+=satArray[i];
+    if(safe==0)
+    	return 0;
     return 1.0/gsl_sf_beta_inc(safe + alpha, total - safe + beta, theta)-1;
 }
 
