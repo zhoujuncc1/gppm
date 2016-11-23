@@ -11,6 +11,8 @@
 #include "miner_utils.h"
 #include "ParameterSet.h"
 #include "State.h"
+#include "ModelChecking.h"
+#include "Model.h"
 
 void do_mine(State* state);
 
@@ -23,10 +25,11 @@ public:
         params = new ParameterSet(bltl, prds);
         params->init_prd_range();
         params->init_time_range();
-        if(!constraint_input.empty())
-            params->parse_constraint_tree(constraint_input);
+        params->parse_constraint_tree(constraint_input);
         if(!weight_input.empty())
             params->parse_weight(weight_input);
+        for(int i = 0; i < MAX_SIM; i++)
+            trajectories.push_back(Model::simulate(1.0));
     }
 
 
@@ -34,6 +37,7 @@ public:
         state = new State(params);
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
+        state->trajectories = &trajectories;
         do_mine(state);
 
     }
@@ -41,6 +45,7 @@ public:
     std::map<std::string, Prd*> prds;
     Bltl* bltl;
     ParameterSet* params;
+    std::vector<Trajectory> trajectories;
 
 
 };

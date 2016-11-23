@@ -33,6 +33,18 @@ double sa_loss (void *xp){
 }
 
 
+void sa_print (void *xp){
+    State* state = (State*)xp;
+    printf("{");
+    for(auto itr = state->prd_values.begin(); itr!=state->prd_values.end(); itr++){
+        printf("%s: %f,", itr->first.c_str(), itr->second);
+    }
+    for(auto itr = state->time_values.begin(); itr!=state->time_values.end(); itr++){
+        printf("%s: %d,", itr->first.c_str(), itr->second);
+    }
+    printf("}");
+}
+
 void sa_step(const gsl_rng *r, void *xp, double step_size){
     State* state = (State*)xp;
     state->prd_values=generate_prd(state->paramset->tree_roots);
@@ -52,24 +64,13 @@ double sa_metric (void *xp, void *yp){
     return distance;
 }
 
-void sa_print (void *xp){
-    State* state = (State*)xp;
-    printf("{");
-    for(auto itr = state->prd_values.begin(); itr!=state->prd_values.end(); itr++){
-        printf("%s: %f,", itr->first.c_str(), itr->second);
-    }
-    for(auto itr = state->time_values.begin(); itr!=state->time_values.end(); itr++){
-        printf("%s: %d,", itr->first.c_str(), itr->second);
-    }
-    printf("}");
-}
-
 void sa_copy (void *source, void *dest){
     State* src = (State*) source;
     State* dst = (State*) dest;
     dst->paramset=src->paramset;
     dst->prd_values=src->prd_values;
     dst->time_values=src->time_values;
+    dst->trajectories=src->trajectories;
 }
 
 void * sa_copy_construct (void *xp){

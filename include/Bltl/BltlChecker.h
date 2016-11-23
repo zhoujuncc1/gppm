@@ -12,7 +12,7 @@ using namespace std;
 class BltlChecker {
 public:
 	BltlChecker(Bltl* bltl) {
-		roots.push_back(buildTree(bltl));
+		source = buildTree(bltl);
 		nTime = 0;
 	}
 	~BltlChecker() {
@@ -24,6 +24,9 @@ public:
 	}
 
 	int check(Trajectory traj){
+		roots.clear();
+		roots.push_back(source->duplicate());
+        nTime=0;
 		int value = update(traj.m_states[0],0);
         int i=1;
 		while(value==-1&&i<traj.m_states.size()-1){
@@ -90,8 +93,8 @@ public:
 
 private:
 	vector<Node*> roots;
-	string formulaString;
 	int nTime;
+	Node* source;
 };
 
 #endif // BLTLCHECKER_H

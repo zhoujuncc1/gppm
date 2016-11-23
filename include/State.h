@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 
+class Trajectory;
 class State{
 public:
     State(ParameterSet* params){
@@ -14,6 +15,7 @@ public:
         paramset=src->paramset;
         prd_values = src->prd_values;
         time_values = src->time_values;
+        trajectories = src->trajectories;
     }
     ~State(){
         paramset=NULL;
@@ -40,5 +42,6 @@ public:
     ParameterSet* paramset;
     std::map<std::string, double> prd_values;
     std::map<std::string, int> time_values;
+    std::vector<Trajectory> * trajectories;
 };
 #endif // !STATE_H_
