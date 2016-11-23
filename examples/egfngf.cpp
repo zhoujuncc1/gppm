@@ -14,4 +14,6 @@ int main(int argc, char** argv){
     miner.mine();
     std::cout<<miner.state->to_string();
 
+    return 0;
+
 }

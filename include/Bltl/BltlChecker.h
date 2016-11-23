@@ -32,9 +32,12 @@ public:
 		while(value==-1&&i<traj.m_states.size()-1){
 			value=update(traj.m_states[i++],0);
 		}
-		if(value==-1)
-			value=update(traj.m_states[i],1);
-		return value;
+        if(value==-1)
+            value=update(traj.m_states[i],1);
+        if(value==1)
+            return 1;
+        else
+            return 0;
 
 	}
 

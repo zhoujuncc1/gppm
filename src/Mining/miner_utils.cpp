@@ -59,7 +59,8 @@ double _recursive_generate_prd(Parameter* param, map<string, double> &value_set)
     }
     if (param->range.first>min)
         throw -1;
-    std::default_random_engine generator;
+    std::random_device rd;
+    std::default_random_engine generator(rd());
     std::uniform_real_distribution<double> distribution(param->range.first,min);
     param->value=distribution(generator);
     value_set[param->name]=param->value;
@@ -70,7 +71,8 @@ double _recursive_generate_prd(Parameter* param, map<string, double> &value_set)
 map<string, int> generate_time(map<string, TimeVariable*> params){
     map<string, int> value_set;
     for(auto itr=params.begin(); itr!=params.end(); itr++){
-        std::default_random_engine generator;
+        std::random_device rd;
+        std::default_random_engine generator(rd());
         std::uniform_int_distribution<int> distribution(itr->second->range.first,itr->second->range.second);
             itr->second->value = distribution(generator);
             value_set[itr->first]=itr->second->value;

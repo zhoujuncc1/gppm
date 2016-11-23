@@ -65,7 +65,11 @@ void ParameterSet::init_prd_range() {
                 ranges[i].first = std::min(ranges[i].first, (*itr)[i]);
                 ranges[i].second = std::max(ranges[i].second, (*itr)[i]);
             }
-
+    for (int i = 0; i < Model::N_SPECIES; i++) {
+        double dis = ranges[i].second - ranges[i].first;
+        ranges[i].first -= 0.1 * dis;
+        ranges[i].second += 0.1 * dis;
+    }
     for (auto itr = unknown_prd_set.begin(); itr != unknown_prd_set.end(); itr++)
         itr->second->range = ranges[itr->second->varId];
 
