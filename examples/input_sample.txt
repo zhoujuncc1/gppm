@@ -1,0 +1,11 @@
+<!-- Only constraint is optional-->
+<input>
+    <prd>p1:26::
+    p2:26::</prd>
+    <bltl>p1 & F[k1]G[k2]p2;</bltl>
+    <constraint></constraint>
+    <weight>p1:0.2
+    p2:0.2
+    k1:0.2
+    k2:0.2</weight>
+</input>

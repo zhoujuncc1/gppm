@@ -12,6 +12,7 @@
 #include "../include/Bltl/Parameter.h"
 
 using namespace std;
+
 vector<pair<string, string> > parse_constraint(string str);
 map<string, double> parse_weight(string input);
 map<string, double> generate_prd(vector<Parameter*> constraint_tree);

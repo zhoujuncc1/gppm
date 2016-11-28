@@ -6,6 +6,9 @@
 #define GPPM_MINING_H
 
 #include <string>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/algorithm/string.hpp>
 #include "Bltl/Bltl.h"
 #include "Bltl/bltl_parser.h"
 #include "miner_utils.h"
@@ -13,6 +16,9 @@
 #include "State.h"
 #include "ModelChecking.h"
 #include "Model.h"
+
+namespace pt = boost::property_tree;
+
 
 void do_mine(State* state);
 
@@ -30,6 +36,22 @@ public:
             params->parse_weight(weight_input);
         for(int i = 0; i < MAX_SIM; i++)
             trajectories.push_back(Model::simulate(1.0));
+    }
+
+    Miner(std::string filename){
+        pt::ptree tree;
+        pt::read_xml(filename, tree);
+        std::string bltl_input = tree.get<std::string>("input.bltl");
+        std::string prd_input = tree.get<std::string>("input.prd");
+        std::string constraint_input = tree.get("input.constraint", "");
+        std::string weight_input = tree.get<std::string>("input.weight");
+        boost::erase_all(bltl_input, " ");
+        boost::erase_all(prd_input, " ");
+        boost::erase_all(constraint_input, " ");
+        boost::erase_all(weight_input, " ");
+
+        Miner(prd_input, bltl_input, constraint_input, weight_input);
+
     }
 
 

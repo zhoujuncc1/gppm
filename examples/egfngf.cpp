@@ -3,14 +3,17 @@
 //
 
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "Mining.h"
 
 int main(int argc, char** argv){
-    std::string bltl_input = "p1 & F[k1]G[k2]p2;";
-    std::string prd_input = "p1:26::\np2:26::";
-    std::string constraint_input = "";
-    std::string weight_input = "p1:0.2\np2:0.2\nk1:0.2\nk2:0.2";
-    Miner miner(prd_input, bltl_input, constraint_input, weight_input);
+    if(argc<2){
+        printf("ERROR: must give input file name!\n");
+        exit(1);
+    }
+    std::string filename(argv[1]);
+    Miner miner(filename);
     miner.mine();
     std::cout<<miner.state->to_string();
 
