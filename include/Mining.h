@@ -50,8 +50,17 @@ public:
         boost::erase_all(constraint_input, " ");
         boost::erase_all(weight_input, " ");
 
-        Miner(prd_input, bltl_input, constraint_input, weight_input);
-
+        prds = parse_prd(prd_input);
+        bltl = parse_bltl(bltl_input);
+        link_prd(bltl, prds);
+        params = new ParameterSet(bltl, prds);
+        params->init_prd_range();
+        params->init_time_range();
+        params->parse_constraint_tree(constraint_input);
+        if(!weight_input.empty())
+            params->parse_weight(weight_input);
+        for(int i = 0; i < MAX_SIM; i++)
+            trajectories.push_back(Model::simulate(1.0));
     }
 
 
