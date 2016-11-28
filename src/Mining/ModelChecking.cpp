@@ -40,7 +40,7 @@ double loss(State* state){
         return LOSS_MAX;
     double score = 1.0;
     for(auto itr=state->paramset->unknown_time_set.begin(); itr!=state->paramset->unknown_time_set.end(); itr++)
-        score*=pow(itr->second->value, state->paramset->weights[itr->first]);
+        score*=pow(itr->second->value, state->paramset->weights[itr->first]*itr->second->weight_sign);
     for(auto itr=state->paramset->prds.begin(); itr!=state->paramset->prds.end(); itr++)
         if(!itr->second->left->isfix || !itr->second->right->isfix){
             double distance = itr->second->right->value - itr->second->left->value;

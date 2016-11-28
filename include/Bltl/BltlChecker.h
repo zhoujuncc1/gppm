@@ -23,10 +23,18 @@ public:
 		roots.clear();
 	}
 
-	int check(Trajectory traj){
-		roots.clear();
-		roots.push_back(source->duplicate());
+    void clean(){
+        for (vector<Node*>::iterator it = roots.begin(); it != roots.end();
+             ++it) {
+            delete *it;
+        }
+        roots.clear();
         nTime=0;
+    }
+
+	int check(Trajectory traj){
+		clean();
+		roots.push_back(source->duplicate());
 		int value = update(traj.m_states[0],0);
         int i=1;
 		while(value==-1&&i<traj.m_states.size()-1){
