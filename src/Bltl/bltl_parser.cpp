@@ -11,12 +11,10 @@
 #include <Bltl/Prd.h>
 #include <Bltl/Bltl.h>
 
-std::map<std::string, Prd*> parse_prd(std::string str) {
+std::map<std::string, Prd*> parse_prd(std::vector<std::string> inputs) {
 	std::map<std::string, Prd*> map;
-	std::stringstream ss;
-	ss.str(str);
-	std::string item;
-	while (std::getline(ss, item)) {
+	for(auto input = inputs.begin(); input !=inputs.end(); input++) {
+		std::string item = *input;
 		size_t begin = 0;
 		size_t found = item.find(":");
 		std::string k = item.substr(0, found);

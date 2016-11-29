@@ -31,9 +31,9 @@ class ParameterSet {
     void init_time_range();
 
     //prase to trees where smallest are roots
-    void parse_constraint_tree(std::string input);
+    void parse_constraint_tree(std::vector<std::string> inputs);
 
-    void parse_weight(std::string input);
+    void parse_weight(std::vector<std::string> inputs);
     Bltl* bltl;
 
  private:

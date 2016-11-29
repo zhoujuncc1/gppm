@@ -8,13 +8,10 @@
 
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set);
 
-vector<pair<string, string> > parse_constraint(string str){
+vector<pair<string, string> > parse_constraint(vector<string> inputs){
     vector<pair<string, string> > constraints;
-
-    stringstream ss;
-    ss.str(str);
-    string item;
-    while (getline(ss, item)) {
+    for(auto input = inputs.begin(); input !=inputs.end(); input++) {
+        string item = *input;
         size_t begin = 0;
         size_t found;
         string low, high;

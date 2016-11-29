@@ -83,8 +83,8 @@ void ParameterSet::init_time_range() {
     }
 }
 
-void ParameterSet::parse_constraint_tree(string input) {
-    vector <pair<string, string> > constraints = parse_constraint(input);
+void ParameterSet::parse_constraint_tree(std::vector<std::string> inputs) {
+    vector <pair<string, string> > constraints = parse_constraint(inputs);
     for (auto itr = constraints.begin(); itr != constraints.end(); itr++)
         if (all_set[itr->first]->isfix)
             all_set[itr->second]->range.first = all_set[itr->first]->value;
@@ -100,11 +100,9 @@ void ParameterSet::parse_constraint_tree(string input) {
 
 }
 
-void ParameterSet::parse_weight(string input) {
-    std::stringstream ss;
-    ss.str(input);
-    std::string item;
-    while (std::getline(ss, item)) {
+void ParameterSet::parse_weight(std::vector<std::string> inputs) {
+    for(auto input = inputs.begin(); input !=inputs.end(); input++) {
+        string item = *input;
         size_t begin = 0;
         size_t found = item.find(":");
         std::string k = item.substr(0, found);
