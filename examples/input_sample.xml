@@ -12,4 +12,14 @@
         <weight>k1:0.2</weight>
         <weight>k2:0.2</weight>
     </weights>
+    <config>
+        <N_TRIES>200</N_TRIES>
+        <ITERS_FIXED_T>1000</ITERS_FIXED_T>
+        <STEP_SIZE>1.0</STEP_SIZE>
+        <K>1.0</K>
+        <T_INITIAL>0.008</T_INITIAL>
+        <MU_T>1.003</MU_T>
+        <T_MIN>2.0e-6</T_MIN>
+    </config>
 </input>
+

@@ -23,7 +23,7 @@
 namespace pt = boost::property_tree;
 
 
-void do_mine(State* state);
+void do_mine(State* state, pt::ptree config);
 
 class Miner{
 public:
@@ -68,7 +68,7 @@ public:
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
         state->trajectories = &trajectories;
-        do_mine(state);
+        do_mine(state, input.get_child("input.config"));
 
     }
     pt::ptree input;
