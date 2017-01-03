@@ -1,7 +1,7 @@
 <!-- Only constraint is optional-->
 <!-- Miner can be single or cluster-->
 <input>
-    <miner>cluster</miner>
+    <miner>single</miner>
     <prds>
         <prd>p1:26::</prd>
         <prd>p2:26::</prd>

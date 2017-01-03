@@ -19,18 +19,15 @@
 #include "State.h"
 #include "ModelChecking.h"
 #include "Model.h"
-
+#include "kmeans.h"
 namespace pt = boost::property_tree;
 
 
 void do_mine(State* state, pt::ptree config);
-
 class Miner{
 public:
 
-    Miner(std::string filename){
-        pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);
-
+    Miner(pt::ptree in) : input(in){
         std::string bltl_input = input.get<std::string>("input.bltl");
         std::vector<std::string> prd_inputs;
         BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.prds")) {
@@ -63,14 +60,7 @@ public:
     }
 
 
-    void mine(){
-        state = new State(params);
-        state->prd_values = generate_prd(params->tree_roots);
-        state->time_values = generate_time(params->unknown_time_set);
-        state->trajectories = &trajectories;
-        do_mine(state, input.get_child("input.config"));
-
-    }
+    virtual void mine();
     pt::ptree input;
     State *state;
     std::map<std::string, Prd*> prds;
@@ -80,5 +70,52 @@ public:
 
 
 };
+
+class SingleMiner : Miner{
+public:
+    SingleMiner(pt::ptree input) : Miner(input){}
+    void mine(){
+        state = new State(params);
+        state->prd_values = generate_prd(params->tree_roots);
+        state->time_values = generate_time(params->unknown_time_set);
+        state->trajectories = &trajectories;
+        do_mine(state, input.get_child("input.config"));
+    }
+};
+
+class ClusterMiner : Miner{
+public:
+    ClusterMiner(pt::ptree input) : Miner(input){
+        pt::ptree cluster_conf = input.get_child("input.cluster");
+        input_t = cluster_conf.get<int>("input_t");
+        cluster_t = cluster_conf.get<int>("cluster_t");
+    }
+    void mine(){
+        state = new State(params);
+        state->prd_values = generate_prd(params->tree_roots);
+        state->time_values = generate_time(params->unknown_time_set);
+        state->trajectories = &trajectories;
+        for(i = 0; i < input_t; i++) {
+            state->prd_values = generate_prd(state->paramset->tree_roots);
+            state->time_values = generate_time(state->paramset->unknown_time_set);
+
+        }
+    }
+    int input_t;
+    int cluster_t;
+    vector<Point> points;
+
+};
+
+Miner buildMiner(std::string filename){
+    pt::ptree input;
+    pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);\
+    std::string miner_type = input.get<std::string>("input.miner");
+    if (miner_type.compare("single"))
+        return SingleMiner(input);
+    else if(miner_type.compare("cluster"))
+        return ClusterMiner(input);
+
+}
 
 #endif //GPPM_MINING_H
