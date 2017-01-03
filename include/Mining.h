@@ -45,7 +45,6 @@ public:
             weight_inputs.push_back(v.second.data());
         }
 
-
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
@@ -92,18 +91,46 @@ public:
     }
     void mine(){
         state = new State(params);
+        state->trajectories = &trajectories;
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
-        state->trajectories = &trajectories;
+        std::vector<std::string> prd_keys;
+        std::vector<std::string> time_keys;
+        BOOST_FOREACH(pair<std::string, double> p, prd_values) {
+            prd_keys.push_back(p.first);
+        }
+        BOOST_FOREACH(pair<std::string, int> p, time_values) {
+            time_keys.push_back(p.first);
+        }
+        int length = prd_keys.size()+time_keys.size();
         for(i = 0; i < input_t; i++) {
+            vector<double> values;
+            BOOST_FOREACH(std::string k, prd_keys){
+                values.push(state->prd_values[k]);
+            }
+            BOOST_FOREACH(std::string k, time_keys){
+                values.push(state->time_values[k]);
+            }
+            points.push(Point(i, values));
+        }
+        KMeans kmeans(clusters, input_t, length, 1000);
+	    kmeans.run(points);
+    }
+     _generate_property(State* state){
+        int trials = 0;
+        double bayes = 0
+        do{
             state->prd_values = generate_prd(state->paramset->tree_roots);
             state->time_values = generate_time(state->paramset->unknown_time_set);
-
-        }
+            bayes = modelchecking(state)
+        } while(bayes < BAYES_MAX && trials<1000);
+        if(bayes < BAYES_MAX)
+            exit(1);
+        
     }
     int input_t;
     int cluster_t;
-    vector<Point> points;
+    std::vector<Point> points;
 
 };
 
