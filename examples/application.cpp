@@ -13,7 +13,7 @@ int main(int argc, char** argv){
         exit(1);
     }
     std::string filename(argv[1]);
-    Miner* miner = buildMiner(filename);
+    Miner* miner = MinerBuilder::buildMiner(filename);
     miner->mine();
     std::cout<<miner->state->to_string();
 

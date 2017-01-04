@@ -4,7 +4,8 @@
     <miner>cluster</miner>
     <cluster>
         <input_t>200</input_t>
-        <cluster_t>4</cluster_t>
+        <cluster_time>2</cluster_time>
+        <cluster_prd>4</cluster_prd>
     </cluster>
     <prds>
         <prd>p1:26::</prd>

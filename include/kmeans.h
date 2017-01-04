@@ -133,6 +133,11 @@ public:
 	{
 		return id_cluster;
 	}
+
+	vector<Point>& getPoints(){
+		return points;
+	}
+
 };
 
 class KMeans
@@ -141,6 +146,7 @@ private:
 	int K; // number of clusters
 	int total_values, total_points, max_iterations;
 	vector<Cluster> clusters;
+	vector<int> pivot_values;
 
 	// return ID of nearest center (uses euclidean distance)
 	int getIDNearestCenter(Point point)
@@ -148,10 +154,10 @@ private:
 		double sum = 0.0, min_dist;
 		int id_cluster_center = 0;
 
-		for(int i = 0; i < total_values; i++)
+		for(auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++)
 		{
-			sum += pow(clusters[0].getCentralValue(i) -
-					   point.getValue(i), 2.0);
+			sum += pow(clusters[0].getCentralValue(*itr) -
+					   point.getValue(*itr), 2.0);
 		}
 
 		min_dist = sqrt(sum);
@@ -161,10 +167,10 @@ private:
 			double dist;
 			sum = 0.0;
 
-			for(int j = 0; j < total_values; j++)
+			for(auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++)
 			{
-				sum += pow(clusters[i].getCentralValue(j) -
-						   point.getValue(j), 2.0);
+				sum += pow(clusters[i].getCentralValue(*itr) -
+						   point.getValue(*itr), 2.0);
 			}
 
 			dist = sqrt(sum);
@@ -180,12 +186,17 @@ private:
 	}
 
 public:
-	KMeans(int K, int total_points, int total_values, int max_iterations)
+	KMeans(int K, int total_points, int total_values, vector<int> pivot_values, int max_iterations)
 	{
 		this->K = K;
 		this->total_points = total_points;
+		this->pivot_values = pivot_values;
 		this->total_values = total_values;
 		this->max_iterations = max_iterations;
+	}
+
+	vector<Cluster> getClusters(){
+		return clusters;
 	}
 
 	void run(vector<Point> & points)
@@ -240,7 +251,7 @@ public:
 			// recalculating the center of each cluster
 			for(int i = 0; i < K; i++)
 			{
-				for(int j = 0; j < total_values; j++)
+				for(auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++)
 				{
 					int total_points_cluster = clusters[i].getTotalPoints();
 					double sum = 0.0;
@@ -248,8 +259,8 @@ public:
 					if(total_points_cluster > 0)
 					{
 						for(int p = 0; p < total_points_cluster; p++)
-							sum += clusters[i].getPoint(p).getValue(j);
-						clusters[i].setCentralValue(j, sum / total_points_cluster);
+							sum += clusters[i].getPoint(p).getValue(*itr);
+						clusters[i].setCentralValue(*itr, sum / total_points_cluster);
 					}
 				}
 			}

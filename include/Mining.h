@@ -58,8 +58,8 @@ public:
             trajectories.push_back(Model::simulate(1.0));
     }
 
-
     virtual void mine()=0;
+
     pt::ptree input;
     State *state;
     std::map<std::string, Prd*> prds;
@@ -87,24 +87,31 @@ public:
     ClusterMiner(pt::ptree input) : Miner(input){
         pt::ptree cluster_conf = input.get_child("input.cluster");
         input_t = cluster_conf.get<int>("input_t");
-        cluster_t = cluster_conf.get<int>("cluster_t");
+        cluster_prd = cluster_conf.get<int>("cluster_prd");
+        cluster_time = cluster_conf.get<int>("cluster_time");
+
     }
     void mine(){
         state = new State(params);
         state->trajectories = &trajectories;
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
-        std::vector<std::string> prd_keys;
-        std::vector<std::string> time_keys;
+        std::vector<std::string> prd_keys, time_keys;
+        std::vector<int> prd_index, time_index;
+
+        int length = 0;
         for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
             prd_keys.push_back(it->first);
+            prd_index.push_back(length++);
         }
         for (auto it=state->time_values.begin(); it!=state->time_values.end(); ++it) {
             time_keys.push_back(it->first);
+            time_index.push_back(length++);
         }
-        int length = prd_keys.size()+time_keys.size();
+
         for(int i = 0; i < input_t; i++) {
             vector<double> values;
+            _generate_property(state);
             BOOST_FOREACH(std::string k, prd_keys){
                 values.push_back(state->prd_values[k]);
             }
@@ -113,8 +120,20 @@ public:
             }
             points.push_back(Point(i, values));
         }
-        KMeans kmeans(cluster_t, input_t, length, 1000);
+        KMeans kmeans(cluster_prd, input_t, length, prd_index, 1000);
 	    kmeans.run(points);
+        
+        cout << "======================================" << "\n";
+        cout << "======================================" << "\n";
+
+        for(int i = 0; i < cluster_prd; i++){
+            cout << "Cluster " << i+1 <<"\n";
+            cout << "======================================" << "\n";
+            KMeans sub_kmeans(cluster_time, kmeans.getClusters()[i].getTotalPoints(), length, time_index, 1000);
+            sub_kmeans.run(kmeans.getClusters()[i].getPoints());
+        }
+
+
     }
     void _generate_property(State* state){
         int trials = 0;
@@ -129,20 +148,23 @@ public:
         
     }
     int input_t;
-    int cluster_t;
+    int cluster_time, cluster_prd;
     std::vector<Point> points;
 
 };
 
-Miner* buildMiner(std::string filename){
+class MinerBuilder{
+public:
+	static Miner* buildMiner(std::string filename){
     pt::ptree input;
     pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);\
     std::string miner_type = input.get<std::string>("input.miner");
-    if (miner_type.compare("single"))
+    if (miner_type.compare("single")==0)
         return new SingleMiner(input);
-    else if(miner_type.compare("cluster"))
+    else if(miner_type.compare("cluster")==0)
         return new ClusterMiner(input);
-}
+	}
+};
 
 
 
