@@ -79,4 +79,3 @@ map<string, int> generate_time(map<string, TimeVariable*> params){
 }
 
 
-

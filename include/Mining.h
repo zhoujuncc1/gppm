@@ -59,7 +59,7 @@ public:
     }
 
 
-    virtual void mine();
+    virtual void mine()=0;
     pt::ptree input;
     State *state;
     std::map<std::string, Prd*> prds;
@@ -70,7 +70,7 @@ public:
 
 };
 
-class SingleMiner : Miner{
+class SingleMiner : public Miner{
 public:
     SingleMiner(pt::ptree input) : Miner(input){}
     void mine(){
@@ -82,7 +82,7 @@ public:
     }
 };
 
-class ClusterMiner : Miner{
+class ClusterMiner : public Miner{
 public:
     ClusterMiner(pt::ptree input) : Miner(input){
         pt::ptree cluster_conf = input.get_child("input.cluster");
@@ -96,33 +96,33 @@ public:
         state->time_values = generate_time(params->unknown_time_set);
         std::vector<std::string> prd_keys;
         std::vector<std::string> time_keys;
-        BOOST_FOREACH(pair<std::string, double> p, prd_values) {
-            prd_keys.push_back(p.first);
+        for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
+            prd_keys.push_back(it->first);
         }
-        BOOST_FOREACH(pair<std::string, int> p, time_values) {
-            time_keys.push_back(p.first);
+        for (auto it=state->time_values.begin(); it!=state->time_values.end(); ++it) {
+            time_keys.push_back(it->first);
         }
         int length = prd_keys.size()+time_keys.size();
-        for(i = 0; i < input_t; i++) {
+        for(int i = 0; i < input_t; i++) {
             vector<double> values;
             BOOST_FOREACH(std::string k, prd_keys){
-                values.push(state->prd_values[k]);
+                values.push_back(state->prd_values[k]);
             }
             BOOST_FOREACH(std::string k, time_keys){
-                values.push(state->time_values[k]);
+                values.push_back(state->time_values[k]);
             }
-            points.push(Point(i, values));
+            points.push_back(Point(i, values));
         }
-        KMeans kmeans(clusters, input_t, length, 1000);
+        KMeans kmeans(cluster_t, input_t, length, 1000);
 	    kmeans.run(points);
     }
-     _generate_property(State* state){
+    void _generate_property(State* state){
         int trials = 0;
-        double bayes = 0
+        double bayes = 0;
         do{
             state->prd_values = generate_prd(state->paramset->tree_roots);
             state->time_values = generate_time(state->paramset->unknown_time_set);
-            bayes = modelchecking(state)
+            bayes = modelchecking(state);
         } while(bayes < BAYES_MAX && trials<1000);
         if(bayes < BAYES_MAX)
             exit(1);
@@ -134,15 +134,16 @@ public:
 
 };
 
-Miner buildMiner(std::string filename){
+Miner* buildMiner(std::string filename){
     pt::ptree input;
     pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);\
     std::string miner_type = input.get<std::string>("input.miner");
     if (miner_type.compare("single"))
-        return SingleMiner(input);
+        return new SingleMiner(input);
     else if(miner_type.compare("cluster"))
-        return ClusterMiner(input);
-
+        return new ClusterMiner(input);
 }
+
+
 
 #endif //GPPM_MINING_H

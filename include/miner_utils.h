@@ -11,9 +11,13 @@
 #include "../include/Bltl/TimeVariable.h"
 #include "../include/Bltl/Parameter.h"
 
+
+
+
 using namespace std;
 
 vector<pair<string, string> > parse_constraint(vector<string> inputs);
 map<string, double> generate_prd(vector<Parameter*> constraint_tree);
 map<string, int> generate_time(map<string, TimeVariable*> params);
+
 #endif //MINER_UTILS_H
