@@ -6,7 +6,12 @@
 #include <sstream>
 #include <random>
 
+std::random_device rd;
+std::default_random_engine generator(rd());
+std::uniform_int_distribution<int> distribution(0, RESOLUTION);
+
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set);
+double _generate_real(double min, double max);
 
 vector<pair<string, string> > parse_constraint(vector<string> inputs){
     vector<pair<string, string> > constraints;
@@ -56,10 +61,7 @@ double _recursive_generate_prd(Parameter* param, map<string, double> &value_set)
     }
     if (param->range.first>min)
         throw -1;
-    std::random_device rd;
-    std::default_random_engine generator(rd());
-    std::uniform_real_distribution<double> distribution(param->range.first,min);
-    param->value=distribution(generator);
+    param->value=_generate_real(param->range.first,min);
     value_set[param->name]=param->value;
     return param->value;
 }
@@ -79,3 +81,6 @@ map<string, int> generate_time(map<string, TimeVariable*> params){
 }
 
 
+double _generate_real(double min, double max){
+    return min+(max-min)/RESOLUTION*distribution(generator);
+}
