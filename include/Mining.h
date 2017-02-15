@@ -12,8 +12,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
-#include <omp.h>
-
 #include "Bltl/Bltl.h"
 #include "Bltl/bltl_parser.h"
 #include "miner_utils.h"
@@ -99,6 +97,75 @@ public:
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
         std::vector<std::string> prd_keys, time_keys;
+        std::vector<int> prd_index, time_index;
+
+        int length = 0;
+        for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
+            prd_keys.push_back(it->first);
+            prd_index.push_back(length++);
+        }
+        for (auto it=state->time_values.begin(); it!=state->time_values.end(); ++it) {
+            time_keys.push_back(it->first);
+            time_index.push_back(length++);
+        }
+
+        for(int i = 0; i < input_t; i++) {
+            vector<double> values;
+            _generate_property(state);
+            BOOST_FOREACH(std::string k, prd_keys){
+                values.push_back(state->prd_values[k]);
+            }
+            BOOST_FOREACH(std::string k, time_keys){
+                values.push_back(state->time_values[k]);
+            }
+            points.push_back(Point(i, values));
+        }
+        KMeans kmeans(cluster_prd, input_t, length, prd_index, 1000);
+	    kmeans.run(points);
+        
+        cout << "======================================" << "\n";
+        cout << "======================================" << "\n";
+
+        for(int i = 0; i < cluster_prd; i++){
+            cout << "Cluster " << i+1 <<"\n";
+            cout << "======================================" << "\n";
+            KMeans sub_kmeans(cluster_time, kmeans.getClusters()[i].getTotalPoints(), length, time_index, 1000);
+            sub_kmeans.run(kmeans.getClusters()[i].getPoints());
+        }
+
+
+    }
+    void _generate_property(State* state){
+        int trials = 0;
+        double bayes = 0;
+        do{
+            state->prd_values = generate_prd(state->paramset->tree_roots);
+            state->time_values = generate_time(state->paramset->unknown_time_set);
+            bayes = modelchecking(state);
+        } while(bayes < BAYES_MAX && trials<1000);
+        if(bayes < BAYES_MAX)
+            exit(1);
+        
+    }
+    int input_t;
+    int cluster_time, cluster_prd;
+    std::vector<Point> points;
+
+};
+
+/*
+#include <omp.h>
+class ParallelClusterMiner : public ClusterMiner{
+public:
+    ParallelClusterMiner(pt::ptree input) {
+        ClusterMiner(input);
+    }
+    void mine(){
+        state = new State(params);
+        state->trajectories = &trajectories;
+        state->prd_values = generate_prd(params->tree_roots);
+        state->time_values = generate_time(params->unknown_time_set);
+        std::vector<std::string> prd_keys, time_keys;
         std::vector<int> prd_index, time_index, all_index;
 
         int length = 0;
@@ -136,7 +203,7 @@ public:
 
         KMeans kmeans(cluster_time, input_t, length, time_index, 1000);
 	    kmeans.run(points);
-        /*
+        
         cout << "======================================" << "\n";
         cout << "======================================" << "\n";
 
@@ -146,28 +213,14 @@ public:
             KMeans sub_kmeans(cluster_prd, kmeans.getClusters()[i].getTotalPoints(), length, prd_index, 1000);
             sub_kmeans.run(kmeans.getClusters()[i].getPoints());
         }
-        */
-
-
-    }
-    void _generate_property(State* state){
-        int trials = 0;
-        double bayes = 0;
-        do{
-            state->prd_values = generate_prd(state->paramset->tree_roots);
-            state->time_values = generate_time(state->paramset->unknown_time_set);
-            bayes = modelchecking(state);
-        } while(bayes < BAYES_MAX && trials<1000);
-        if(bayes < BAYES_MAX)
-            exit(1);
         
+
+
     }
-    int input_t;
-    int cluster_time, cluster_prd;
-    std::vector<Point> points;
+
 
 };
-
+*/
 
 
 class MinerBuilder{

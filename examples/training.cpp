@@ -17,10 +17,6 @@ int main(int argc, char** argv){
     std::string outfilename(argv[2]);
 
     Miner* miner = MinerBuilder::buildMiner(infilename);
-    for(int i =2; i < argc; i+=2){
-        std::string key(argv[i]);
-        miner->params->weights[key] = atof(argv[i+1]);
-    }
     miner->mine();
     
     ofstream myfile;
