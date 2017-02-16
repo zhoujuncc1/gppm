@@ -31,13 +31,13 @@ public:
 
     std::string to_string() {
 	    std::stringstream ss;
-	    ss<<"{";
 	    for(auto itr=prd_values.begin();itr!=prd_values.end();itr++)
-	        ss<<itr->first<<": "<<itr->second<<", ";
+	        ss<<"\'"<<itr->first<<"\'"<<": "<<itr->second<<", ";
 	    for(auto itr=time_values.begin();itr!=time_values.end();itr++)
-	        ss<<itr->first<<": "<<itr->second<<", ";
-	    ss<<"}";
-	    return ss.str();
+	        ss<<"\'"<<itr->first<<"\'"<<": "<<itr->second<<", ";
+        std::string str = ss.str();
+        str.pop_back();
+	    return '{'+str+'}';
 	}
     ParameterSet* paramset;
     std::map<std::string, double> prd_values;
