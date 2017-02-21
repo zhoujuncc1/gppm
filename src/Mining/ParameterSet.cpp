@@ -43,27 +43,36 @@ void ParameterSet::init_traj_ranges(){
                 ranges[i].second = std::max(ranges[i].second, (*itr)[i]);
                 t_min[i] = std::min(t_min[i], (*itr)[i]);
                 t_max[i] = std::max(t_max[i], (*itr)[i]);
-
             }
-        for (int i = 0; i < Model::N_SPECIES; i++){
-            min[i].first = std::min(min[i].first, t_min[i]);
-            min[i].second = std::max(min[i].second, t_min[i]);
-            max[i].first = std::min(max[i].first, t_max[i]);
-            max[i].second = std::max(max[i].second, t_max[i]);
-        }
+        if(j == 0)
+            for (int i = 0; i < Model::N_SPECIES; i++){
+                min[i].first = t_min[i];
+                min[i].second = t_min[i];
+                max[i].first = t_max[i];
+                max[i].second = t_max[i];
+            }
+        else
+            for (int i = 0; i < Model::N_SPECIES; i++){
+                min[i].first = std::min(min[i].first, t_min[i]);
+                min[i].second = std::max(min[i].second, t_min[i]);
+                max[i].first = std::min(max[i].first, t_max[i]);
+                max[i].second = std::max(max[i].second, t_max[i]);
+            }
     }
     for (int i = 0; i < Model::N_SPECIES; i++) {
         double dis = ranges[i].second - ranges[i].first;
         ranges[i].first -= 0.1 * dis;
         ranges[i].second += 0.1 * dis;
 
+
         dis = min[i].second - min[i].first;
-        min[i].first -= 0.1 * dis;
-        min[i].second += 0.1 * dis;
+        min[i].first -= 0.2 * dis;
+        min[i].second += 0.2 * dis;
 
         dis = max[i].second - max[i].first;
-        max[i].first -= 0.1 * dis;
-        max[i].second += 0.1 * dis;
+        max[i].first -= 0.2 * dis;
+        max[i].second += 0.2 * dis;
+
     }
 }
 void ParameterSet::resolveFlags(std::map<std::string, Prd*> prds){

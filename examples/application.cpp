@@ -13,10 +13,11 @@ int main(int argc, char** argv){
     }
     string filename(argv[1]);
     vector<Miner*> miners = MinerBuilder::buildMiner(filename);
-    for(auto itr = miners.begin(); itr!=miners.end(); itr++){
+    for(auto itr = miners.begin(); itr!=miners.end(); itr++)
         (*itr)->mine();
-        cout<<(*itr)->state->to_string()<<endl;
-    }
+    for(auto itr = miners.begin(); itr!=miners.end(); itr++)
+        cout<<(*itr)->to_string()<<endl;
+
 
     return 0;
 

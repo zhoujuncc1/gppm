@@ -50,6 +50,21 @@ public:
             mineGeneral();
     }
 
+    string to_string(){
+	    std::stringstream ss;
+	    ss<<"{";
+	    for(auto itr=params->known_prd_set.begin();itr!=params->known_prd_set.end();itr++)
+	        ss<<itr->first<<": "<<itr->second->value<<", ";
+        for(auto itr=params->known_time_set.begin();itr!=params->known_time_set.end();itr++)
+	        ss<<itr->first<<": "<<itr->second->value<<", ";
+        for(auto itr=params->unknown_prd_set.begin();itr!=params->unknown_prd_set.end();itr++)
+            ss<<itr->first<<": "<<state->prd_values[itr->first]<<", ";
+        for(auto itr=params->unknown_time_set.begin();itr!=params->unknown_time_set.end();itr++)
+	        ss<<itr->first<<": "<<state->time_values[itr->first]<<", ";
+	    ss<<"}";
+	    return ss.str();
+    }
+
     void minePrd(){
         state = new State(params);
         state->trajectories = &trajectories;
