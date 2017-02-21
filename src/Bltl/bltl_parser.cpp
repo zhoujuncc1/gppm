@@ -25,9 +25,15 @@ std::map<std::string, Prd*> parse_prd(std::vector<std::string> inputs) {
 
 		begin = found + 1;
 		found = item.find(":", begin);
-		std::string l = item.substr(begin, found-begin);
-		std::string r = item.substr(found+1);
-		map[k]=new Prd(k,v,l,r);
+		if(found == std::string::npos){
+			std::string flag = item.substr(begin);
+			map[k] = new Prd(k,v, flag);
+		}
+		else{
+			std::string l = item.substr(begin, found-begin);
+			std::string r = item.substr(found+1);
+			map[k]=new Prd(k,v,l,r);
+		}
 	}
 	return map;
 }

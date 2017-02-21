@@ -13,7 +13,6 @@
 class ParameterSet {
  public:
     ParameterSet(Bltl* bltl, std::map<std::string, Prd*> prds);
-    virtual ~ParameterSet();
 
     std::map<std::string, Parameter*> unknown_prd_set;
     std::map<std::string, Parameter*> known_prd_set;
@@ -21,7 +20,6 @@ class ParameterSet {
     std::map<std::string, TimeVariable*> known_time_set;
     std::map<std::string, Parameter*> all_set;
 
-    std::vector<std::pair<double, double> > ranges;
     //Smallest are roots
     std::vector<Parameter*> tree_roots;
     std::map<std::string, double> weights;
@@ -37,7 +35,14 @@ class ParameterSet {
     Bltl* bltl;
 
  private:
+
+    std::vector<std::pair<double, double> > ranges;
+    std::vector<std::pair<double, double> > min;
+    std::vector<std::pair<double, double> > max;
+    
+    void init_traj_ranges();
     void findParameters(Bltl* bltl);
+    void resolveFlags(std::map<std::string, Prd*> prds);
 };
 
 #endif /* SRC_PARAMETERSET_H_ */

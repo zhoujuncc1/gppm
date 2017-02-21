@@ -22,28 +22,13 @@
 #include "kmeans.h"
 namespace pt = boost::property_tree;
 
-
+using namespace std;
 void do_mine(State* state, pt::ptree config);
 class Miner{
 public:
 
-    Miner(pt::ptree in) : input(in){
-        std::string bltl_input = input.get<std::string>("input.bltl");
-        std::vector<std::string> prd_inputs;
-        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.prds")) {
-            // The data function is used to access the data stored in a node.
-            prd_inputs.push_back(v.second.data());
-        }
-        std::vector<std::string> constraint_inputs;
-        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.constraints")) {
-            // The data function is used to access the data stored in a node.
-            constraint_inputs.push_back(v.second.data());
-        }
-        std::vector<std::string> weight_inputs;
-        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.weights")) {
-            // The data function is used to access the data stored in a node.
-            weight_inputs.push_back(v.second.data());
-        }
+    Miner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : input(in){
+        
 
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
@@ -58,22 +43,50 @@ public:
             trajectories.push_back(Model::simulate(1.0));
     }
 
-    virtual void mine()=0;
+    void mine(){
+        if(bltl->getOperation()==op_PRD)
+            minePrd();
+        else
+            mineGeneral();
+    }
+
+    void minePrd(){
+        state = new State(params);
+        state->trajectories = &trajectories;
+        state->prd_values = generate_prd(params->tree_roots);
+        state->time_values = generate_time(params->unknown_time_set);
+        double min,max;
+        min=trajectories[0].m_states[0][bltl->getPrd()->varId];
+        max=trajectories[0].m_states[0][bltl->getPrd()->varId];
+        for(auto itr = trajectories.begin(); itr!=trajectories.end(); itr++){
+            if (min>itr->m_states[0][bltl->getPrd()->varId])
+                min=itr->m_states[0][bltl->getPrd()->varId];
+            if (max<itr->m_states[0][bltl->getPrd()->varId])
+                max=itr->m_states[0][bltl->getPrd()->varId];
+        }
+        for(auto itr = state->prd_values.begin(); itr!=state->prd_values.end(); itr++)
+            if(itr->first.find("left")!=string::npos)
+                itr->second=min;
+            else
+                itr->second=max;
+    }
+    virtual void mineGeneral()=0;
+
 
     pt::ptree input;
     State *state;
-    std::map<std::string, Prd*> prds;
+    map<string, Prd*> prds;
     Bltl* bltl;
     ParameterSet* params;
-    std::vector<Trajectory> trajectories;
+    vector<Trajectory> trajectories;
 
 
 };
 
 class SingleMiner : public Miner{
 public:
-    SingleMiner(pt::ptree input) : Miner(input){}
-    void mine(){
+    SingleMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : Miner(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs){}
+    void mineGeneral(){
         state = new State(params);
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
@@ -84,20 +97,20 @@ public:
 
 class ClusterMiner : public Miner{
 public:
-    ClusterMiner(pt::ptree input) : Miner(input){
+    ClusterMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : Miner(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs){
         pt::ptree cluster_conf = input.get_child("input.cluster");
         input_t = cluster_conf.get<int>("input_t");
         cluster_prd = cluster_conf.get<int>("cluster_prd");
         cluster_time = cluster_conf.get<int>("cluster_time");
 
     }
-    void mine(){
+    void mineGeneral(){
         state = new State(params);
         state->trajectories = &trajectories;
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
-        std::vector<std::string> prd_keys, time_keys;
-        std::vector<int> prd_index, time_index;
+        vector<string> prd_keys, time_keys;
+        vector<int> prd_index, time_index;
 
         int length = 0;
         for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
@@ -112,10 +125,10 @@ public:
         for(int i = 0; i < input_t; i++) {
             vector<double> values;
             _generate_property(state);
-            BOOST_FOREACH(std::string k, prd_keys){
+            BOOST_FOREACH(string k, prd_keys){
                 values.push_back(state->prd_values[k]);
             }
-            BOOST_FOREACH(std::string k, time_keys){
+            BOOST_FOREACH(string k, time_keys){
                 values.push_back(state->time_values[k]);
             }
             points.push_back(Point(i, values));
@@ -149,7 +162,7 @@ public:
     }
     int input_t;
     int cluster_time, cluster_prd;
-    std::vector<Point> points;
+    vector<Point> points;
 
 };
 
@@ -165,8 +178,8 @@ public:
         state->trajectories = &trajectories;
         state->prd_values = generate_prd(params->tree_roots);
         state->time_values = generate_time(params->unknown_time_set);
-        std::vector<std::string> prd_keys, time_keys;
-        std::vector<int> prd_index, time_index, all_index;
+        vector<string> prd_keys, time_keys;
+        vector<int> prd_index, time_index, all_index;
 
         int length = 0;
         for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
@@ -188,10 +201,10 @@ public:
         for(int i = 0; i < input_t; i++) {
             vector<double> values;
             _generate_property(state);
-            BOOST_FOREACH(std::string k, prd_keys){
+            BOOST_FOREACH(string k, prd_keys){
                 values.push_back(state->prd_values[k]);
             }
-            BOOST_FOREACH(std::string k, time_keys){
+            BOOST_FOREACH(string k, time_keys){
                 values.push_back(state->time_values[k]);
             }
             omp_set_lock(&writelock);
@@ -225,15 +238,44 @@ public:
 
 class MinerBuilder{
 public:
-	static Miner* buildMiner(std::string filename){
-    pt::ptree input;
-    pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);\
-    std::string miner_type = input.get<std::string>("input.miner");
-    if (miner_type.compare("single")==0)
-        return new SingleMiner(input);
-    else if(miner_type.compare("cluster")==0)
-        return new ClusterMiner(input);
+	static vector<Miner*> buildMiner(string filename){
+        vector<Miner*> miners;
+        pt::ptree input;
+        pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);
+
+        vector<string> bltl_inputs;
+        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.bltls")) {
+            // The data function is used to access the data stored in a node.
+            bltl_inputs.push_back(v.second.data());
+        }
+        vector<string> prd_inputs;
+        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.prds")) {
+            // The data function is used to access the data stored in a node.
+            prd_inputs.push_back(v.second.data());
+        }
+        vector<string> constraint_inputs;
+        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.constraints")) {
+            // The data function is used to access the data stored in a node.
+            constraint_inputs.push_back(v.second.data());
+        }
+        vector<string> weight_inputs;
+        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.weights")) {
+            // The data function is used to access the data stored in a node.
+            weight_inputs.push_back(v.second.data());
+        }
+
+        string miner_type = input.get<string>("input.miner");
+        if (miner_type.compare("single")==0)
+            for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+                miners.push_back(new SingleMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
+        else if(miner_type.compare("cluster")==0)
+            for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+                miners.push_back(new ClusterMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
+        
+        return miners;
+
 	}
+
 };
 
 

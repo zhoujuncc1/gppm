@@ -4,14 +4,17 @@
     <miner>cluster</miner>
     <cluster>
         <input_t>200</input_t>
-        <cluster_time>2</cluster_time>
-        <cluster_prd>4</cluster_prd>
+        <cluster_time>4</cluster_time>
+        <cluster_prd>2</cluster_prd>
     </cluster>
     <prds>
         <prd>p1:26::</prd>
         <prd>p2:26::</prd>
     </prds>
-    <bltl>p1 & F[k1]G[k2]p2;</bltl>
+    <bltls> <!-- bltls are connected with conjunction-->
+        <bltl>p1</bltl>
+        <bltl>F[k1]G[k2]p2</bltl>
+    </bltls>
     <constraints></constraints>
     <weights>
         <weight>p1:0.2</weight>

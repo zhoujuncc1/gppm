@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
 #include "Mining.h"
 
 int main(int argc, char** argv){
@@ -12,10 +11,12 @@ int main(int argc, char** argv){
         printf("ERROR: must give input file name!\n");
         exit(1);
     }
-    std::string filename(argv[1]);
-    Miner* miner = MinerBuilder::buildMiner(filename);
-    miner->mine();
-    std::cout<<miner->state->to_string();
+    string filename(argv[1]);
+    vector<Miner*> miners = MinerBuilder::buildMiner(filename);
+    for(auto itr = miners.begin(); itr!=miners.end(); itr++){
+        (*itr)->mine();
+        cout<<(*itr)->state->to_string()<<endl;
+    }
 
     return 0;
 

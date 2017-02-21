@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
 #include "Mining.h"
 
 
@@ -16,13 +15,16 @@ int main(int argc, char** argv){
     std::string infilename(argv[1]);
     std::string outfilename(argv[2]);
 
-    Miner* miner = MinerBuilder::buildMiner(infilename);
-    miner->mine();
+    vector<Miner*> miners = MinerBuilder::buildMiner(infilename);
+    for(auto itr = miners.begin(); itr!=miners.end(); itr++){
+        (*itr)->mine();
+        ofstream myfile;
+        myfile.open (outfilename);
+        myfile<<(*itr)->state->to_string()<<endl;
+        myfile.close();
+    }
     
-    ofstream myfile;
-    myfile.open (outfilename);
-    myfile<<miner->state->to_string();
-    myfile.close();
+    
 
     return 0;
 
