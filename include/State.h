@@ -1,6 +1,7 @@
 #ifndef STATE_H_
 #define STATE_H_
 #include "ParameterSet.h"
+#include "Bltl/BltlChecker.h"
 #include <map>
 #include <string>
 #include <sstream>
@@ -16,6 +17,7 @@ public:
         prd_values = src->prd_values;
         time_values = src->time_values;
         trajectories = src->trajectories;
+        bltlChecker = src->bltlChecker;
     }
     ~State(){
         paramset=NULL;
@@ -43,5 +45,6 @@ public:
     std::map<std::string, double> prd_values;
     std::map<std::string, int> time_values;
     std::vector<Trajectory> * trajectories;
+    BltlChecker* bltlChecker;
 };
 #endif // !STATE_H_

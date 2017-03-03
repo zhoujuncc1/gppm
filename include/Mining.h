@@ -41,9 +41,16 @@ public:
             params->parse_weight(weight_inputs);
         for(int i = 0; i < MAX_SIM; i++)
             trajectories.push_back(Model::simulate(1.0));
+        bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
     }
 
     void mine(){
+        state = new State(params);
+        state->prd_values = generate_prd(params->tree_roots);
+        state->time_values = generate_time(params->unknown_time_set);
+        state->trajectories = &trajectories;
+        state->bltlChecker=bltlChecker;
+
         if(bltl->getOperation()==op_PRD)
             minePrd();
         else
@@ -66,10 +73,6 @@ public:
     }
 
     void minePrd(){
-        state = new State(params);
-        state->trajectories = &trajectories;
-        state->prd_values = generate_prd(params->tree_roots);
-        state->time_values = generate_time(params->unknown_time_set);
         double min,max;
         min=trajectories[0].m_states[0][bltl->getPrd()->varId];
         max=trajectories[0].m_states[0][bltl->getPrd()->varId];
@@ -94,6 +97,7 @@ public:
     Bltl* bltl;
     ParameterSet* params;
     vector<Trajectory> trajectories;
+    BltlChecker* bltlChecker;
 
 
 };
@@ -102,10 +106,6 @@ class SingleMiner : public Miner{
 public:
     SingleMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : Miner(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs){}
     void mineGeneral(){
-        state = new State(params);
-        state->prd_values = generate_prd(params->tree_roots);
-        state->time_values = generate_time(params->unknown_time_set);
-        state->trajectories = &trajectories;
         do_mine(state, input.get_child("input.config"));
     }
 };
@@ -120,10 +120,6 @@ public:
 
     }
     void mineGeneral(){
-        state = new State(params);
-        state->trajectories = &trajectories;
-        state->prd_values = generate_prd(params->tree_roots);
-        state->time_values = generate_time(params->unknown_time_set);
         vector<string> prd_keys, time_keys;
         vector<int> prd_index, time_index;
 

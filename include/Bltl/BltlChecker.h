@@ -4,18 +4,102 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "Node.h"
 #include "TimeVariable.h"
 #include "../Model.h"
+#include "Bltl.h"
+#include "Prd.h"
 using namespace std;
 
-class BltlChecker {
+class BltlChecker{
 public:
-	BltlChecker(Bltl* bltl) {
+	BltlChecker(Bltl* bltl){}
+	virtual ~BltlChecker(){}
+	virtual int check(Trajectory traj)=0;
+
+	Bltl* bltl;
+	map<string, Prd*> prds;
+};
+
+class RecursiveBltlChecker: public BltlChecker{
+public:
+	RecursiveBltlChecker(Bltl* bltl, map<string, Prd*> prds, Trajectory traj):BltlChecker(bltl){
+		this->prds=prds;
+		for(auto prd_itr = prds.begin(); prd_itr!=prds.end(); prd_itr++)
+				values[prd_itr->first] = (bool*)malloc(traj.m_states.size()*sizeof(bool));
+	}
+
+	virtual ~RecursiveBltlChecker(){
+		for(auto itr = values.begin(); itr!=values.end(); itr++)
+		 delete (itr->second);
+	}
+
+	virtual int check(Trajectory traj){
+		eval_prds(traj);
+		return eval_formula(bltl, 0);
+	}
+
+private:
+	map<string, bool*> values;
+	void eval_prds(Trajectory traj){
+		for(auto prd_itr = prds.begin(); prd_itr!=prds.end(); prd_itr++){
+			Prd* prd = prd_itr->second;
+			bool *value_arr = values[prd_itr->first];
+			for(int i = 0 ; i< traj.m_states.size(); i++){
+				value_arr[i]=traj.m_states[i][prd->varId]>prd->left->value && traj.m_states[i][prd->varId]<prd->right->value;
+			}
+		}
+	}
+	bool eval_formula(Bltl* bltl, int t){
+		switch(bltl->getOperation()){
+			case op_F:
+				return eval_F(bltl, t, bltl->getTime()->value);
+			case op_G:
+				return eval_G(bltl, t, bltl->getTime()->value);
+			case op_U:
+				return eval_U(bltl, t, bltl->getTime()->value);
+			case op_X:
+				return eval_formula(bltl, t+1);
+			case op_NOT:
+				return !eval_formula(bltl, t);
+			case op_AND:
+				return eval_formula(bltl->getChild1(), t) && eval_formula(bltl->getChild2(), t);
+			case op_OR:
+				return eval_formula(bltl->getChild1(), t) || eval_formula(bltl->getChild2(), t);
+			case op_PRD:
+				return values[bltl->getPrdName()][t];
+		}
+	}
+
+	bool eval_F(Bltl* bltl, int t, int temp){
+		if (temp == 0)
+        	return false;
+		else
+			return eval_formula(bltl->getChild1(), t) || eval_F(bltl, t + 1, temp-1);
+	}
+	bool eval_G(Bltl* bltl, int t, int temp){
+		if (temp == 0)
+        	return true;
+		else
+			return eval_formula(bltl->getChild1(), t) && eval_F(bltl, t + 1, temp-1);
+	}
+
+	bool eval_U(Bltl* bltl, int t, int temp){
+		if(temp == 0)
+        	return true;
+		else
+			return eval_formula(bltl->getChild2(), t) || (eval_formula(bltl->getChild1(), t) and eval_U(bltl, t + 1, temp-1));
+	}
+};
+
+class TreeBltlChecker : public BltlChecker{
+public:
+	TreeBltlChecker(Bltl* bltl) : BltlChecker(bltl){
 		source = buildTree(bltl);
 		nTime = 0;
 	}
-	~BltlChecker() {
+	virtual ~TreeBltlChecker() {
 		for (vector<Node*>::iterator it = roots.begin(); it != roots.end();
 				++it) {
 			delete *it;
@@ -32,7 +116,7 @@ public:
         nTime=0;
     }
 
-	int check(Trajectory traj){
+	virtual int check(Trajectory traj){
 		clean();
 		roots.push_back(source->duplicate());
 		int value = update(traj.m_states[0],0);
