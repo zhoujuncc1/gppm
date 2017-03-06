@@ -13,7 +13,8 @@
 
 #define N_TRAJ 200
 
-ParameterSet::ParameterSet(Bltl *bltl, map<std::string, Prd*> prds) {
+using namespace std;
+ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds) {
     this->bltl = bltl;
     this->prds = prds;
     init_traj_ranges();
@@ -22,13 +23,13 @@ ParameterSet::ParameterSet(Bltl *bltl, map<std::string, Prd*> prds) {
 }
 
 void ParameterSet::init_traj_ranges(){
-    std::vector <Trajectory> trajectories;
+    vector <Trajectory> trajectories;
     for (int i = 0; i < N_TRAJ; i++)
         trajectories.push_back(Model::simulate(1.0));
     for (auto itr = trajectories[0].m_states[0].begin(); itr != trajectories[0].m_states[0].end();itr++){
-        ranges.push_back(std::pair<double, double>(*itr, *itr));
-        min.push_back(std::pair<double, double>(*itr, *itr));
-        max.push_back(std::pair<double, double>(*itr, *itr));
+        ranges.push_back(pair<double, double>(*itr, *itr));
+        min.push_back(pair<double, double>(*itr, *itr));
+        max.push_back(pair<double, double>(*itr, *itr));
     }
     double t_min[Model::N_SPECIES];        
     double t_max[Model::N_SPECIES];
@@ -75,7 +76,7 @@ void ParameterSet::init_traj_ranges(){
 
     }
 }
-void ParameterSet::resolveFlags(std::map<std::string, Prd*> prds){
+void ParameterSet::resolveFlags(map<string, Prd*> prds){
     for(auto itr = prds.begin(); itr != prds.end(); itr++){
         if(itr->second->isFlag){
             if(itr->second->flag==MAX)
@@ -131,8 +132,9 @@ void ParameterSet::init_time_range() {
     }
 }
 
-void ParameterSet::parse_constraint_tree(std::vector<std::string> inputs) {
-    vector <pair<string, string> > constraints = parse_constraint(inputs);
+void ParameterSet::parse_constraint_tree(vector<string> inputs) {
+    parse_constraint(inputs);
+    
     for (auto itr = constraints.begin(); itr != constraints.end(); itr++)
         if (all_set[itr->first]->isfix)
             all_set[itr->second]->range.first = all_set[itr->first]->value;
@@ -148,16 +150,38 @@ void ParameterSet::parse_constraint_tree(std::vector<std::string> inputs) {
 
 }
 
-void ParameterSet::parse_weight(std::vector<std::string> inputs) {
+void ParameterSet::parse_weight(vector<string> inputs) {
     for(auto input = inputs.begin(); input !=inputs.end(); input++) {
         string item = *input;
         size_t begin = 0;
         size_t found = item.find(":");
-        std::string k = item.substr(0, found);
+        string k = item.substr(0, found);
         boost::trim_right(k);
         begin = found + 1;
-        std::string v = item.substr(begin);
+        string v = item.substr(begin);
         boost::trim_left(v);
-        weights[k] = std::stod(v);
+        weights[k] = stod(v);
+    }
+}
+
+vector<pair<string, string> > ParameterSet::parse_constraint(vector<string> inputs){
+    //implicit constraints
+    for(auto prd = prds.begin(); prd!=prds.end(); prd++)
+        constraints.push_back(pair<string, string>(prd->second->left->name, prd->second->right->name));
+    //explicit contraints
+    for(auto input = inputs.begin(); input !=inputs.end(); input++) {
+        string item = *input;
+        size_t begin = 0;
+        size_t found;
+        string low, high;
+        if((found=item.find("<"))!=string::npos) {
+            low = item.substr(0, found);
+            high = item.substr(found + 1, string::npos);
+        }
+        else if((found=item.find(">"))!=string::npos) {
+            high = item.substr(0, found);
+            low = item.substr(found + 1, string::npos);
+        }
+        constraints.push_back(pair<string, string>(low, high));
     }
 }

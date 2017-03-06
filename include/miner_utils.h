@@ -15,7 +15,6 @@
 
 using namespace std;
 
-vector<pair<string, string> > parse_constraint(vector<string> inputs);
 map<string, double> generate_prd(vector<Parameter*> constraint_tree);
 map<string, int> generate_time(map<string, TimeVariable*> params);
 

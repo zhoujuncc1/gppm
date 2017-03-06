@@ -10,39 +10,44 @@
 #include "Bltl/Bltl.h"
 #include "Model.h"
 #include <map>
+
+using namespace std;
 class ParameterSet {
  public:
-    ParameterSet(Bltl* bltl, std::map<std::string, Prd*> prds);
+    ParameterSet(Bltl* bltl, map<string, Prd*> prds);
 
-    std::map<std::string, Parameter*> unknown_prd_set;
-    std::map<std::string, Parameter*> known_prd_set;
-    std::map<std::string, TimeVariable*> unknown_time_set;
-    std::map<std::string, TimeVariable*> known_time_set;
-    std::map<std::string, Parameter*> all_set;
+    map<string, Parameter*> unknown_prd_set;
+    map<string, Parameter*> known_prd_set;
+    map<string, TimeVariable*> unknown_time_set;
+    map<string, TimeVariable*> known_time_set;
+    map<string, Parameter*> all_set;
 
     //Smallest are roots
-    std::vector<Parameter*> tree_roots;
-    std::map<std::string, double> weights;
-    std::map<std::string, Prd*> prds;
+    vector<Parameter*> tree_roots;
+    map<string, double> weights;
+    map<string, Prd*> prds;
 
     void init_prd_range();
     void init_time_range();
 
     //prase to trees where smallest are roots
-    void parse_constraint_tree(std::vector<std::string> inputs);
+    void parse_constraint_tree(vector<string> inputs);
 
-    void parse_weight(std::vector<std::string> inputs);
+    void parse_weight(vector<string> inputs);
     Bltl* bltl;
 
  private:
 
-    std::vector<std::pair<double, double> > ranges;
-    std::vector<std::pair<double, double> > min;
-    std::vector<std::pair<double, double> > max;
-    
+    vector<pair<double, double> > ranges;
+    vector<pair<double, double> > min;
+    vector<pair<double, double> > max;
+    vector<pair<string, string> > constraints;
+
     void init_traj_ranges();
     void findParameters(Bltl* bltl);
-    void resolveFlags(std::map<std::string, Prd*> prds);
+    void resolveFlags(map<string, Prd*> prds);
+    vector<pair<string, string> > parse_constraint(vector<string> inputs);
+
 };
 
 #endif /* SRC_PARAMETERSET_H_ */

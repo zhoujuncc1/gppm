@@ -13,25 +13,7 @@ std::uniform_int_distribution<int> distribution(0, RESOLUTION);
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set);
 double _generate_real(double min, double max);
 
-vector<pair<string, string> > parse_constraint(vector<string> inputs){
-    vector<pair<string, string> > constraints;
-    for(auto input = inputs.begin(); input !=inputs.end(); input++) {
-        string item = *input;
-        size_t begin = 0;
-        size_t found;
-        string low, high;
-        if((found=item.find("<"))!=string::npos) {
-            low = item.substr(0, found);
-            high = item.substr(found + 1, string::npos);
-        }
-        else if((found=item.find(">"))!=string::npos) {
-            high = item.substr(0, found);
-            low = item.substr(found + 1, string::npos);
-        }
-        constraints.push_back(pair<string, string>(low, high));
-    }
-    return constraints;
-}
+
 
 map<string, double> generate_prd(vector<Parameter*> constraint_tree){
     bool success = false;
