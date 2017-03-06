@@ -28,7 +28,6 @@ vector<pair<string, string> > parse_constraint(vector<string> inputs){
             high = item.substr(0, found);
             low = item.substr(found + 1, string::npos);
         }
-
         constraints.push_back(pair<string, string>(low, high));
     }
     return constraints;

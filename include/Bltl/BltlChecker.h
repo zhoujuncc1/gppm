@@ -14,7 +14,9 @@ using namespace std;
 
 class BltlChecker{
 public:
-	BltlChecker(Bltl* bltl){}
+	BltlChecker(Bltl* bltl){
+        this->bltl=bltl;
+    }
 	virtual ~BltlChecker(){}
 	virtual int check(Trajectory traj)=0;
 
@@ -26,33 +28,36 @@ class RecursiveBltlChecker: public BltlChecker{
 public:
 	RecursiveBltlChecker(Bltl* bltl, map<string, Prd*> prds, Trajectory traj):BltlChecker(bltl){
 		this->prds=prds;
+        length = traj.m_states.size();
 		for(auto prd_itr = prds.begin(); prd_itr!=prds.end(); prd_itr++)
-				values[prd_itr->first] = (bool*)malloc(traj.m_states.size()*sizeof(bool));
+			values[prd_itr->first] = (int*)malloc(length*sizeof(int));
 	}
 
 	virtual ~RecursiveBltlChecker(){
-		for(auto itr = values.begin(); itr!=values.end(); itr++)
-		 delete (itr->second);
+		//for(auto itr = values.begin(); itr!=values.end(); itr++)
+		    //delete (itr->second);
 	}
 
 	virtual int check(Trajectory traj){
 		eval_prds(traj);
-		return eval_formula(bltl, 0);
+        int result = eval_formula(bltl, 0);
+		return result;
 	}
 
 private:
-	map<string, bool*> values;
+	map<string, int*> values;
+    int length;
 	void eval_prds(Trajectory traj){
 		for(auto prd_itr = prds.begin(); prd_itr!=prds.end(); prd_itr++){
 			Prd* prd = prd_itr->second;
-			bool *value_arr = values[prd_itr->first];
-			for(int i = 0 ; i< traj.m_states.size(); i++){
+			int *value_arr = values[prd_itr->first];
+			for(int i = 0 ; i< length; i++){
 				value_arr[i]=traj.m_states[i][prd->varId]>prd->left->value && traj.m_states[i][prd->varId]<prd->right->value;
-			}
+            }
 		}
 	}
-	bool eval_formula(Bltl* bltl, int t){
-		switch(bltl->getOperation()){
+	int eval_formula(Bltl* bltl, int t){
+		switch(bltl->operation){
 			case op_F:
 				return eval_F(bltl, t, bltl->getTime()->value);
 			case op_G:
@@ -60,36 +65,44 @@ private:
 			case op_U:
 				return eval_U(bltl, t, bltl->getTime()->value);
 			case op_X:
-				return eval_formula(bltl, t+1);
+				return eval_formula(bltl->getChild1(), t+1);
 			case op_NOT:
-				return !eval_formula(bltl, t);
+				return !eval_formula(bltl->getChild1(), t);
 			case op_AND:
 				return eval_formula(bltl->getChild1(), t) && eval_formula(bltl->getChild2(), t);
 			case op_OR:
 				return eval_formula(bltl->getChild1(), t) || eval_formula(bltl->getChild2(), t);
 			case op_PRD:
-				return values[bltl->getPrdName()][t];
-		}
+                if(t>=length){
+                    return 0;
+                }
+                else{
+				    return values[bltl->getPrdName()][t];
+                }
+            default:
+                printf("Something is wrong\n!");
+                exit(1);
+        }
 	}
 
-	bool eval_F(Bltl* bltl, int t, int temp){
+	int eval_F(Bltl* bltl, int t, int temp){
 		if (temp == 0)
-        	return false;
+        	return 0;
 		else
 			return eval_formula(bltl->getChild1(), t) || eval_F(bltl, t + 1, temp-1);
 	}
-	bool eval_G(Bltl* bltl, int t, int temp){
+	int eval_G(Bltl* bltl, int t, int temp){
 		if (temp == 0)
-        	return true;
+        	return 1;
 		else
-			return eval_formula(bltl->getChild1(), t) && eval_F(bltl, t + 1, temp-1);
+			return eval_formula(bltl->getChild1(), t) && eval_G(bltl, t + 1, temp-1);
 	}
 
-	bool eval_U(Bltl* bltl, int t, int temp){
+	int eval_U(Bltl* bltl, int t, int temp){
 		if(temp == 0)
-        	return true;
+        	return 1;
 		else
-			return eval_formula(bltl->getChild2(), t) || (eval_formula(bltl->getChild1(), t) and eval_U(bltl, t + 1, temp-1));
+			return eval_formula(bltl->getChild2(), t) || (eval_formula(bltl->getChild1(), t) && eval_U(bltl, t + 1, temp-1));
 	}
 };
 

@@ -11,10 +11,11 @@
 #include "Bltl/BltlChecker.h"
 using namespace std;
 double bayes_factor(vector<int> satArray, double theta=0.9, double alpha=1.0, double beta=1.0){
-    double safe=0;
-    double total = satArray.size();
-    for(int i =0; i < total; i++)
+    int safe=0;
+    int total = satArray.size();
+    for(int i =0; i < total; i++){
         safe+=satArray[i];
+    }
     if(safe==0)
     	return 0;
     return 1.0/gsl_sf_beta_inc(safe + alpha, total - safe + beta, theta)-1;

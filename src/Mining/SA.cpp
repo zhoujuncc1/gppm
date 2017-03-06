@@ -71,6 +71,7 @@ void sa_copy(void *source, void *dest) {
     dst->prd_values = src->prd_values;
     dst->time_values = src->time_values;
     dst->trajectories = src->trajectories;
+    dst->bltlChecker=src->bltlChecker;
 }
 
 void *sa_copy_construct(void *xp) {
