@@ -46,7 +46,7 @@ class ParameterSet {
     void init_traj_ranges();
     void findParameters(Bltl* bltl);
     void resolveFlags(map<string, Prd*> prds);
-    vector<pair<string, string> > parse_constraint(vector<string> inputs);
+    void parse_constraint(vector<string> inputs);
 
 };
 

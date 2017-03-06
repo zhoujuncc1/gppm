@@ -103,6 +103,8 @@ void ParameterSet::findParameters(Bltl *bltl) {
             unknown_prd_set[bltl->getPrd()->right->name] = bltl->getPrd()->right;
 
         all_set[bltl->getPrd()->right->name] = bltl->getPrd()->right;
+        //Add implicit constraints
+        constraints.push_back(pair<string, string>(bltl->getPrd()->left->name, bltl->getPrd()->right->name));
     } else {
         if (bltl->getTime()) {
             if (bltl->getTime()->isfix)
@@ -135,7 +137,7 @@ void ParameterSet::init_time_range() {
 void ParameterSet::parse_constraint_tree(vector<string> inputs) {
     parse_constraint(inputs);
     
-    for (auto itr = constraints.begin(); itr != constraints.end(); itr++)
+    for (auto itr = constraints.begin(); itr != constraints.end(); itr++){
         if (all_set[itr->first]->isfix)
             all_set[itr->second]->range.first = all_set[itr->first]->value;
         else if (all_set[itr->second]->isfix)
@@ -144,6 +146,7 @@ void ParameterSet::parse_constraint_tree(vector<string> inputs) {
             all_set[itr->first]->children.push_back(all_set[itr->second]);
             all_set[itr->second]->parents.push_back(all_set[itr->first]);
         }
+    }
     for (auto itr = unknown_prd_set.begin(); itr != unknown_prd_set.end(); itr++)
         if (itr->second->parents.size() == 0)
             tree_roots.push_back(itr->second);
@@ -164,10 +167,7 @@ void ParameterSet::parse_weight(vector<string> inputs) {
     }
 }
 
-vector<pair<string, string> > ParameterSet::parse_constraint(vector<string> inputs){
-    //implicit constraints
-    for(auto prd = prds.begin(); prd!=prds.end(); prd++)
-        constraints.push_back(pair<string, string>(prd->second->left->name, prd->second->right->name));
+void ParameterSet::parse_constraint(vector<string> inputs){
     //explicit contraints
     for(auto input = inputs.begin(); input !=inputs.end(); input++) {
         string item = *input;
