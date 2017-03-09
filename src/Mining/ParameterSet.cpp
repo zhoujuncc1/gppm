@@ -66,12 +66,12 @@ void ParameterSet::init_traj_ranges(){
 
 
         dis = min[i].second - min[i].first;
-        min[i].first -= 0.2 * dis;
-        min[i].second += 0.2 * dis;
+        min[i].first -= 0.3 * dis;
+        min[i].second += 0.3 * dis;
 
         dis = max[i].second - max[i].first;
-        max[i].first -= 0.2 * dis;
-        max[i].second += 0.2 * dis;
+        max[i].first -= 0.3 * dis;
+        max[i].second += 0.3 * dis;
 
     }
 }
@@ -181,7 +181,12 @@ void ParameterSet::parse_constraint(vector<string> inputs){
             high = item.substr(0, found);
             low = item.substr(found + 1, string::npos);
         }
-        if(all_set[low])
+        if(prds[low]){
+            prds[high]->weight_sign-=1;
+            prds[low]->weight_sign+=1;
+            high= high+".left";
+            low=low+".right";
             constraints.push_back(pair<string, string>(low, high));
+        }
     }
 }

@@ -47,6 +47,9 @@ double loss(State* state){
             double distance = itr->second->right->value - itr->second->left->value;
             double max_distance = itr->second->right->range.second - itr->second->left->range.first;
             score*=pow(distance/max_distance, state->paramset->weights[itr->first]);
+
+            double avg_distance = (itr->second->right->value + itr->second->left->value)/2-itr->second->left->range.first;
+            score*=pow(avg_distance/max_distance, itr->second->weight_sign);
         }
     score*=1/log(bayes);
     return score;

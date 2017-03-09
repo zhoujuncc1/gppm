@@ -25,7 +25,7 @@ public:
 	Parameter* right;
 	FLAG flag;
 	bool isFlag;
-	
+    double weight_sign=0;
 };
 
 #endif /* PRD_H_ */
