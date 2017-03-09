@@ -16,9 +16,8 @@
 using namespace std;
 ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds) {
     this->bltl = bltl;
-    this->prds = prds;
     init_traj_ranges();
-    resolveFlags(this->prds);
+    resolveFlags(prds);
     findParameters(this->bltl);
 }
 
@@ -105,6 +104,7 @@ void ParameterSet::findParameters(Bltl *bltl) {
         all_set[bltl->getPrd()->right->name] = bltl->getPrd()->right;
         //Add implicit constraints
         constraints.push_back(pair<string, string>(bltl->getPrd()->left->name, bltl->getPrd()->right->name));
+        prds[bltl->getPrdName()]=bltl->getPrd();
     } else {
         if (bltl->getTime()) {
             if (bltl->getTime()->isfix)
@@ -130,7 +130,6 @@ void ParameterSet::init_time_range() {
     for (auto itr = unknown_time_set.begin(); itr != unknown_time_set.end(); itr++) {
         itr->second->range.first = 1;
         itr->second->range.second = (int) Model::end_time;
-
     }
 }
 
@@ -182,6 +181,7 @@ void ParameterSet::parse_constraint(vector<string> inputs){
             high = item.substr(0, found);
             low = item.substr(found + 1, string::npos);
         }
-        constraints.push_back(pair<string, string>(low, high));
+        if(all_set[low])
+            constraints.push_back(pair<string, string>(low, high));
     }
 }

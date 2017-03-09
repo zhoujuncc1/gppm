@@ -42,6 +42,7 @@ public:
         for(int i = 0; i < MAX_SIM; i++)
             trajectories.push_back(Model::simulate(1.0));
         bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
+        //bltlChecker= new TreeBltlChecker(bltl);
     }
 
     void mine(){

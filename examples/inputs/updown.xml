@@ -11,14 +11,14 @@
         <bltl>p1</bltl>
         <bltl>F[k1](p2 & F[k2]p3)</bltl>
     </bltls>
-    <constraints></constraints>
+    <constraints>
+    <constraint>p2.left>p3.right</constraint>
+    </constraints>
     <weights>
         <weight>k1:0.5</weight>
         <weight>k2:0.5</weight>
-        <weight>k3:0.5</weight>
         <weight>p3:0.5</weight>
         <weight>p2:0.5</weight>
-        <weight>p1:0.5</weight>
     </weights>
     <config>
         <N_TRIES>100</N_TRIES>

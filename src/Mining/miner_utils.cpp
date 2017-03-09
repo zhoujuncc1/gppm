@@ -54,8 +54,8 @@ map<string, int> generate_time(map<string, TimeVariable*> params){
         std::random_device rd;
         std::default_random_engine generator(rd());
         std::uniform_int_distribution<int> distribution(itr->second->range.first,itr->second->range.second);
-            itr->second->value = distribution(generator);
-            value_set[itr->first]=itr->second->value;
+        itr->second->value = distribution(generator);
+        value_set[itr->first]=itr->second->value;
     }
     return value_set;
         
