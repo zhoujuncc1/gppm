@@ -5,6 +5,7 @@ Created on 5 Apr 2016
 '''
 
 from parser import Parser
+from templates import Templates
 import sys
 
 import xml.etree.ElementTree as ET
@@ -21,11 +22,13 @@ def run(variable, template, model, xml_filename):
     updateXml(parser, xmlData)
     xml_string = ET.tostring(xmlData.getroot())
     xml_string=xml_string.replace("&amp;", "&")
+    xml_string=xml_string.replace("&lt;", "<")
+    xml_string=xml_string.replace("&gt;", ">")
     infile=open(inputfilename, "w")
     infile.write(xml_string)
     infile.close()
     command = "../%s %s >> %s"% (model, inputfilename, outputfilename)
-    return Popen(command, shell=True)
+    return sp.Popen(command, shell=True)
 
 
 def updateXml(parser, xmlData):
@@ -49,20 +52,25 @@ def parseXML(filename):
 def batch(model, variables, templates, xml_filename):
     ps = []
     for i in range(0, len(variables)):
-        ps.append(run(variables[i], templates[i], model, xml_filename))
+        ps.append(run(variables[i], Templates.templates[templates[i]], model, xml_filename))
     for p in ps:
         p.wait()
 
 def main(batch_filename):
     with open(batch_filename) as f:
         content = f.readlines()
-    model = content[0]
-    xml_filename = content[1]
-    variables = eval(content[2])
-    templates = eval[content[3]]
+    print content[0]
+    model = content[0][:-1]
+    print content[1]
+    xml_filename = content[1][:-1]
+    print content[2]
+    variables = eval(content[2][:-1])
+    print content[3]
+    templates = eval(content[3][:-1])
     batch(model, variables, templates, xml_filename)
     
 if __name__=='__main__':
-    if(len(sys.argv)==1):
+    if(len(sys.argv)<2):
         print "Input file with 4 lines: model=str, xml_filename=str, variables=[], templates=[]"
-    main(sys.argv[1])
+    else:
+        main(sys.argv[1])

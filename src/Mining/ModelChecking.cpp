@@ -40,12 +40,22 @@ double loss(State* state){
     if(bayes < BAYES_MAX)
         return LOSS_MAX;
     double score = 1.0;
-    for(auto itr=state->paramset->unknown_time_set.begin(); itr!=state->paramset->unknown_time_set.end(); itr++)
-        score*=pow(itr->second->value, state->paramset->weights[itr->first]*itr->second->weight_sign);
+    double weight = 0.2;
+    for(auto itr=state->paramset->unknown_time_set.begin(); itr!=state->paramset->unknown_time_set.end(); itr++){
+        if(state->paramset->weights[itr->first])
+            weight = state->paramset->weights[itr->first];
+        else
+            weight=0.2;
+        score*=pow(itr->second->value, weight*itr->second->weight_sign);
+    }
     for(auto itr=state->paramset->prds.begin(); itr!=state->paramset->prds.end(); itr++)
         if(!itr->second->left->isfix || !itr->second->right->isfix){
             double distance = itr->second->right->value - itr->second->left->value;
             double max_distance = itr->second->right->range.second - itr->second->left->range.first;
+            if(state->paramset->weights[itr->first])
+                weight = state->paramset->weights[itr->first];
+            else
+                weight=0.2;
             score*=pow(distance/max_distance, state->paramset->weights[itr->first]);
 
             double avg_distance = (itr->second->right->value + itr->second->left->value)/2-itr->second->left->range.first;

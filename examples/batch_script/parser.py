@@ -11,6 +11,7 @@ import re
 
 class Parser:
     def __init__(self, bltl_str, constraint_str):
+        self.constraints=[]
         self.bltl_str = bltl_str
         self.constraint_str=constraint_str
         self.parse_bltl()
@@ -21,8 +22,9 @@ class Parser:
 
 
     def parse_constraint(self):
-        self.constraints = self.preprocess(self.constraint_str.rstrip())
-    
+        if(self.constraint_str!=None):
+            self.constraints = self.preprocess(self.constraint_str.rstrip())
+
     def parse_bltl(self):
         s = self.bltl_str.rstrip()
         inputLines = self.preprocess(s)
