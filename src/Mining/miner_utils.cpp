@@ -29,6 +29,10 @@ map<string, double> generate_prd(vector<Parameter*> constraint_tree){
         }
         catch(int e){trials++;}
     }
+    if(!success){
+        printf("Generate Error!\n");
+        exit(1);
+    }
 }
 
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set){

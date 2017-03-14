@@ -3,22 +3,27 @@
 <input>
     <miner>single</miner>
     <prds>
-        <prd>p1:9::</prd>
-        <prd>p2:9:MAX</prd>
-        <prd>p3:9::</prd>
+        <prd>p1:3::</prd>
+        <prd>p2:3::</prd>
+        <prd>p3:3::</prd>
+        <prd>p4:3::</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>
-        <bltl>F[k1](p2 & F[k2]p3)</bltl>
+        <bltl>F[k1](p2 & F[k2](p3 & F[k3]p4))</bltl>
     </bltls>
     <constraints>
     <constraint>p2>p3</constraint>
+    <constraint>p4>p3</constraint>
     </constraints>
     <weights>
-        <weight>k1:0.5</weight>
-        <weight>k2:0.5</weight>
-        <weight>p3:0.5</weight>
-        <weight>p2:0.5</weight>
+        <weight>k1:0.2</weight>
+        <weight>k2:0.2</weight>
+        <weight>k3:0.2</weight>
+        <weight>p3:0.2</weight>
+        <weight>p2:0.2</weight>
+        <weight>p4:0.2</weight>
+        <weight>p1:0.2</weight>
     </weights>
     <config>
         <N_TRIES>100</N_TRIES>

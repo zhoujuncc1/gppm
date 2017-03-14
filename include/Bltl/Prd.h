@@ -11,7 +11,7 @@
 #include <iostream>
 #include "Parameter.h"
 
-enum FLAG {MAX, MIN};
+enum FLAG {MAX, MIN, T0};
 
 class Prd {
 public:

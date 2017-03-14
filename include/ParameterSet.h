@@ -41,6 +41,7 @@ class ParameterSet {
     vector<pair<double, double> > ranges;
     vector<pair<double, double> > min;
     vector<pair<double, double> > max;
+    vector<pair<double, double> > t0;
     vector<pair<string, string> > constraints;
 
     void init_traj_ranges();

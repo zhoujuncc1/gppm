@@ -29,6 +29,7 @@ void ParameterSet::init_traj_ranges(){
         ranges.push_back(pair<double, double>(*itr, *itr));
         min.push_back(pair<double, double>(*itr, *itr));
         max.push_back(pair<double, double>(*itr, *itr));
+        t0.push_back(pair<double, double>(*itr, *itr));
     }
     double t_min[Model::N_SPECIES];        
     double t_max[Model::N_SPECIES];
@@ -36,6 +37,8 @@ void ParameterSet::init_traj_ranges(){
         for (int i = 0; i < Model::N_SPECIES; i++){
             t_min[i] = trajectories[j].m_states[0][i];
             t_max[i] = trajectories[j].m_states[0][i];
+            t0[i].first = std::min(t0[i].first, trajectories[j].m_states[0][i]);
+            t0[i].second = std::max(t0[i].second, trajectories[j].m_states[0][i]);
         }
         for (auto itr = trajectories[j].m_states.begin(); itr != trajectories[j].m_states.end(); itr++)
             for (int i = 0; i < Model::N_SPECIES; i++) {
@@ -66,12 +69,17 @@ void ParameterSet::init_traj_ranges(){
 
 
         dis = min[i].second - min[i].first;
-        min[i].first -= 0.3 * dis;
-        min[i].second += 0.3 * dis;
+        min[i].first -= 0.5 * dis;
+        min[i].second += 0.5 * dis;
 
         dis = max[i].second - max[i].first;
-        max[i].first -= 0.3 * dis;
-        max[i].second += 0.3 * dis;
+        max[i].first -= 0.5 * dis;
+        max[i].second += 0.5 * dis;
+
+        dis = t0[i].second - t0[i].first;
+        t0[i].first -= 0.3 * dis;
+        t0[i].second += 0.3 * dis;
+
 
     }
 }
@@ -80,8 +88,10 @@ void ParameterSet::resolveFlags(map<string, Prd*> prds){
         if(itr->second->isFlag){
             if(itr->second->flag==MAX)
                 itr->second->resolveFlag(max[itr->second->varId].first, max[itr->second->varId].second);
-            if(itr->second->flag==MIN)
+            else if(itr->second->flag==MIN)
                 itr->second->resolveFlag(min[itr->second->varId].first, min[itr->second->varId].second);    
+            else if(itr->second->flag==T0)
+                itr->second->resolveFlag(t0[itr->second->varId].first, t0[itr->second->varId].second);    
         }
     }
 }
@@ -103,7 +113,8 @@ void ParameterSet::findParameters(Bltl *bltl) {
 
         all_set[bltl->getPrd()->right->name] = bltl->getPrd()->right;
         //Add implicit constraints
-        constraints.push_back(pair<string, string>(bltl->getPrd()->left->name, bltl->getPrd()->right->name));
+        if(!bltl->getPrd()->left->isfix ||!bltl->getPrd()->right->isfix)
+            constraints.push_back(pair<string, string>(bltl->getPrd()->left->name, bltl->getPrd()->right->name));
         prds[bltl->getPrdName()]=bltl->getPrd();
     } else {
         if (bltl->getTime()) {
@@ -149,7 +160,7 @@ void ParameterSet::parse_constraint_tree(vector<string> inputs) {
     for (auto itr = unknown_prd_set.begin(); itr != unknown_prd_set.end(); itr++)
         if (itr->second->parents.size() == 0)
             tree_roots.push_back(itr->second);
-
+    
 }
 
 void ParameterSet::parse_weight(vector<string> inputs) {

@@ -37,6 +37,8 @@ Prd::Prd(const std::string k, const std::string v, const std::string flag) {
 		this->flag = MAX;
 	else if(flag.compare("MIN")==0)
 		this->flag = MIN;
+    else if(flag.compare("T0")==0)
+		this->flag = T0;
 }
 
 void Prd::resolveFlag(double l, double r){

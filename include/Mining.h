@@ -51,7 +51,6 @@ public:
         state->time_values = generate_time(params->unknown_time_set);
         state->trajectories = &trajectories;
         state->bltlChecker=bltlChecker;
-
         if(bltl->getOperation()==op_PRD)
             minePrd();
         else

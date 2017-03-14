@@ -11,7 +11,7 @@
 #include "../include/Bltl/TimeVariable.h"
 #include "../include/Bltl/Parameter.h"
 
-#define RESOLUTION 10000
+#define RESOLUTION 100
 
 using namespace std;
 
