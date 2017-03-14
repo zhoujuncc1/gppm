@@ -25,7 +25,7 @@ def run(variable, template, model, xml_filename):
     infile.write(xml_string)
     infile.close()
     command = "../%s %s >> %s"% (model, inputfilename, outputfilename)
-    sp.call(command, shell=True)
+    return Popen(command, shell=True)
 
 
 def updateXml(parser, xmlData):
@@ -47,8 +47,11 @@ def parseXML(filename):
     return tree
 
 def batch(model, variables, templates, xml_filename):
+    ps = []
     for i in range(0, len(variables)):
-        run(variables[i], templates[i], model, xml_filename)
+        ps.append(run(variables[i], templates[i], model, xml_filename))
+    for p in ps:
+        p.wait()
 
 def main(batch_filename):
     with open(batch_filename) as f:
