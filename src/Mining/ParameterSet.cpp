@@ -192,9 +192,11 @@ void ParameterSet::parse_constraint(vector<string> inputs){
             high = item.substr(0, found);
             low = item.substr(found + 1, string::npos);
         }
-        if(prds[low]){
+        if(prds.find(high) != prds.end())
             prds[high]->weight_sign-=1;
+        if(prds.find(low) != prds.end())
             prds[low]->weight_sign+=1;
+        if(prds.find(high) != prds.end() && prds.find(low) != prds.end()){
             high= high+".left";
             low=low+".right";
             constraints.push_back(pair<string, string>(low, high));

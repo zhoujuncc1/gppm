@@ -14,7 +14,7 @@ import subprocess as sp
 
 def run(variable, template, model, xml_filename):
     inputfilename = "input_%d.xml" % variable
-    outputfilename = "output_%d.xml" % variable
+    outputfilename = "output_%d.out" % variable
 
     parser = Parser(template.generate_bltl(variable), template.generate_constraint())
 

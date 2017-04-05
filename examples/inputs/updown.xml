@@ -3,9 +3,9 @@
 <input>
     <miner>single</miner>
     <prds>
-        <prd>p1:9::</prd>
-        <prd>p2:9:MAX</prd>
-        <prd>p3:9::</prd>
+        <prd>p1:12::</prd>
+        <prd>p2:12::</prd>
+        <prd>p3:12::</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>
@@ -13,6 +13,7 @@
     </bltls>
     <constraints>
     <constraint>p2>p3</constraint>
+    <constraint>p2>p1</constraint>
     </constraints>
     <weights>
         <weight>k1:0.5</weight>
