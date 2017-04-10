@@ -26,21 +26,21 @@ using namespace std;
 void do_mine(State* state, pt::ptree config);
 class Miner{
 public:
-
+    Miner(){}
     Miner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : input(in){
         
 
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
-        params = new ParameterSet(bltl, prds);
+        for(int i = 0; i < MAX_SIM; i++)
+            trajectories.push_back(Model::simulate(1.0));
+        params = new ParameterSet(bltl, prds, trajectories);
         params->init_prd_range();
         params->init_time_range();
         params->parse_constraint_tree(constraint_inputs);
         if(!weight_inputs.empty())
             params->parse_weight(weight_inputs);
-        for(int i = 0; i < MAX_SIM; i++)
-            trajectories.push_back(Model::simulate(1.0));
         bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
         //bltlChecker= new TreeBltlChecker(bltl);
     }
@@ -104,10 +104,37 @@ public:
 
 class SingleMiner : public Miner{
 public:
+    SingleMiner(){}
     SingleMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : Miner(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs){}
     void mineGeneral(){
         do_mine(state, input.get_child("input.config"));
     }
+};
+
+class FileMiner : public SingleMiner{
+public:    
+    FileMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
+        input = in;
+        prds = parse_prd(prd_inputs);
+        bltl = parse_bltl(bltl_input);
+        link_prd(bltl, prds);
+        string filename = input.get<string>("input.filename");
+        FileTrajectoryProvider trajProvider(filename);
+        trajectories = trajProvider.getTrajectories(MAX_SIM);
+        params = new ParameterSet(bltl, prds, trajectories);
+        params->init_prd_range();
+        params->init_time_range();
+        params->parse_constraint_tree(constraint_inputs);
+        if(!weight_inputs.empty())
+            params->parse_weight(weight_inputs);
+        
+        
+        bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
+        //bltlChecker= new TreeBltlChecker(bltl);
+    }
+
+
+
 };
 
 class ClusterMiner : public Miner{
@@ -249,7 +276,7 @@ public:
 
 class MinerBuilder{
 public:
-	static vector<Miner*> buildMiner(string filename){
+	static vector<Miner*> buildMiner(string filename, bool isFileMiner){
         vector<Miner*> miners;
         pt::ptree input;
         pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);
@@ -275,16 +302,23 @@ public:
             weight_inputs.push_back(v.second.data());
         }
 
-        string miner_type = input.get<string>("input.miner");
-        if (miner_type.compare("single")==0)
+        if(isFileMiner){
             for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
-                miners.push_back(new SingleMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
-        else if(miner_type.compare("cluster")==0)
-            for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
-                miners.push_back(new ClusterMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
-        
-        return miners;
-
+                miners.push_back(new FileMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
+            return miners;
+        }
+        else {
+            string miner_type = input.get<string>("input.miner");
+            if (miner_type.compare("single")==0){
+                for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+                    miners.push_back(new SingleMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
+            }
+            else if(miner_type.compare("cluster")==0){
+                for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+                    miners.push_back(new ClusterMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
+            }
+            return miners;
+        }
 	}
 
 };

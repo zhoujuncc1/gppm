@@ -12,7 +12,7 @@
 #include<ctime>
 #include<boost/numeric/odeint/integrate/integrate.hpp>
 #include<boost/random.hpp>
-
+#include<fstream>
 using namespace boost::numeric::odeint;
 
 typedef std::vector<double> state_type;
@@ -71,6 +71,58 @@ private:
 
 	static const double x_variation;
 
+};
+
+class FileTrajectoryProvider{
+public:
+    FileTrajectoryProvider(std::string filename){
+        std::ifstream input(filename);
+        input >> N_SPECIES;
+        input >> end_time;
+        input >> size;
+        for(int k = 0; k < size; k++){
+            Trajectory traj(N_SPECIES, end_time);
+            for(int t = 0 ; t < end_time; t++){
+                state_type state;
+                for(int i = 0; i < N_SPECIES; i++){
+                    double v;
+                    input >> v;
+                    state.push_back(v);
+                }
+                traj.m_states.push_back(state);
+                traj.m_times.push_back(t);
+            }
+            trajectories.push_back(traj);
+        }
+        input.close();
+        /*
+        std::ofstream output("testdata.txt");
+        output << N_SPECIES << " "<<end_time << " " <<size<<"\n";
+        for(int k = 0; k < size; k++){
+            for(int t = 0 ; t < end_time; t++){
+                for(int i = 0; i < N_SPECIES; i++){
+                    output<<trajectories[k].m_states[t][i];
+                    if(i < N_SPECIES-1)
+                        output << " ";
+                }
+                output << "\n";
+            }
+        }
+        output.close();
+        */
+    }
+
+    std::vector<Trajectory> getTrajectories(int size){
+        std::vector<Trajectory> trajs;
+        for(int i = 0; i < size; i++)
+            trajs.push_back(trajectories[i]);
+        return trajs;
+    }
+
+    int size = 0;
+    int N_SPECIES;
+    int end_time;
+    std::vector<Trajectory> trajectories;
 };
 
 

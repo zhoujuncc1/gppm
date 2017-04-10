@@ -14,7 +14,7 @@
 using namespace std;
 class ParameterSet {
  public:
-    ParameterSet(Bltl* bltl, map<string, Prd*> prds);
+    ParameterSet(Bltl* bltl, map<string, Prd*> prds, vector<Trajectory> trajectories);
 
     map<string, Parameter*> unknown_prd_set;
     map<string, Parameter*> known_prd_set;
@@ -35,7 +35,7 @@ class ParameterSet {
 
     void parse_weight(vector<string> inputs);
     Bltl* bltl;
-
+    vector<Trajectory> trajectories;
  private:
 
     vector<pair<double, double> > ranges;

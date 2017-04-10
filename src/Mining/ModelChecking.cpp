@@ -25,12 +25,13 @@ double modelchecking(State *state){
     state->assignValues();
     double bayes = 1;
     vector<int> result;
-    while(bayes>BAYES_MIN && bayes < BAYES_MAX && result.size()<=MAX_SIM) {
+    while(bayes>BAYES_MIN && bayes < BAYES_MAX && result.size()<MAX_SIM) {
         for (int i = 0; i < N_SIM; i++){
             result.push_back(state->bltlChecker->check((*(state->trajectories))[result.size()]));
         }
         bayes = bayes_factor(result);
     }
+
 
     return bayes;
 }

@@ -14,55 +14,55 @@
 #define N_TRAJ 200
 
 using namespace std;
-ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds) {
+ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds, vector<Trajectory> trajectories) {
     this->bltl = bltl;
+    this->trajectories = trajectories;
+    printf("Size %d\n", this->trajectories.size());
     init_traj_ranges();
     resolveFlags(prds);
     findParameters(this->bltl);
 }
 
 void ParameterSet::init_traj_ranges(){
-    vector <Trajectory> trajectories;
-    for (int i = 0; i < N_TRAJ; i++)
-        trajectories.push_back(Model::simulate(1.0));
+    int N_SPECIES = trajectories[0].N_SPECIES;
     for (auto itr = trajectories[0].m_states[0].begin(); itr != trajectories[0].m_states[0].end();itr++){
         ranges.push_back(pair<double, double>(*itr, *itr));
         min.push_back(pair<double, double>(*itr, *itr));
         max.push_back(pair<double, double>(*itr, *itr));
         t0.push_back(pair<double, double>(*itr, *itr));
     }
-    double t_min[Model::N_SPECIES];        
-    double t_max[Model::N_SPECIES];
+    double t_min[N_SPECIES];        
+    double t_max[N_SPECIES];
     for (int j = 0; j < N_TRAJ; j++){
-        for (int i = 0; i < Model::N_SPECIES; i++){
+        for (int i = 0; i < N_SPECIES; i++){
             t_min[i] = trajectories[j].m_states[0][i];
             t_max[i] = trajectories[j].m_states[0][i];
             t0[i].first = std::min(t0[i].first, trajectories[j].m_states[0][i]);
             t0[i].second = std::max(t0[i].second, trajectories[j].m_states[0][i]);
         }
         for (auto itr = trajectories[j].m_states.begin(); itr != trajectories[j].m_states.end(); itr++)
-            for (int i = 0; i < Model::N_SPECIES; i++) {
+            for (int i = 0; i < N_SPECIES; i++) {
                 ranges[i].first = std::min(ranges[i].first, (*itr)[i]);
                 ranges[i].second = std::max(ranges[i].second, (*itr)[i]);
                 t_min[i] = std::min(t_min[i], (*itr)[i]);
                 t_max[i] = std::max(t_max[i], (*itr)[i]);
             }
         if(j == 0)
-            for (int i = 0; i < Model::N_SPECIES; i++){
+            for (int i = 0; i < N_SPECIES; i++){
                 min[i].first = t_min[i];
                 min[i].second = t_min[i];
                 max[i].first = t_max[i];
                 max[i].second = t_max[i];
             }
         else
-            for (int i = 0; i < Model::N_SPECIES; i++){
+            for (int i = 0; i < N_SPECIES; i++){
                 min[i].first = std::min(min[i].first, t_min[i]);
                 min[i].second = std::max(min[i].second, t_min[i]);
                 max[i].first = std::min(max[i].first, t_max[i]);
                 max[i].second = std::max(max[i].second, t_max[i]);
             }
     }
-    for (int i = 0; i < Model::N_SPECIES; i++) {
+    for (int i = 0; i < N_SPECIES; i++) {
         double dis = ranges[i].second - ranges[i].first;
         ranges[i].first -= 0.1 * dis;
         ranges[i].second += 0.1 * dis;
@@ -140,7 +140,7 @@ void ParameterSet::init_prd_range() {
 void ParameterSet::init_time_range() {
     for (auto itr = unknown_time_set.begin(); itr != unknown_time_set.end(); itr++) {
         itr->second->range.first = 1;
-        itr->second->range.second = (int) Model::end_time;
+        itr->second->range.second = (int) trajectories[0].dt;
     }
 }
 

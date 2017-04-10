@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     }
     clock_t begin = clock();
     string filename(argv[1]);
-    vector<Miner*> miners = MinerBuilder::buildMiner(filename, false);
+    vector<Miner*> miners = MinerBuilder::buildMiner(filename, true);
     for(auto itr = miners.begin(); itr!=miners.end(); itr++)
         (*itr)->mine();
     for(auto itr = miners.begin(); itr!=miners.end(); itr++)
