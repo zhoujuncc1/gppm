@@ -4,8 +4,8 @@
     <miner>single</miner>
     <filename>/home/zhoujun/gppm/examples/statin_data.csv</filename>
     <prds>
-        <prd>p1:8::</prd>
-        <prd>p2:8::</prd>
+        <prd>p1:2::</prd>
+        <prd>p2:2::</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>

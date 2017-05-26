@@ -5,8 +5,8 @@
     <miner>single</miner>
     <prds>
         <prd>p1:6::</prd>
-        <prd>p2:6::</prd>
-        <prd>p3:6::</prd>
+        <prd>p2:6:40879.4:42302.5</prd>
+        <prd>p3:6:16736.3:17412.7</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>
@@ -17,10 +17,10 @@
     <constraint>p2>p1</constraint>
     </constraints>
     <weights>
-        <weight>k1:0.5</weight>
-        <weight>k2:0.5</weight>
-        <weight>p3:0.5</weight>
-        <weight>p2:0.5</weight>
+        <weight>k1:0.2</weight>
+        <weight>k2:0.2</weight>
+        <weight>p3:0.2</weight>
+        <weight>p2:0.2</weight>
     </weights>
     <config>
         <N_TRIES>100</N_TRIES>
@@ -28,7 +28,7 @@
         <STEP_SIZE>1.0</STEP_SIZE>
         <K>1.0</K>
         <T_INITIAL>0.008</T_INITIAL>
-        <MU_T>1.005</MU_T>
+        <MU_T>1.1</MU_T>
         <T_MIN>0.001</T_MIN>
     </config>
 </input>
