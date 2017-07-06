@@ -24,7 +24,7 @@
         <STEP_SIZE>1.0</STEP_SIZE>
         <K>1.0</K>
         <T_INITIAL>0.008</T_INITIAL>
-        <MU_T>1.01</MU_T>
+        <MU_T>1.003</MU_T>
         <T_MIN>0.001</T_MIN>
     </config>
 </input>

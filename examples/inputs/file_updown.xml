@@ -1,12 +1,12 @@
 <!-- Only constraint is optional-->
 <!-- Miner can be single or cluster-->
 <input>
-    <filename>/home/zhoujun/gppm/examples/statin_data.csv</filename>
+    <filename>/home/zhoujun/gppm/examples/mapk_data_origin.txt</filename>
     <miner>single</miner>
     <prds>
-        <prd>p1:6::</prd>
-        <prd>p2:6:40879.4:42302.5</prd>
-        <prd>p3:6:16736.3:17412.7</prd>
+        <prd>p1:1::</prd>
+        <prd>p2:1::</prd>
+        <prd>p3:1::</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>
@@ -28,7 +28,7 @@
         <STEP_SIZE>1.0</STEP_SIZE>
         <K>1.0</K>
         <T_INITIAL>0.008</T_INITIAL>
-        <MU_T>1.1</MU_T>
+        <MU_T>1.003</MU_T>
         <T_MIN>0.001</T_MIN>
     </config>
 </input>

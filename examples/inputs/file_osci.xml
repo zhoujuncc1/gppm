@@ -2,12 +2,12 @@
 <!-- Miner can be single or cluster-->
 <input>
     <miner>single</miner>
-    <filename>/home/zhoujun/gppm/examples/mapk1_data.txt</filename>
+    <filename>/home/zhoujun/gppm/examples/mapk_data_origin.txt</filename>
     <prds>
-        <prd>p1:1::</prd>
-        <prd>p2:1::</prd>
-        <prd>p3:1::</prd>
-        <prd>p4:1::</prd>
+        <prd>p1:7::</prd>
+        <prd>p2:7::</prd>
+        <prd>p3:7::</prd>
+        <prd>p4:7::</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>

@@ -4,8 +4,8 @@
     <miner>single</miner>
     <prds>
         <prd>p1:12::</prd>
-        <prd>p2:12:0.0184:0.0220</prd>
-        <prd>p3:12:0.00:0.00012</prd>
+        <prd>p2:12::</prd>
+        <prd>p3:12::</prd>
     </prds>
     <bltls>
         <bltl>p1</bltl>
@@ -27,7 +27,7 @@
         <STEP_SIZE>1.0</STEP_SIZE>
         <K>1.0</K>
         <T_INITIAL>0.008</T_INITIAL>
-        <MU_T>2</MU_T>
+        <MU_T>1.005</MU_T>
         <T_MIN>0.001</T_MIN>
     </config>
 </input>
