@@ -27,7 +27,7 @@ def run(variable, template, model, xml_filename):
     infile=open(inputfilename, "w")
     infile.write(xml_string)
     infile.close()
-    command = "../%s %s >> %s"% (model, inputfilename, outputfilename)
+    command = "../%s %s > %s"% (model, inputfilename, outputfilename)
     return sp.Popen(command, shell=True)
 
 

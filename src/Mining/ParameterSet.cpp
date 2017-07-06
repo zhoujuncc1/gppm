@@ -140,7 +140,8 @@ void ParameterSet::init_prd_range() {
 void ParameterSet::init_time_range() {
     for (auto itr = unknown_time_set.begin(); itr != unknown_time_set.end(); itr++) {
         itr->second->range.first = 1;
-        itr->second->range.second = (int) trajectories[0].dt;
+        itr->second->range.second =  trajectories[0].m_times.size();
+        printf("time end: %d\n", itr->second->range.second);
     }
 }
 

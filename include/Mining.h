@@ -55,6 +55,29 @@ public:
             minePrd();
         else
             mineGeneral();
+        refine_time();
+    }
+
+    void refine_time(){
+        for(auto itr=params->unknown_prd_set.begin();itr!=params->unknown_prd_set.end();itr++)
+            itr->second->value = state->prd_values[itr->first];
+        for(auto itr=params->unknown_time_set.begin();itr!=params->unknown_time_set.end();itr++)
+            itr->second->value = state->time_values[itr->first];
+
+        for(auto itr = params->unknown_time_set.begin(); itr != params->unknown_time_set.end(); itr++){
+            cout<<itr->first<<" ";
+            double loss_v = 0;
+            while(loss_v < LOSS_MAX && itr->second->value>itr->second->range.first && itr->second->value < itr->second->range.second){
+                itr->second->value-=itr->second->weight_sign;
+                cout<<itr->second->value<<", ";
+                loss_v = loss(state);
+                cout<<loss_v << "| ";
+            }
+            cout << endl<<endl;
+            itr->second->value+=itr->second->weight_sign;
+            state->time_values[itr->first] = itr->second->value;
+        }
+
     }
 
     string to_string(){

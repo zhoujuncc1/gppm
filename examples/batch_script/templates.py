@@ -40,7 +40,24 @@ class Templates(object):
                         
                         (F[k1]G[k2]p2)
                         ''',
-                        None
+                        'p2>p1'
+                        )
+    templates['pfp'] = Template('pfp',
+                         '''Predicates:
+        
+                        p1:{0}::
+        
+                        p2:{0}::
+    
+                        Formulas:
+
+                        p1
+                        
+                        (F[k1]p2)
+                        ''',
+                        '''p2>p1'
+                        
+                        p2>p1'''
                         )
     templates['updown_stay'] = Template('updown_stay',
                          '''Predicates:
@@ -57,7 +74,13 @@ class Templates(object):
                         
                         F[k1](p2 & F[k2]G[k3]p3)''',
                          
-                         '''p3<p2'''
+                         '''p2>p3
+                         
+                         p2>p3
+
+                         p2>p1
+                         
+                         p2>p1'''
         				)
       
     templates['updown'] = Template('updown',
@@ -74,7 +97,13 @@ class Templates(object):
                         p1
                         
                         F[k1](p2 & F[k2]p3)''',
-                        '''p2>p3'''
+                        '''p2>p3
+                         
+                         p2>p3
+
+                         p2>p1
+                         
+                         p2>p1'''
         				)
     
     templates['osci'] = Template('5',

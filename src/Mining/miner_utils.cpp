@@ -47,6 +47,8 @@ double _recursive_generate_prd(Parameter* param, map<string, double> &value_set)
     if (param->range.first>min)
         throw -1;
     param->value=_generate_real(param->range.first,min);
+    if(param->value<0)
+        param->value = 0;
     value_set[param->name]=param->value;
     return param->value;
 }
