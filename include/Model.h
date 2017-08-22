@@ -49,13 +49,20 @@ public:
 		for (int i = 0; i < Model::N_SPECIES; i++) {
 			x0.push_back(Model::x[i] * numberGenerator());
 		}
-		for (double i = 0; i < Model::end_time; i += dt) {
+        for (int i = Model::N_SPECIES; i < 2*Model::N_SPECIES; i++) {
+			x0.push_back(0.0);
+		}
+        traj.m_times.push_back(0);
+        traj.m_states.push_back(x0);
+		for (double i = dt; i < Model::end_time; i += dt) {
+            integrate(Model::odefun, x0, 0.0, dt, 0.001);
+            for (int j = Model::N_SPECIES; j < 2*Model::N_SPECIES; j++)
+			    x0[j] = (x0[j-Model::N_SPECIES]- traj.m_states.back()[j-Model::N_SPECIES])/dt;
             traj.m_times.push_back(i);
             traj.m_states.push_back(x0);
-            integrate(Model::odefun, x0, 0.0, dt, 0.001);
 		}
-		traj.m_times.push_back(Model::end_time);
-		traj.m_states.push_back(x0);
+        for (int j = Model::N_SPECIES; j < 2*Model::N_SPECIES; j++)
+			traj.m_states.front()[j] = traj.m_states[1][j];
         return traj;
 	}
 

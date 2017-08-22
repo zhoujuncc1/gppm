@@ -24,6 +24,7 @@ namespace pt = boost::property_tree;
 
 using namespace std;
 void do_mine(State* state, pt::ptree config);
+
 class Miner{
 public:
     Miner(){}
@@ -34,7 +35,7 @@ public:
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
         for(int i = 0; i < MAX_SIM; i++)
-            trajectories.push_back(Model::simulate(1.0));
+            trajectories.push_back(Model::simulate(0.1));
         params = new ParameterSet(bltl, prds, trajectories);
         params->init_prd_range();
         params->init_time_range();

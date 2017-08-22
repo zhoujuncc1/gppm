@@ -3,8 +3,8 @@
 <input>
     <miner>single</miner>
     <prds>
-        <prd>p1:14:MAX</prd>
-        <prd>p2:20:MAX</prd>
+        <prd>p1:7:MAX</prd>
+        <prd>p2:9:MAX</prd>
     </prds>
     <bltls>
         <bltl>F[k1](p1 & G[k2](~p2) & F[k3]p2)</bltl>
