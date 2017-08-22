@@ -24,7 +24,7 @@ ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds, vector<Trajectory
 }
 
 void ParameterSet::init_traj_ranges(){
-    int N_SPECIES = trajectories[0].N_SPECIES;
+    int N_SPECIES = trajectories[0].m_states[0].size();
     for (auto itr = trajectories[0].m_states[0].begin(); itr != trajectories[0].m_states[0].end();itr++){
         ranges.push_back(pair<double, double>(*itr, *itr));
         min.push_back(pair<double, double>(*itr, *itr));

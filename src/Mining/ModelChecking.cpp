@@ -63,5 +63,7 @@ double loss(State* state){
             score*=pow(avg_distance/max_distance, itr->second->weight_sign);
         }
     //score*=1/log(bayes);
+    if(score <=0.0)
+        score=LOSS_MAX;
     return score;
 }
