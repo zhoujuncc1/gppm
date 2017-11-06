@@ -413,7 +413,7 @@ AR = ar
 AUTOCONF = ${SHELL} /home/zhoujun/research/gppm/missing autoconf
 AUTOHEADER = ${SHELL} /home/zhoujun/research/gppm/missing autoheader
 AUTOMAKE = ${SHELL} /home/zhoujun/research/gppm/missing automake-1.15
-AWK = gawk
+AWK = mawk
 BOOST_CPPFLAGS = 
 BOOST_ROOT = 
 CC = gcc
@@ -426,7 +426,7 @@ CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"gppm\" -DPACKAGE_TARNAME=\"gppm\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"gppm\ 1.0\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"gppm\" -DVERSION=\"1.0\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DYYTEXT_POINTER=1 -DHAVE_BOOST=1 -DHAVE_LIBM=1 -DHAVE_LIBGSLCBLAS=1 -DHAVE_LIBGSL=1
+DEFS = -DPACKAGE_NAME=\"gppm\" -DPACKAGE_TARNAME=\"gppm\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"gppm\ 1.0\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"gppm\" -DVERSION=\"1.0\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_BOOST=1 -DHAVE_LIBM=1 -DHAVE_LIBGSLCBLAS=1 -DHAVE_LIBGSL=1
 DEPDIR = .deps
 DISTCHECK_CONFIGURE_FLAGS =  '--with-boost='
 DLLTOOL = false
@@ -446,9 +446,9 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
-LEX = flex
-LEXLIB = -lfl
-LEX_OUTPUT_ROOT = lex.yy
+LEX = :
+LEXLIB = 
+LEX_OUTPUT_ROOT = 
 LIBOBJS = 
 LIBS = -lgsl -lgslcblas -lm 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -479,7 +479,7 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 1.0
-YACC = bison -y
+YACC = yacc
 YFLAGS = 
 abs_builddir = /home/zhoujun/research/gppm/test
 abs_srcdir = /home/zhoujun/research/gppm/test
