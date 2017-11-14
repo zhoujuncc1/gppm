@@ -52,7 +52,7 @@ private:
 			Prd* prd = prd_itr->second;
 			int *value_arr = values[prd_itr->first];
 			for(int i = 0 ; i< length; i++){
-				value_arr[i]=traj.m_states[i][prd->varId]>prd->left->value && traj.m_states[i][prd->varId]<prd->right->value;
+				value_arr[i]=traj.m_states[i][prd->varId]>=prd->left->value && traj.m_states[i][prd->varId]<=prd->right->value;
             }
 		}
 	}

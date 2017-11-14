@@ -89,13 +89,31 @@ public:
         input >> size;
         for(int k = 0; k < size; k++){
             Trajectory traj(N_SPECIES, end_time);
-            for(int t = 0 ; t < end_time; t++){
+            {
                 state_type state;
                 for(int i = 0; i < N_SPECIES; i++){
                     double v;
                     input >> v;
                     state.push_back(v);
                 }
+                for(int i = 0; i < N_SPECIES; i++){
+                    state.push_back(0);
+                }
+
+                traj.m_states.push_back(state);
+                traj.m_times.push_back(0);
+            }
+            for(int t = 1 ; t < end_time; t++){
+                state_type state;
+                double v;
+                for(int i = 0; i < N_SPECIES; i++){
+                    input >> v;
+                    state.push_back(v);
+                }
+                for(int i = 0; i < N_SPECIES; i++){
+                    state.push_back(state[i]-traj.m_states.back()[i]);
+                }
+
                 traj.m_states.push_back(state);
                 traj.m_times.push_back(t);
             }
