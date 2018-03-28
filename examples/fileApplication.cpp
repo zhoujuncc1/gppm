@@ -15,6 +15,10 @@ int main(int argc, char** argv){
     }
     clock_t begin = clock();
     string filename(argv[1]);
+    std::ifstream f(filename);
+    if (f.is_open())
+        std::cout << f.rdbuf();
+    f.close();
     vector<Miner*> miners = MinerBuilder::buildMiner(filename, true);
     for(auto itr = miners.begin(); itr!=miners.end(); itr++)
         (*itr)->mine();

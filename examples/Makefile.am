@@ -1,4 +1,4 @@
-bin_PROGRAMS=egfngf segclock cd95 fileModel
+bin_PROGRAMS=egfngf segclock cd95 apoptosis represillator fileModel
 
 egfngf_SOURCES=application.cpp ../src/Models/Egfngf.cpp ../include
 egfngf_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
@@ -14,6 +14,18 @@ cd95_SOURCES=application.cpp ../src/Models/Cd95.cpp ../include
 cd95_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
 cd95_LDADD = ../src/libbltl.a ../src/libmining.a
 cd95_LDFLAGS = -L/usr/local/lib -lgsl $(GSL_LIBS) -v 
+
+apoptosis_SOURCES=application.cpp ../src/Models/apoptosis.cpp ../include
+apoptosis_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
+apoptosis_LDADD = ../src/libbltl.a ../src/libmining.a
+apoptosis_LDFLAGS = -L/usr/local/lib -lgsl $(GSL_LIBS) -v 
+
+
+represillator_SOURCES=application.cpp ../src/Models/Represillator.cpp ../include
+represillator_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
+represillator_LDADD = ../src/libbltl.a ../src/libmining.a
+represillator_LDFLAGS = -L/usr/local/lib -lgsl $(GSL_LIBS) -v 
+
 
 
 fileModel_SOURCES=fileApplication.cpp ../src/Models/Cd95.cpp ../include

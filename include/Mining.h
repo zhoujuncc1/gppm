@@ -34,8 +34,10 @@ public:
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
+        dt = input.get<double>("input.dt", 1.0);
+        end_time = input.get<double>("input.end_time", Model::end_time);
         for(int i = 0; i < MAX_SIM; i++)
-            trajectories.push_back(Model::simulate(0.1));
+            trajectories.push_back(Model::simulate(dt, end_time));
         params = new ParameterSet(bltl, prds, trajectories);
         params->init_prd_range();
         params->init_time_range();
@@ -122,7 +124,8 @@ public:
     ParameterSet* params;
     vector<Trajectory> trajectories;
     BltlChecker* bltlChecker;
-
+    double dt;
+    double end_time;
 
 };
 
