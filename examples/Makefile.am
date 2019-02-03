@@ -1,4 +1,4 @@
-bin_PROGRAMS=egfngf segclock cd95 apoptosis represillator fileModel
+bin_PROGRAMS=egfngf segclock cd95 apoptosis represillator cAMP fileModel
 
 egfngf_SOURCES=application.cpp ../src/Models/Egfngf.cpp ../include
 egfngf_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
@@ -25,6 +25,12 @@ represillator_SOURCES=application.cpp ../src/Models/Represillator.cpp ../include
 represillator_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
 represillator_LDADD = ../src/libbltl.a ../src/libmining.a
 represillator_LDFLAGS = -L/usr/local/lib -lgsl $(GSL_LIBS) -v 
+
+
+cAMP_SOURCES=application.cpp ../src/Models/cAMP.cpp ../include
+cAMP_CPPFLAGS=-I$(top_srcdir)/include $(BOOST_CPPFLAGS) -g -std=c++11
+cAMP_LDADD = ../src/libbltl.a ../src/libmining.a
+cAMP_LDFLAGS = -L/usr/local/lib -lgsl $(GSL_LIBS) -v 
 
 
 

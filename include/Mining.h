@@ -70,14 +70,21 @@ public:
         for(auto itr = params->unknown_time_set.begin(); itr != params->unknown_time_set.end(); itr++){
             cout<<itr->first<<" ";
             double loss_v = 0;
-            while(loss_v < LOSS_MAX && itr->second->value>itr->second->range.first && itr->second->value < itr->second->range.second){
+            int best = itr->second->value;
+            double best_loss = loss(state);
+            while(itr->second->value>itr->second->range.first && itr->second->value < itr->second->range.second){
                 itr->second->value-=itr->second->weight_sign;
                 cout<<itr->second->value<<", ";
                 loss_v = loss(state);
+                if(loss_v < best_loss){
+                    best = itr->second->value;
+                    best_loss = loss_v;
+                }
                 cout<<loss_v << "| ";
             }
+            itr->second->value = best;
+            loss(state);
             cout << endl<<endl;
-            itr->second->value+=itr->second->weight_sign;
             state->time_values[itr->first] = itr->second->value;
         }
 
