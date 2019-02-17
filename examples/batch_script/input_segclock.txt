@@ -1,4 +1,0 @@
-cd95
-../inputs/single_input_empty.xml
-[1, 2, 4, 5 ,8, 9, 12, 20]
-['updown', 'up', 'updown', 'updown', 'updown', 'updown', 'updown_stay', 'up']

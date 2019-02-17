@@ -1,4 +1,0 @@
-fileModel
-../inputs/file_input_empty.xml
-[3, 11, 15]
-['pfp', 'pfp', 'pfp']
