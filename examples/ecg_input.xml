@@ -1,0 +1,47 @@
+<!-- Only constraint is optional-->
+<!-- Miner can be single or cluster-->
+<input>
+    <miner>single</miner>
+    <filename>ecg_1000.txt</filename>
+    <prds>
+        <prd>p1:0::</prd>
+        <prd>p2:0::</prd>
+        <prd>p3:0::</prd>
+        <prd>p4:0::</prd>
+        <prd>p5:0::</prd>
+        <prd>p6:0::</prd>
+        <prd>p7:0::</prd>
+        <prd>p8:0::</prd>
+    </prds>
+    <bltls>
+        <bltl>G[k1]p1 & F[k2](p2 & F[k3](G[k4]p3 & F[k5](p4 & F[k6](p5 & F[k7](G[k8]p6 & F[k9](p7 & F[k10](p8))))))) </bltl>
+    </bltls>
+    <constraints>
+    <constraint>p2>p1</constraint>
+    <constraint>p2>p3</constraint>
+    <constraint>p3>p4</constraint>
+    <constraint>p5>p4</constraint>
+    <constraint>p5>p6</constraint>
+    <constraint>p7>p6</constraint>
+    <constraint>p7>p8</constraint>
+    </constraints>
+    <weights>
+        <weight>k1:0.2</weight>
+        <weight>k2:0.2</weight>
+        <weight>k3:0.2</weight>
+        <weight>p3:0.2</weight>
+        <weight>p2:0.2</weight>
+        <weight>p4:0.2</weight>
+        <weight>p1:0.2</weight>
+    </weights>
+    <config>
+        <N_TRIES>100</N_TRIES>
+        <ITERS_FIXED_T>200</ITERS_FIXED_T>
+        <STEP_SIZE>1.0</STEP_SIZE>
+        <K>1.0</K>
+        <T_INITIAL>0.008</T_INITIAL>
+        <MU_T>1.003</MU_T>
+        <T_MIN>0.001</T_MIN>
+    </config>
+</input>
+
