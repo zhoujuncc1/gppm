@@ -1,0 +1,18 @@
+<!-- Only constraint is optional-->
+<!-- Miner can be single or cluster-->
+<input>
+    <filename>ecg_1000.txt</filename>
+    <prds>
+        <prd>p2:0:0.091250:0.121737</prd>
+        <prd>p3:0:0:0.010764</prd>
+        <prd>p5:0:0:1.455556</prd>
+        <prd>p6:0:0:0</prd>
+        <prd>p7:0:0:1.026828</prd>
+        <prd>p8:0:0:0</prd>
+    </prds>
+    <bltls>
+        <bltl>F[k2=57](p2 & F[k3=222](p3 & F[k6=51](p5 & F[k7=2](p6 & F[k9=180](p7 & F[k10=12](p8)))))) </bltl>
+    </bltls>
+
+</input>
+
