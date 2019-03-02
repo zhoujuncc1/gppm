@@ -146,7 +146,8 @@ public:
 };
 
 class FileMiner : public SingleMiner{
-public:    
+public:
+    FileMiner(){}
     FileMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
         input = in;
         prds = parse_prd(prd_inputs);
@@ -170,6 +171,32 @@ public:
 
 
 };
+
+class GPUMiner : public FileMiner{
+  public:    
+      GPUMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
+      input = in;
+      prds = parse_prd(prd_inputs);
+      bltl = parse_bltl(bltl_input);
+      link_prd(bltl, prds);
+      string filename = input.get<string>("input.filename");
+      GPUFileTrajectoryProvider trajProvider(filename);
+      trajectories = trajProvider.getTrajectories(MAX_SIM);
+      params = new ParameterSet(bltl, prds, trajectories);
+      params->init_prd_range();
+      params->init_time_range();
+      params->parse_constraint_tree(constraint_inputs);
+      if(!weight_inputs.empty())
+        params->parse_weight(weight_inputs);
+
+
+      bltlChecker= new GPUBltlChecker(bltl, prds, &trajProvider);
+    }
+
+
+
+};
+
 
 class ClusterMiner : public Miner{
 public:
@@ -354,6 +381,36 @@ public:
             return miners;
         }
 	}
+  static vector<Miner*> buildGPUMiner(string filename){
+    vector<Miner*> miners;
+    pt::ptree input;
+    pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);
+
+    vector<string> bltl_inputs;
+    BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.bltls")) {
+      // The data function is used to access the data stored in a node.
+      bltl_inputs.push_back(v.second.data());
+    }
+    vector<string> prd_inputs;
+    BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.prds")) {
+      // The data function is used to access the data stored in a node.
+      prd_inputs.push_back(v.second.data());
+    }
+    vector<string> constraint_inputs;
+    BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.constraints")) {
+      // The data function is used to access the data stored in a node.
+      constraint_inputs.push_back(v.second.data());
+    }
+    vector<string> weight_inputs;
+    BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.weights")) {
+      // The data function is used to access the data stored in a node.
+      weight_inputs.push_back(v.second.data());
+    }
+
+    for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+      miners.push_back(new GPUMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
+    return miners;
+  }
 
 };
 
