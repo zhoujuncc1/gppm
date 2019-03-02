@@ -1,0 +1,25 @@
+NVCC=nvcc
+CC=g++
+CPFLAGS= -g  -std=c++11 -I../../include -ll -lm -lfl
+CPP_SRCS = $(wildcard *.cpp)
+CPP_OBJS = $(patsubst %.cpp,%.o,$(CPP_SRCS))
+CU_SRCS = $(wildcard *.cu)
+CU_OBJS = $(patsubst %.cu,%.o,$(CU_SRCS))
+
+all: parser.o lexer.o $(CPP_OBJS) $(CU_OBJS)
+
+clean:
+	rm -f *.o parser.cpp lexer.cpp
+parser.cpp:
+	bison parser.ypp -d -o parser.cpp
+lexer.cpp:
+	/bin/sh ylwrap lexer.lpp lex.yy.c lexer.cpp -- flex
+
+
+%.o: %.cpp
+	$(CC) $(CPFLAGS)  -c  $<
+
+%.o: %.cu
+	$(NVCC) $(CPFLAGS)  -c  $<
+
+

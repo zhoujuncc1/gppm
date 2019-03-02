@@ -4,8 +4,8 @@
 #include <vector>
 #include <map>
 #include <cuda_runtime.h>
-#include <helper_functions.h>
-#include <helper_cuda.h>
+#include "../../include/helper_functions.h"
+#include "../../include/helper_cuda.h"
 
 #include "../../include/Bltl/BltlChecker.h"
 #include "../../include/Bltl/Bltl.h"
