@@ -1,6 +1,6 @@
 NVCC=nvcc
 CC=g++
-CPFLAGS= -g  -std=c++11 -I../../include -ll -lm -lfl
+CPFLAGS= -g -std=c++11 -I../../include
 CPP_SRCS = $(wildcard *.cpp)
 CPP_OBJS = $(patsubst %.cpp,%.o,$(CPP_SRCS))
 CU_SRCS = $(wildcard *.cu)
@@ -9,7 +9,7 @@ CU_OBJS = $(patsubst %.cu,%.o,$(CU_SRCS))
 all: parser.o lexer.o $(CPP_OBJS) $(CU_OBJS)
 
 clean:
-	rm -f *.o parser.cpp lexer.cpp
+	rm -f *.o parser.cpp lexer.cpp parser.hpp
 parser.cpp:
 	bison parser.ypp -d -o parser.cpp
 lexer.cpp:

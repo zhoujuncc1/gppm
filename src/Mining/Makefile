@@ -7,13 +7,13 @@ CPP_OBJS = $(patsubst %.cpp,%.o,$(CPP_SRCS))
 CU_SRCS = $(wildcard *.cu)
 CU_OBJS = $(patsubst %.cu,%.o,$(CU_SRCS))
 
-all: $(CPP_OBJS)
+all: $(CPP_OBJS)  $(CU_OBJS)
 #	$(CC) -o $@ $^
 
 clean:
 	rm -f *.o
 %.o: %.cpp
-	$(NVCC) $(CPFLAGS)  -c  $<
+	$(CC) $(CPFLAGS)  -c  $<
 
 %.o: %.cu
 	$(NVCC) $(CPFLAGS)  -c  $<

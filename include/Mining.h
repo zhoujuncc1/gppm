@@ -28,6 +28,7 @@ void do_mine(State* state, pt::ptree config);
 class Miner{
 public:
     Miner(){}
+/*
     Miner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : input(in){
         
 
@@ -47,7 +48,7 @@ public:
         bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
         //bltlChecker= new TreeBltlChecker(bltl);
     }
-
+*/
     void mine(){
         state = new State(params);
         state->prd_values = generate_prd(params->tree_roots);
@@ -139,7 +140,6 @@ public:
 class SingleMiner : public Miner{
 public:
     SingleMiner(){}
-    SingleMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : Miner(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs){}
     void mineGeneral(){
         do_mine(state, input.get_child("input.config"));
     }
@@ -198,143 +198,6 @@ class GPUMiner : public FileMiner{
 };
 
 
-class ClusterMiner : public Miner{
-public:
-    ClusterMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs) : Miner(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs){
-        pt::ptree cluster_conf = input.get_child("input.cluster");
-        input_t = cluster_conf.get<int>("input_t");
-        cluster_prd = cluster_conf.get<int>("cluster_prd");
-        cluster_time = cluster_conf.get<int>("cluster_time");
-
-    }
-    void mineGeneral(){
-        vector<string> prd_keys, time_keys;
-        vector<int> prd_index, time_index;
-
-        int length = 0;
-        for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
-            prd_keys.push_back(it->first);
-            prd_index.push_back(length++);
-        }
-        for (auto it=state->time_values.begin(); it!=state->time_values.end(); ++it) {
-            time_keys.push_back(it->first);
-            time_index.push_back(length++);
-        }
-
-        for(int i = 0; i < input_t; i++) {
-            vector<double> values;
-            _generate_property(state);
-            BOOST_FOREACH(string k, prd_keys){
-                values.push_back(state->prd_values[k]);
-            }
-            BOOST_FOREACH(string k, time_keys){
-                values.push_back(state->time_values[k]);
-            }
-            points.push_back(Point(i, values));
-        }
-        KMeans kmeans(cluster_prd, input_t, length, prd_index, 1000);
-	    kmeans.run(points);
-        
-        cout << "======================================" << "\n";
-        cout << "======================================" << "\n";
-
-        for(int i = 0; i < cluster_prd; i++){
-            cout << "Cluster " << i+1 <<"\n";
-            cout << "======================================" << "\n";
-            KMeans sub_kmeans(cluster_time, kmeans.getClusters()[i].getTotalPoints(), length, time_index, 1000);
-            sub_kmeans.run(kmeans.getClusters()[i].getPoints());
-        }
-
-
-    }
-    void _generate_property(State* state){
-        int trials = 0;
-        double bayes = 0;
-        do{
-            state->prd_values = generate_prd(state->paramset->tree_roots);
-            state->time_values = generate_time(state->paramset->unknown_time_set);
-            bayes = modelchecking(state);
-        } while(bayes < BAYES_MAX && trials<1000);
-        if(bayes < BAYES_MAX)
-            exit(1);
-        
-    }
-    int input_t;
-    int cluster_time, cluster_prd;
-    vector<Point> points;
-
-};
-
-/*
-#include <omp.h>
-class ParallelClusterMiner : public ClusterMiner{
-public:
-    ParallelClusterMiner(pt::ptree input) {
-        ClusterMiner(input);
-    }
-    void mine(){
-        state = new State(params);
-        state->trajectories = &trajectories;
-        state->prd_values = generate_prd(params->tree_roots);
-        state->time_values = generate_time(params->unknown_time_set);
-        vector<string> prd_keys, time_keys;
-        vector<int> prd_index, time_index, all_index;
-
-        int length = 0;
-        for (auto it=state->prd_values.begin(); it!=state->prd_values.end(); ++it){
-            prd_keys.push_back(it->first);
-            prd_index.push_back(length);
-            all_index.push_back(length);
-            length++;
-        }
-        for (auto it=state->time_values.begin(); it!=state->time_values.end(); ++it) {
-            time_keys.push_back(it->first);
-            time_index.push_back(length);
-            all_index.push_back(length);
-            length++;
-        }
-        omp_lock_t writelock;
-
-        omp_init_lock(&writelock);
-#pragma omp parallel for
-        for(int i = 0; i < input_t; i++) {
-            vector<double> values;
-            _generate_property(state);
-            BOOST_FOREACH(string k, prd_keys){
-                values.push_back(state->prd_values[k]);
-            }
-            BOOST_FOREACH(string k, time_keys){
-                values.push_back(state->time_values[k]);
-            }
-            omp_set_lock(&writelock);
-            points.push_back(Point(i, values));
-            omp_unset_lock(&writelock);
-
-        }
-        omp_destroy_lock(&writelock);
-
-        KMeans kmeans(cluster_time, input_t, length, time_index, 1000);
-	    kmeans.run(points);
-        
-        cout << "======================================" << "\n";
-        cout << "======================================" << "\n";
-
-        for(int i = 0; i < cluster_time; i++){
-            cout << "Cluster " << i+1 <<"\n";
-            cout << "======================================" << "\n";
-            KMeans sub_kmeans(cluster_prd, kmeans.getClusters()[i].getTotalPoints(), length, prd_index, 1000);
-            sub_kmeans.run(kmeans.getClusters()[i].getPoints());
-        }
-        
-
-
-    }
-
-
-};
-*/
-
-
 class MinerBuilder{
 public:
 	static vector<Miner*> buildMiner(string filename, bool isFileMiner){
@@ -368,19 +231,7 @@ public:
                 miners.push_back(new FileMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
             return miners;
         }
-        else {
-            string miner_type = input.get<string>("input.miner");
-            if (miner_type.compare("single")==0){
-                for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
-                    miners.push_back(new SingleMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
-            }
-            else if(miner_type.compare("cluster")==0){
-                for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
-                    miners.push_back(new ClusterMiner(input, *itr+";", prd_inputs, constraint_inputs, weight_inputs));
-            }
-            return miners;
-        }
-	}
+  }
   static vector<Miner*> buildGPUMiner(string filename){
     vector<Miner*> miners;
     pt::ptree input;

@@ -14,6 +14,7 @@ using namespace std;
 
 class BltlChecker{
 public:
+  BltlChecker(){}
 	BltlChecker(Bltl* bltl){
         this->bltl=bltl;
     }
@@ -29,6 +30,7 @@ public:
 
 class RecursiveBltlChecker: public BltlChecker{
 public:
+  RecursiveBltlChecker(){}
 	RecursiveBltlChecker(Bltl* bltl, map<string, Prd*> prds, Trajectory traj):BltlChecker(bltl){
 		isGPU=false;
 		this->prds=prds;

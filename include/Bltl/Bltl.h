@@ -40,7 +40,7 @@ private:
 	Bltl* child1;
 	Bltl* child2;
 	std::string prd_name;
-	Prd* prd;
+  Prd* prd;
 	void set_weight_sign();
 
 

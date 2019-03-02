@@ -2,7 +2,7 @@
 #include <helper_functions.h>
 #include <helper_cuda.h>
 #include <cuda_runtime.h>
-GPUFileTrajectoryProvider::GPUFileTrajectoryProvider(std::string filename) : FileTrajectoryProvider(filename)
+GPUFileTrajectoryProvider::GPUFileTrajectoryProvider(std::string filename)
     {
         dim_array[TRAJ_N_SPECIES_I] = N_SPECIES;
         dim_array[TRAJ_END_TIME_I] = end_time;
@@ -40,7 +40,6 @@ GPUFileTrajectoryProvider::GPUFileTrajectoryProvider(std::string filename) : Fil
         input >> size;
 
         float *trajectory_host = (float *)malloc(2 * N_SPECIES * end_time * sizeof(float));
-        cudaError_t error;
 
         for (int k = 0; k < size; k++)
         {

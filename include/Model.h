@@ -47,57 +47,10 @@ class GPUTrajectory : public Trajectory
     float *traj_device;
 };
 
-class Model
-{
-  public:
-    static Trajectory simulate(double dt, double end_time)
-    {
-        Trajectory traj = Trajectory(Model::N_SPECIES, dt);
-        NumberDistribution distribution(1.0 - Model::x_variation,
-                                        1.0 + Model::x_variation);
-        RandomNumberGenerator generator;
-        Generator numberGenerator(generator, distribution);
-        generator.seed(std::time(0)); // seed with the current time
-
-        state_type x0;
-        for (int i = 0; i < Model::N_SPECIES; i++)
-        {
-            x0.push_back(Model::x[i] * numberGenerator());
-        }
-        for (int i = Model::N_SPECIES; i < 2 * Model::N_SPECIES; i++)
-        {
-            x0.push_back(0.0);
-        }
-        traj.m_times.push_back(0);
-        traj.m_states.push_back(x0);
-        for (double i = dt; i < end_time; i += dt)
-        {
-            integrate(Model::odefun, x0, 0.0, dt, 0.001);
-            for (int j = Model::N_SPECIES; j < 2 * Model::N_SPECIES; j++)
-                x0[j] = (x0[j - Model::N_SPECIES] - traj.m_states.back()[j - Model::N_SPECIES]) / dt;
-            traj.m_times.push_back(i);
-            traj.m_states.push_back(x0);
-        }
-        for (int j = Model::N_SPECIES; j < 2 * Model::N_SPECIES; j++)
-            traj.m_states.front()[j] = traj.m_states[1][j];
-        return traj;
-    }
-
-    static void odefun(const state_type &x, state_type &dxdt, const double /* t */);
-
-    static const int N_SPECIES;
-    static const int N_PARAMS;
-    static const double x[];
-    static const double p[];
-    static const double end_time;
-
-  private:
-    static const double x_variation;
-};
-
 class FileTrajectoryProvider
 {
   public:
+    FileTrajectoryProvider(){}
     FileTrajectoryProvider(std::string filename)
     {
         std::ifstream input(filename);
