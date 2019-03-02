@@ -34,6 +34,7 @@ public:
 	Operation getOperation();
 
 	Operation operation;
+	bool* value_array_device;
 private:
 	TimeVariable *time;
 	Bltl* child1;
@@ -41,6 +42,7 @@ private:
 	std::string prd_name;
 	Prd* prd;
 	void set_weight_sign();
+
 
 };
 

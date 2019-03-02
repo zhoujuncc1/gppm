@@ -19,14 +19,18 @@ public:
     }
 	virtual ~BltlChecker(){}
 	virtual int check(Trajectory traj)=0;
+	virtual vector<int> check(){return vector<int>();}
 
 	Bltl* bltl;
 	map<string, Prd*> prds;
+	int isGPU;
+
 };
 
 class RecursiveBltlChecker: public BltlChecker{
 public:
 	RecursiveBltlChecker(Bltl* bltl, map<string, Prd*> prds, Trajectory traj):BltlChecker(bltl){
+		isGPU=false;
 		this->prds=prds;
         length = traj.m_states.size();
 		for(auto prd_itr = prds.begin(); prd_itr!=prds.end(); prd_itr++)
@@ -43,10 +47,10 @@ public:
         int result = eval_formula(bltl, 0);
 		return result;
 	}
+	int length;
 
 private:
 	map<string, int*> values;
-    int length;
 	void eval_prds(Trajectory traj){
 		for(auto prd_itr = prds.begin(); prd_itr!=prds.end(); prd_itr++){
 			Prd* prd = prd_itr->second;
@@ -111,6 +115,8 @@ public:
 	TreeBltlChecker(Bltl* bltl) : BltlChecker(bltl){
 		source = buildTree(bltl);
 		nTime = 0;
+		isGPU=false;
+
 	}
 	virtual ~TreeBltlChecker() {
 		for (vector<Node*>::iterator it = roots.begin(); it != roots.end();
@@ -204,5 +210,35 @@ private:
 	int nTime;
 	Node* source;
 };
+
+
+
+class GPUBltlChecker : public RecursiveBltlChecker
+{
+  public:
+	GPUBltlChecker(Bltl *bltl, map<string, Prd *> prds, GPUFileTrajectoryProvider* traj_provider);
+	virtual ~GPUBltlChecker()
+	{
+		//for(auto itr = values.begin(); itr!=values.end(); itr++)
+		//delete (itr->second);
+	}
+
+	virtual vector<int> check()
+	{
+		eval_prds();
+		vector<int> result = eval_bltl(bltl);
+		return result;
+	}
+
+  private:
+	float *traj_device;
+	GPUFileTrajectoryProvider* traj_provider;
+	int *dim_array_device;
+
+	void eval_prds();
+	bool* eval_bltl_recursive(Bltl *bltl);
+	vector<int> eval_bltl(Bltl *bltl);
+
+    };
 
 #endif // BLTLCHECKER_H

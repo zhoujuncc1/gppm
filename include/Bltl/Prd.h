@@ -25,7 +25,8 @@ public:
 	Parameter* right;
 	FLAG flag;
 	bool isFlag;
-    double weight_sign=0;
+    float weight_sign=0;
+    bool* value_array_device;
 };
 
 #endif /* PRD_H_ */

@@ -25,58 +25,67 @@
 using namespace std;
 namespace pt = boost::property_tree;
 
-
 class State;
 double modelchecking(State *state);
-double loss(State* state);
+double loss(State *state);
 
-
-class ModelChecker{
-public:
-    map<string, Prd*> prds;
-    Bltl* bltl;
+class ModelChecker
+{
+  public:
+    map<string, Prd *> prds;
+    Bltl *bltl;
     vector<Trajectory> trajectories;
-    BltlChecker* bltlChecker;
-    ModelChecker(string bltl_input, vector<string> prd_inputs, string filename){
+    BltlChecker *bltlChecker;
+    ModelChecker(string bltl_input, vector<string> prd_inputs, string filename)
+    {
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
         FileTrajectoryProvider trajProvider(filename);
         trajectories = trajProvider.getTrajectories(MAX_SIM);
-        bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
-
+        bltlChecker = new RecursiveBltlChecker(bltl, prds, trajectories[0]);
     }
 
-    vector<int> check(){
+    vector<int> check()
+    {
         vector<int> results;
-        for(int i = 0; i < trajectories.size(); i++)
-            results.push_back(bltlChecker->check(trajectories[i]));
+        if (bltlChecker->isGPU)
+        {
+            results = bltlChecker->check();
+        }
+        else
+        {
+            for (int i = 0; i < trajectories.size(); i++)
+                results.push_back(bltlChecker->check(trajectories[i]));
+        }
         return results;
     }
 
-	static vector<ModelChecker*> buildChecker(string filename){
-        vector<ModelChecker*> checkers;
+    static vector<ModelChecker *> buildChecker(string filename)
+    {
+        vector<ModelChecker *> checkers;
 
         pt::ptree input;
         pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);
 
         vector<string> bltl_inputs;
-        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.bltls")) {
+        BOOST_FOREACH (pt::ptree::value_type &v, input.get_child("input.bltls"))
+        {
             // The data function is used to access the data stored in a node.
             bltl_inputs.push_back(v.second.data());
         }
         vector<string> prd_inputs;
-        BOOST_FOREACH(pt::ptree::value_type &v, input.get_child("input.prds")) {
+        BOOST_FOREACH (pt::ptree::value_type &v, input.get_child("input.prds"))
+        {
             // The data function is used to access the data stored in a node.
             prd_inputs.push_back(v.second.data());
         }
         string traj_filename = input.get<string>("input.filename");
 
-        for(auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
-            checkers.push_back(new ModelChecker(*itr+";", prd_inputs, traj_filename));
+        for (auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+            checkers.push_back(new ModelChecker(*itr + ";", prd_inputs, traj_filename));
         return checkers;
-	}
-
+    }
 };
 
 #endif //GPPM_MODELCHECKING_H
