@@ -2,11 +2,11 @@ CC=nvcc
 MAKE=make
 CPFLAGS= -g  -std=c++11 -Iinclude 
 
-all: libblstl.a libmining.a
+all: libbltl.a libmining.a
 
-libblstl.a:
+libbltl.a:
 	$(MAKE) -C Bltl all
-	ar rcs libblstl.a Bltl/*.o
+	ar rcs libbltl.a Bltl/*.o
 
 libmining.a:
 	$(MAKE) -C Mining all
