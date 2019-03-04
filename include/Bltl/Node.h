@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-typedef std::vector<double> state_type;
+typedef std::vector<float> state_type;
 class Node {
 public:
 	Node() {

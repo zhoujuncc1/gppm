@@ -38,10 +38,10 @@ class ParameterSet {
     vector<Trajectory> trajectories;
  private:
 
-    vector<pair<double, double> > ranges;
-    vector<pair<double, double> > min;
-    vector<pair<double, double> > max;
-    vector<pair<double, double> > t0;
+    vector<pair<float, float> > ranges;
+    vector<pair<float, float> > min;
+    vector<pair<float, float> > max;
+    vector<pair<float, float> > t0;
     vector<pair<string, string> > constraints;
 
     void init_traj_ranges();

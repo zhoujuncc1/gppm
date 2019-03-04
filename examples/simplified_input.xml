@@ -2,7 +2,7 @@
 <!-- Miner can be single or cluster-->
 <input>
     <miner>single</miner>
-    <filename>ecg_1000.txt</filename>
+    <filename>examples/ecg_1000.txt</filename>
     <prds>
         <prd>p1:0::</prd>
         <prd>p2:0::</prd>

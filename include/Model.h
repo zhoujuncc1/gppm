@@ -15,7 +15,7 @@
 #include <fstream>
 using namespace boost::numeric::odeint;
 
-typedef std::vector<double> state_type;
+typedef std::vector<float> state_type;
 
 typedef boost::uniform_real<> NumberDistribution;
 typedef boost::mt19937 RandomNumberGenerator;
@@ -35,17 +35,9 @@ class Trajectory
     double dt;
     int N_SPECIES;
     std::vector<state_type> m_states;
-    std::vector<double> m_times;
+    std::vector<float> m_times;
 };
 
-class GPUTrajectory : public Trajectory
-{
-  public:
-    GPUTrajectory(int N_SPECIES, float dt) : Trajectory(N_SPECIES, dt)
-    {
-    }
-    float *traj_device;
-};
 
 class FileTrajectoryProvider
 {
@@ -64,7 +56,7 @@ class FileTrajectoryProvider
                 state_type state;
                 for (int i = 0; i < N_SPECIES; i++)
                 {
-                    double v;
+                    float v;
                     input >> v;
                     state.push_back(v);
                 }
@@ -79,7 +71,7 @@ class FileTrajectoryProvider
             for (int t = 1; t < end_time; t++)
             {
                 state_type state;
-                double v;
+                float v;
                 for (int i = 0; i < N_SPECIES; i++)
                 {
                     input >> v;
@@ -121,7 +113,7 @@ class FileTrajectoryProvider
         return trajs;
     }
 
-    int size = 0;
+    int size;
     int N_SPECIES;
     int end_time;
     std::vector<Trajectory> trajectories;

@@ -26,13 +26,13 @@ ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds, vector<Trajectory
 void ParameterSet::init_traj_ranges(){
     int N_SPECIES = trajectories[0].m_states[0].size();
     for (auto itr = trajectories[0].m_states[0].begin(); itr != trajectories[0].m_states[0].end();itr++){
-        ranges.push_back(pair<double, double>(*itr, *itr));
-        min.push_back(pair<double, double>(*itr, *itr));
-        max.push_back(pair<double, double>(*itr, *itr));
-        t0.push_back(pair<double, double>(*itr, *itr));
+        ranges.push_back(pair<float, float>(*itr, *itr));
+        min.push_back(pair<float, float>(*itr, *itr));
+        max.push_back(pair<float, float>(*itr, *itr));
+        t0.push_back(pair<float, float>(*itr, *itr));
     }
-    double t_min[N_SPECIES];        
-    double t_max[N_SPECIES];
+    float t_min[N_SPECIES];        
+    float t_max[N_SPECIES];
     for (int j = 0; j < N_TRAJ; j++){
         for (int i = 0; i < N_SPECIES; i++){
             t_min[i] = trajectories[j].m_states[0][i];
@@ -63,7 +63,7 @@ void ParameterSet::init_traj_ranges(){
             }
     }
     for (int i = 0; i < N_SPECIES; i++) {
-        double dis = ranges[i].second - ranges[i].first;
+        float dis = ranges[i].second - ranges[i].first;
         ranges[i].first -= 0.1 * dis;
         ranges[i].second += 0.1 * dis;
 

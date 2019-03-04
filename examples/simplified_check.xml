@@ -1,7 +1,7 @@
 <!-- Only constraint is optional-->
 <!-- Miner can be single or cluster-->
 <input>
-    <filename>ecg_1000.txt</filename>
+  <filename>examples/ecg_1000.txt</filename>
     <prds>
         <prd>p2:0:0.091250:0.121737</prd>
         <prd>p3:0:0:0.010764</prd>
