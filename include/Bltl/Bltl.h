@@ -34,7 +34,8 @@ public:
 	Operation getOperation();
 
 	Operation operation;
-	bool* value_array_device;
+    bool* value_array_device_default_true;
+    bool* value_array_device_default_false;
 private:
 	TimeVariable *time;
 	Bltl* child1;

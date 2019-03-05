@@ -20,13 +20,14 @@
 #define MAX_SIM 1000
 #define BAYES_MIN 0.01
 #define BAYES_MAX 100
+#define RATE_MAX 0.9
 #define LOSS_MAX 1000000
 
 using namespace std;
 namespace pt = boost::property_tree;
 
 class State;
-double modelchecking(State *state);
+vector<int> modelchecking(State *state);
 double loss(State *state);
 
 class ModelChecker
@@ -36,6 +37,7 @@ class ModelChecker
     Bltl *bltl;
     vector<Trajectory> trajectories;
     BltlChecker *bltlChecker;
+     ModelChecker(){}
     ModelChecker(string bltl_input, vector<string> prd_inputs, string filename)
     {
         prds = parse_prd(prd_inputs);
@@ -84,6 +86,51 @@ class ModelChecker
 
         for (auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
             checkers.push_back(new ModelChecker(*itr + ";", prd_inputs, traj_filename));
+        return checkers;
+    }
+};
+
+
+class GPUModelChecker:ModelChecker
+{
+  public:
+    GPUModelChecker(string bltl_input, vector<string> prd_inputs, string filename)
+    {
+        prds = parse_prd(prd_inputs);
+        bltl = parse_bltl(bltl_input);
+        link_prd(bltl, prds);
+        GPUFileTrajectoryProvider *trajProvider = new GPUFileTrajectoryProvider(filename);
+        bltlChecker = new GPUBltlChecker(bltl, prds, trajProvider);
+    }
+
+    vector<int> check()
+    {
+        return bltlChecker->check();
+    }
+
+    static vector<GPUModelChecker *> buildChecker(string filename)
+    {
+        vector<GPUModelChecker *> checkers;
+
+        pt::ptree input;
+        pt::read_xml(filename, input, pt::xml_parser::trim_whitespace);
+
+        vector<string> bltl_inputs;
+        BOOST_FOREACH (pt::ptree::value_type &v, input.get_child("input.bltls"))
+        {
+            // The data function is used to access the data stored in a node.
+            bltl_inputs.push_back(v.second.data());
+        }
+        vector<string> prd_inputs;
+        BOOST_FOREACH (pt::ptree::value_type &v, input.get_child("input.prds"))
+        {
+            // The data function is used to access the data stored in a node.
+            prd_inputs.push_back(v.second.data());
+        }
+        string traj_filename = input.get<string>("input.filename");
+
+        for (auto itr = bltl_inputs.begin(); itr != bltl_inputs.end(); itr++)
+            checkers.push_back(new GPUModelChecker(*itr + ";", prd_inputs, traj_filename));
         return checkers;
     }
 };

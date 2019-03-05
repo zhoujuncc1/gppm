@@ -26,7 +26,9 @@ public:
 	FLAG flag;
 	bool isFlag;
     float weight_sign=0;
-    bool* value_array_device;
+    bool* value_array_device_default_true;
+    bool* value_array_device_default_false;
+
 };
 
 #endif /* PRD_H_ */

@@ -15,7 +15,6 @@ GPUFileTrajectoryProvider::GPUFileTrajectoryProvider(std::string filename)
         dim_array[TRAJ_END_TIME_I] = end_time;
         dim_array[TRAJ_SIZE_I] = size;
 
-        trajectories_host = (float *)malloc(size * N_SPECIES * 2 * end_time);
 
         cudaError_t error;
         error = cudaMalloc((void **)&dim_array_device, 3 * sizeof(int));
@@ -32,6 +31,8 @@ GPUFileTrajectoryProvider::GPUFileTrajectoryProvider(std::string filename)
             printf("cudaMemcpy (dim_array_device, dim_array) returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
             exit(EXIT_FAILURE);
         }
+
+        trajectories_host = (float *)malloc(size * N_SPECIES * 2 * end_time*sizeof(float));
         error = cudaMalloc((void **)&trajectories_device, 2 * N_SPECIES * end_time * size * sizeof(float));
 
         if (error != cudaSuccess)

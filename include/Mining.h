@@ -180,8 +180,8 @@ class GPUMiner : public FileMiner{
       bltl = parse_bltl(bltl_input);
       link_prd(bltl, prds);
       string filename = input.get<string>("input.filename");
-      GPUFileTrajectoryProvider trajProvider(filename);
-      trajectories = trajProvider.getTrajectories(MAX_SIM);
+      GPUFileTrajectoryProvider *trajProvider = new GPUFileTrajectoryProvider(filename);
+      trajectories = trajProvider->getTrajectories(MAX_SIM);
       params = new ParameterSet(bltl, prds, trajectories);
       params->init_prd_range();
       params->init_time_range();
@@ -190,7 +190,7 @@ class GPUMiner : public FileMiner{
         params->parse_weight(weight_inputs);
 
 
-      bltlChecker= new GPUBltlChecker(bltl, prds, &trajProvider);
+      bltlChecker= new GPUBltlChecker(bltl, prds, trajProvider);
     }
 
 

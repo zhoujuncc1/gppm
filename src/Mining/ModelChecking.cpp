@@ -10,7 +10,8 @@
 #include "State.h"
 #include "Bltl/BltlChecker.h"
 using namespace std;
-double bayes_factor(vector<int> satArray, double theta = 0.9, double alpha = 1.0, double beta = 1.0)
+
+int count(vector<int> satArray)
 {
     int safe = 0;
     int total = satArray.size();
@@ -18,12 +19,19 @@ double bayes_factor(vector<int> satArray, double theta = 0.9, double alpha = 1.0
     {
         safe += satArray[i];
     }
-    if (safe == 0)
-        return 0;
-    return 1.0 / gsl_sf_beta_inc(safe + alpha, total - safe + beta, theta) - 1;
+    return safe;
 }
 
-double modelchecking(State *state)
+
+double bayes_factor(vector<int> satArray, double theta = 0.9, double alpha = 1.0, double beta = 1.0)
+{
+    int safe = count(satArray);
+    if (safe == 0)
+        return 0;
+    return 1.0 / gsl_sf_beta_inc(safe + alpha, satArray.size() - safe + beta, theta) - 1;
+}
+
+vector<int> modelchecking(State *state)
 {
     state->assignValues();
     double bayes = 1;
@@ -42,15 +50,19 @@ double modelchecking(State *state)
             }
         }
     }
-    bayes = bayes_factor(result);
 
-    return bayes;
+    return result;
 }
+
+
+
 
 double loss(State *state)
 {
-    double bayes = modelchecking(state);
-    if (bayes < BAYES_MAX)
+    vector<int> result = modelchecking(state);
+    //double bayes = bayes_factor(result);
+    double bayes = ((double)count(result))/result.size();
+    if (bayes < RATE_MAX)
         return LOSS_MAX;
     double score = 1.0;
     double weight = 0.2;

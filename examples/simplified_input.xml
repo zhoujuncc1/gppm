@@ -14,7 +14,6 @@
         <prd>p8:0::</prd>
     </prds>
     <bltls>
-        <bltl>p1 </bltl>
         <bltl>F[k2](p2 & F[k3](p3 & F[k6](p5 & F[k7](p6 & F[k9](p7 & F[k10](p8)))))) </bltl>
     </bltls>
     <constraints>
