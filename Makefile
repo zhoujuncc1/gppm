@@ -2,7 +2,7 @@ NVCC=nvcc
 CC=g++
 NVCCFLAGS=-g -std=c++11 -Iinclude -lgsl -lgslcblas -lm
 #-lgslcblas
-all: fileModel modelChecker gpuModel gpuChecker
+all: fileModel modelChecker #gpuModel gpuChecker
 
 fileModel: examples/fileApplication.cpp libs
 	$(CC) examples/fileApplication.cpp src/libbltl.a src/libmining.a $(NVCCFLAGS) -o fileModel

@@ -52,8 +52,8 @@ void sa_print(void *xp) {
 
 void sa_step(const gsl_rng *r, void *xp, double step_size) {
     State *state = (State *) xp;
-    state->prd_values = generate_prd(state->paramset->tree_roots, step_size);
-    state->time_values = generate_time(state->paramset->unknown_time_set, step_size);
+    generate_prd(state->paramset->tree_roots, step_size, state->prd_values);
+    generate_time(state->paramset->unknown_time_set, step_size, state->time_values);
 }
 
 double sa_metric(void *xp, void *yp) {
