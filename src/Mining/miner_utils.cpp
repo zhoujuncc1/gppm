@@ -18,9 +18,9 @@ void generate_time(map<string, TimeVariable*> params, double step_size, map<stri
     for(auto itr=params.begin(); itr!=params.end(); itr++){
         std::random_device rd;
         std::default_random_engine generator(rd());
-        int left_bound = (1.0 + step_size)*current[itr->first] > itr->second->range.first?(1.0 + step_size)*current[itr->first]:itr->second->range.first;
-        int right_bound = (1.0 - step_size)*current[itr->first] < itr->second->range.second?(1.0 - step_size)*current[itr->first] : itr->second->range.second;
-        std::uniform_int_distribution<int> distribution(-left_bound,right_bound);
+        int left_bound = (1.0 - step_size)*current[itr->first] > itr->second->range.first?(1.0 - step_size)*current[itr->first]:itr->second->range.first;
+        int right_bound = (1.0 + step_size)*current[itr->first] < itr->second->range.second && right_bound>0?(1.0 + step_size)*current[itr->first] : itr->second->range.second;
+        std::uniform_int_distribution<int> distribution(left_bound,right_bound);
         current[itr->first]=distribution(generator);
     }        
 }
@@ -103,7 +103,7 @@ double _recursive_generate_prd(Parameter* param, map<string, double> &value_set,
         return value_set[param->name];
     double min = param->range.second;
     for(int i = 0; i < param->children.size(); i++){
-        double value = _recursive_generate_prd(param->children[i], value_set);
+        double value = _recursive_generate_prd(param->children[i], value_set, current, step_size);
         if(min>value)
             min=value;
     }
