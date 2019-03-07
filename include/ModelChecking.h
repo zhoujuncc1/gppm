@@ -15,6 +15,7 @@
 #include "Bltl/Bltl.h"
 #include "Bltl/bltl_parser.h"
 #include "Bltl/BltlChecker.h"
+#include "ParameterSet.h"
 
 #define N_SIM 100
 #define MAX_SIM 1000
@@ -37,6 +38,7 @@ class ModelChecker
     Bltl *bltl;
     vector<Trajectory> trajectories;
     BltlChecker *bltlChecker;
+    ParameterSet *params;
      ModelChecker(){}
     ModelChecker(string bltl_input, vector<string> prd_inputs, string filename)
     {
@@ -45,6 +47,8 @@ class ModelChecker
         link_prd(bltl, prds);
         FileTrajectoryProvider trajProvider(filename);
         trajectories = trajProvider.getTrajectories(MAX_SIM);
+        params = new ParameterSet(bltl, prds, trajectories);
+
         bltlChecker = new RecursiveBltlChecker(bltl, prds, trajectories[0]);
     }
 
@@ -100,7 +104,11 @@ class GPUModelChecker:ModelChecker
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
         GPUFileTrajectoryProvider *trajProvider = new GPUFileTrajectoryProvider(filename);
+        trajectories = trajProvider->getTrajectories(MAX_SIM);
+        params = new ParameterSet(bltl, prds, trajectories);
+
         bltlChecker = new GPUBltlChecker(bltl, prds, trajProvider);
+
     }
 
     vector<int> check()
