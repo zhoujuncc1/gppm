@@ -163,6 +163,7 @@ public:
     
 
     void init_with_trajectories(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
+        input=in;
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
@@ -172,8 +173,12 @@ public:
         params->parse_constraint_tree(constraint_inputs);
         if(!weight_inputs.empty())
             params->parse_weight(weight_inputs);
-        string init_string = in.get<string>("input.init");
-        initial_state = read_property_values(init_string);
+        try{
+            string init_string = in.get<string>("input.init");
+            initial_state = read_property_values(init_string);
+        } catch(...){
+            
+        }
         
     }
 
