@@ -11,6 +11,7 @@ std::default_random_engine generator(rd());
 std::uniform_int_distribution<int> distribution(0, RESOLUTION);
 
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set);
+double _recursive_generate_prd(Parameter* param, map<string, double> &value_set, map<string, string> initial_state);
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set,  map<string, double> &current, double step_size);
 double _generate_real(double min, double max);
 
@@ -33,6 +34,23 @@ map<string, int> generate_time(map<string, TimeVariable*> params){
         std::uniform_int_distribution<int> distribution(itr->second->range.first,itr->second->range.second);
         itr->second->value = distribution(generator);
         value_set[itr->first]=itr->second->value;
+    }
+    return value_set;
+        
+}
+
+map<string, int> generate_time(map<string, TimeVariable*> params, map<string, string> initial_state){
+    map<string, int> value_set;
+    for(auto itr=params.begin(); itr!=params.end(); itr++){
+        if(initial_state.find(itr->first) != initial_state.end())
+            value_set[itr->first]=atoi(initial_state[itr->first].c_str());
+        else{
+            std::random_device rd;
+            std::default_random_engine generator(rd());
+            std::uniform_int_distribution<int> distribution(itr->second->range.first,itr->second->range.second);
+            itr->second->value = distribution(generator);
+            value_set[itr->first]=itr->second->value;
+        }
     }
     return value_set;
         
@@ -80,7 +98,53 @@ map<string, double> generate_prd(vector<Parameter*> constraint_tree){
     }
 }
 
+
+map<string, double> generate_prd(vector<Parameter*> constraint_tree, map<string, string> initial_state){
+    bool success = false;
+    int trials = 0;
+    
+    while(!success && trials < 100){
+        try{
+            map<string, double> value_set;
+            for(int i = 0; i < constraint_tree.size(); i++){
+                _recursive_generate_prd(constraint_tree[i], value_set, initial_state);
+            }
+            return value_set;
+            success=true;
+        }
+        catch(int e){trials++;}
+    }
+    if(!success){
+        printf("Generate Error!\n");
+        exit(1);
+    }
+}
+
+
 double _recursive_generate_prd(Parameter* param, map<string, double> &value_set){
+    if(value_set.find(param->name)!=value_set.end())
+        return value_set[param->name];
+    double min = param->range.second;
+    for(int i = 0; i < param->children.size(); i++){
+        double value = _recursive_generate_prd(param->children[i], value_set);
+        if(min>value)
+            min=value;
+    }
+    if (param->range.first>min)
+        throw -1;
+    param->value=_generate_real(param->range.first,min);
+    if(param->value<0)
+        param->value = 0;
+    value_set[param->name]=param->value;
+    return param->value;
+}
+
+double _recursive_generate_prd(Parameter* param, map<string, double> &value_set, map<string, string> initial_state){
+    if(initial_state.find(param->name)!=initial_state.end()){
+        value_set[param->name]=atof(initial_state[param->name].c_str());
+        param->value = value_set[param->name];
+        return param->value;
+    }
     if(value_set.find(param->name)!=value_set.end())
         return value_set[param->name];
     double min = param->range.second;

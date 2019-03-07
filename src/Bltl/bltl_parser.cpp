@@ -10,6 +10,7 @@
 
 #include <Bltl/Prd.h>
 #include <Bltl/Bltl.h>
+#include <boost/algorithm/string.hpp> 
 
 std::map<std::string, Prd*> parse_prd(std::vector<std::string> inputs) {
 	std::map<std::string, Prd*> map;
@@ -49,3 +50,17 @@ void link_prd(Bltl* bltl, std::map<std::string, Prd*> prds){
 	}
 }
 
+
+std::map<std::string, std::string> read_property_values(std::string input){
+    std::map<std::string, std::string> values;
+    std::vector<std::string> parts; 
+    boost::split(parts, input, boost::is_any_of(",")); 
+    for(int i = 0; i < parts.size(); i++){
+        std::vector<std::string> pair;
+        boost::split(pair, parts[i], boost::is_any_of(":")); 
+        boost::trim(pair[0]);
+        boost::trim(pair[1]);
+        values[pair[0]] = pair[1];
+    }
+    return values;
+}

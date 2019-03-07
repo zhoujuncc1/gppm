@@ -24,7 +24,6 @@ namespace pt = boost::property_tree;
 
 using namespace std;
 void do_mine(State* state, pt::ptree config);
-
 class Miner{
 public:
     Miner(){}
@@ -51,8 +50,9 @@ public:
 */
     void mine(){
         state = new State(params);
-        state->prd_values = generate_prd(params->tree_roots);
-        state->time_values = generate_time(params->unknown_time_set);
+        state->prd_values = generate_prd(params->tree_roots, initial_state);
+        state->time_values = generate_time(params->unknown_time_set, initial_state);
+        
         state->trajectories = &trajectories;
         state->bltlChecker=bltlChecker;
         if(bltl->getOperation()==op_PRD)
@@ -135,6 +135,8 @@ public:
     double dt;
     double end_time;
 
+    map<string, string> initial_state;
+
 };
 
 class SingleMiner : public Miner{
@@ -149,23 +151,30 @@ class FileMiner : public SingleMiner{
 public:
     FileMiner(){}
     FileMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
-        input = in;
+        string filename = in.get<string>("input.filename");
+        FileTrajectoryProvider trajProvider(filename);
+        trajectories = trajProvider.getTrajectories(MAX_SIM);
+
+        init_with_trajectories(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs);
+        
+        
+        bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
+    }
+    
+
+    void init_with_trajectories(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
         link_prd(bltl, prds);
-        string filename = input.get<string>("input.filename");
-        FileTrajectoryProvider trajProvider(filename);
-        trajectories = trajProvider.getTrajectories(MAX_SIM);
         params = new ParameterSet(bltl, prds, trajectories);
         params->init_prd_range();
         params->init_time_range();
         params->parse_constraint_tree(constraint_inputs);
         if(!weight_inputs.empty())
             params->parse_weight(weight_inputs);
+        string init_string = in.get<string>("input.init");
+        initial_state = read_property_values(init_string);
         
-        
-        bltlChecker= new RecursiveBltlChecker(bltl, prds, trajectories[0]);
-        //bltlChecker= new TreeBltlChecker(bltl);
     }
 
 
@@ -175,22 +184,15 @@ public:
 class GPUMiner : public FileMiner{
   public:    
       GPUMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
-      input = in;
-      prds = parse_prd(prd_inputs);
-      bltl = parse_bltl(bltl_input);
-      link_prd(bltl, prds);
-      string filename = input.get<string>("input.filename");
+    string filename = input.get<string>("input.filename");
       GPUFileTrajectoryProvider *trajProvider = new GPUFileTrajectoryProvider(filename);
       trajectories = trajProvider->getTrajectories(MAX_SIM);
-      params = new ParameterSet(bltl, prds, trajectories);
-      params->init_prd_range();
-      params->init_time_range();
-      params->parse_constraint_tree(constraint_inputs);
-      if(!weight_inputs.empty())
-        params->parse_weight(weight_inputs);
+      
+      init_with_trajectories(in, bltl_input, prd_inputs, constraint_inputs, weight_inputs);
 
 
       bltlChecker= new GPUBltlChecker(bltl, prds, trajProvider);
+      
     }
 
 
