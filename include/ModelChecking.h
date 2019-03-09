@@ -48,7 +48,8 @@ class ModelChecker
         FileTrajectoryProvider trajProvider(filename);
         trajectories = trajProvider.getTrajectories(MAX_SIM);
         params = new ParameterSet(bltl, prds, trajectories);
-
+        params->init_prd_range();
+        params->init_time_range();
         bltlChecker = new RecursiveBltlChecker(bltl, prds, trajectories[0]);
     }
 
@@ -106,7 +107,8 @@ class GPUModelChecker:ModelChecker
         GPUFileTrajectoryProvider *trajProvider = new GPUFileTrajectoryProvider(filename);
         trajectories = trajProvider->getTrajectories(MAX_SIM);
         params = new ParameterSet(bltl, prds, trajectories);
-
+        params->init_prd_range();
+        params->init_time_range();
         bltlChecker = new GPUBltlChecker(bltl, prds, trajProvider);
 
     }
