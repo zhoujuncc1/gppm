@@ -88,6 +88,10 @@ void sa_destroy(void *xp) {
 }
 
 void do_mine(State *state, pt::ptree config) {
+    printf("Initial State: \n");
+    sa_print(state);
+    printf("-------------------------\n");
+
     gsl_siman_params_t params
             = {config.get("N_TRIES", N_TRIES), config.get("ITERS_FIXED_T", ITERS_FIXED_T),
                config.get("STEP_SIZE", STEP_SIZE), config.get("K", K), config.get("T_INITIAL", T_INITIAL),

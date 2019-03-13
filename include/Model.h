@@ -107,6 +107,8 @@ class FileTrajectoryProvider
 
     std::vector<Trajectory> getTrajectories(int size)
     {
+	if(size > this->size)
+		size=this->size;
         std::vector<Trajectory> trajs;
         for (int i = 0; i < size; i++)
             trajs.push_back(trajectories[i]);

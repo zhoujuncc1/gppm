@@ -188,7 +188,7 @@ public:
 class GPUMiner : public FileMiner{
   public:    
       GPUMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs, vector<string> constraint_inputs, vector<string> weight_inputs){
-    string filename = input.get<string>("input.filename");
+    string filename = in.get<string>("input.filename");
       GPUFileTrajectoryProvider *trajProvider = new GPUFileTrajectoryProvider(filename);
       trajectories = trajProvider->getTrajectories(MAX_SIM);
       

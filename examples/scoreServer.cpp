@@ -20,7 +20,8 @@
 #include <cstdlib>
 
 #include "ModelChecking.h"
-#include "bltl/bltl_parser.h"
+#include "Mining.h"
+#include "Bltl/bltl_parser.h"
 #include "miner_utils.h"
 
 #include "State.h"
@@ -118,8 +119,8 @@ int main(int argc, char *argv[])
         if (f.is_open())
             std::cout << f.rdbuf();
         f.close();
-        vector<FileMiner *> miners = MinerBuilder::buildMiner(filename, true);
-        FileMiner *miner = miners[0];
+        vector<Miner *> miners = MinerBuilder::buildMiner(filename, true);
+        Miner *miner = miners[0];
         State *state = new State(miner->params);
         state->prd_values = generate_prd(miner->params->tree_roots, miner->initial_state);
         state->time_values = generate_time(miner->params->unknown_time_set, miner->initial_state);

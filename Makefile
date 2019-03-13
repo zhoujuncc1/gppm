@@ -2,21 +2,38 @@ NVCC=nvcc
 CC=g++
 NVCCFLAGS=-g -std=c++11 -Iinclude -lgsl -lgslcblas -lm -lboost_system -lboost_thread
 #-lgslcblas
-all: fileModel modelChecker scoreServer#gpuModel gpuChecker
+LIBS=src/libbltl.a src/libmining.a
+GPU_LIBS=src/libbltl.a src/libmining.a src/libbltl_gpu.a src/libmining_gpu.a
 
-fileModel: examples/fileApplication.cpp libs
-	$(CC) examples/fileApplication.cpp src/libbltl.a src/libmining.a $(NVCCFLAGS) -o fileModel
-gpuModel: examples/gpuApplication.cpp libs
-	$(NVCC) examples/gpuApplication.cpp src/libbltl.a src/libmining.a $(NVCCFLAGS) -o gpuModel 
-modelChecker: examples/modelChecker.cpp libs
-	$(CC) examples/modelChecker.cpp src/libbltl.a src/libmining.a $(NVCCFLAGS) -o modelChecker
-gpuChecker: examples/gpuChecker.cpp libs
-	$(NVCC) examples/gpuChecker.cpp src/libbltl.a src/libmining.a $(NVCCFLAGS) -o gpuChecker
+all: fileModel modelChecker scoreServer
 
-scoreServer: examples/scoreServer.cpp libs
-	$(CC) examples/scoreServer.cpp src/libbltl.a src/libmining.a $(NVCCFLAGS) -o scoreServer
-libs:
-	make -C src
+gpu: gpuModel gpuChecker
+
+fileModel: examples/fileApplication.cpp $(LIBS)
+	$(CC) examples/fileApplication.cpp $(LIBS) $(NVCCFLAGS) -o fileModel
+gpuModel: examples/gpuApplication.cpp $(GPU_LIBS)
+	$(NVCC) examples/gpuApplication.cpp $(GPU_LIBS) $(NVCCFLAGS) -o gpuModel 
+modelChecker: examples/modelChecker.cpp $(LIBS)
+	$(CC) examples/modelChecker.cpp $(LIBS) $(NVCCFLAGS) -o modelChecker
+gpuChecker: examples/gpuChecker.cpp $(GPU_LIBS)
+	$(NVCC) examples/gpuChecker.cpp $(GPU_LIBS) $(NVCCFLAGS) -o gpuChecker
+
+scoreServer: examples/scoreServer.cpp $(LIBS)
+	$(CC) examples/scoreServer.cpp $(LIBS) $(NVCCFLAGS) -o scoreServer
+
+src/libbltl.a:
+	make -C src libbltl.a
+
+src/libmining.a:
+	make -C src libmining.a
+
+src/libbltl_gpu.a:
+	make -C src libbltl_gpu.a
+
+src/libmining_gpu.a:
+	make -C src libmining_gpu.a
+
+
 
 
 clean:

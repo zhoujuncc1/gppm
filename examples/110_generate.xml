@@ -1,0 +1,42 @@
+<!-- Only constraint is optional-->
+<!-- Miner can be single or cluster-->
+<input>
+    <miner>single</miner>
+    <filename>examples/110_N_train.txt</filename>
+    <prds>
+        <prd>p1:0::</prd>
+        <prd>p2:0::</prd>
+        <prd>p3:0::</prd>
+        <prd>p4:0::</prd>
+        <prd>p5:0::</prd>
+    </prds>
+    <bltls>
+        <bltl>F[22](G[13](p1)&F[56](p2&F[10](p3&F[8](p4&F[19](G[60](p5))))))</bltl>
+    </bltls>
+    <init>k1:22, k2:13, k3:56, k4:10, k5:8, k6:19, k7:60,p1.left:0.000,p1.right:0.60000,p2.left:0.0,p2.right:0.4,p3.left:1.09,p3.right:2,p4.left:0.0,p4.right:0.6,p5.left:0.0,p5.right:0.6000</init>
+    <constraints>
+    <constraint>p1>p2</constraint>
+    <constraint>p3>p2</constraint>
+    <constraint>p3>p4</constraint>
+    <constraint>p5>p4</constraint>
+    </constraints>
+    <weights>
+        <weight>k1:0.2</weight>
+        <weight>k2:0.2</weight>
+        <weight>k3:0.2</weight>
+        <weight>p3:0.1</weight>
+        <weight>p2:0.1</weight>
+        <weight>p4:0.1</weight>
+        <weight>p1:0.1</weight>
+    </weights>
+    <config>
+        <N_TRIES>1000</N_TRIES>
+        <ITERS_FIXED_T>200</ITERS_FIXED_T>
+        <STEP_SIZE>0.2</STEP_SIZE>
+        <K>1.0</K>
+        <T_INITIAL>0.008</T_INITIAL>
+        <MU_T>1.001</MU_T>
+        <T_MIN>0.001</T_MIN>
+    </config>
+</input>
+

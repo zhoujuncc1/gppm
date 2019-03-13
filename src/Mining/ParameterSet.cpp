@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
 
-#define N_TRAJ 200
 
 using namespace std;
 ParameterSet::ParameterSet(Bltl *bltl, map<string, Prd*> prds, vector<Trajectory> trajectories) {
@@ -33,7 +32,7 @@ void ParameterSet::init_traj_ranges(){
     }
     float t_min[N_SPECIES];        
     float t_max[N_SPECIES];
-    for (int j = 0; j < N_TRAJ; j++){
+    for (int j = 0; j < trajectories.size(); j++){
         for (int i = 0; i < N_SPECIES; i++){
             t_min[i] = trajectories[j].m_states[0][i];
             t_max[i] = trajectories[j].m_states[0][i];

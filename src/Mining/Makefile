@@ -7,7 +7,9 @@ CPP_OBJS = $(patsubst %.cpp,%.o,$(CPP_SRCS))
 CU_SRCS = $(wildcard *.cu)
 CU_OBJS = $(patsubst %.cu,%.o,$(CU_SRCS))
 
-all: $(CPP_OBJS)  #$(CU_OBJS)
+all: $(CPP_OBJS)  
+
+gpu: $(CU_OBJS)
 #	$(CC) -o $@ $^
 
 clean:

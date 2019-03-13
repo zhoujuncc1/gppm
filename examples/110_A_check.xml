@@ -1,0 +1,17 @@
+<!-- Only constraint is optional-->
+<!-- Miner can be single or cluster-->
+<input>
+    <miner>single</miner>
+    <filename>examples/110_A_test.txt</filename>
+    <prds>
+        <prd>p1:0:0.2034:0.698863</prd>
+        <prd>p2:0:0.000000:0.202371</prd>
+        <prd>p3:0:1.03362:1.80146</prd>
+        <prd>p4:0:0.0356022:0.194098</prd>
+        <prd>p5:0:0.0219672:0.605299</prd>
+    </prds>
+    <bltls>
+        <bltl>F[22](G[13](p1)&F[56](p2&F[10](p3&F[8](p4&F[19](G[60](p5))))))</bltl>
+    </bltls>
+</input>
+
