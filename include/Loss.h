@@ -21,7 +21,7 @@ vector<int> modelchecking(State* state);
 class Loss
 {
 public:
-    double operator() (State *state);
+    virtual double operator() (State *state);
 };
 
 class Se_Loss:public Loss
@@ -31,7 +31,7 @@ class Se_Loss:public Loss
     vector<int> class_count;
     int n_class;
     Se_Loss(vector<int> labels, vector<int> class_count);
-    double operator() (State *state);
+    virtual double operator() (State *state);
 
 };
 

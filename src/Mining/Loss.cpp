@@ -102,11 +102,11 @@ Se_Loss::Se_Loss(vector<int> labels, vector<int> class_count){
         for (int i = 0; i < result.size(); i++){
             count[labels[i]]+=result[i];
         }
-        double se = 0;
-        for(int i =0 ; i < n_class; i++){
-            se += count[i]/class_count[i];
+        double se = count[0]/class_count[0];
+        for(int i = 1; i < n_class; i++){
+            se += (class_count[i]-count[i])/class_count[i];
         }
-        return se/n_class;
+        return 1.0/(se/n_class);
 
     }
 

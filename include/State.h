@@ -16,12 +16,7 @@ class State
         paramset = params;
         this->loss = loss;
     }
-    State(ParameterSet *params)
-    {
-        paramset = params;
-        this->loss = new Loss();
-    }
-    State(State *src)
+   State(State *src)
     {
         paramset = src->paramset;
         prd_values = src->prd_values;
