@@ -33,7 +33,7 @@ namespace pt = boost::property_tree;
 double sa_loss(void* xp)
 {
     State* state = (State*)xp;
-    return loss(state);
+    return (*(state->loss))(state);
 }
 
 void sa_print(void* xp)

@@ -12,7 +12,7 @@ libbltl.a:
 
 libmining.a: 	
 	$(MAKE) -C Mining all
-	ar rcs libmining.a Mining/miner_utils.o Mining/ParameterSet.o Mining/IntervalSA.o Mining/ModelChecking.o
+	ar rcs libmining.a Mining/miner_utils.o Mining/ParameterSet.o Mining/IntervalSA.o Mining/Loss.o
 
 libbltl_gpu.a:
 	$(MAKE) -C Bltl gpu

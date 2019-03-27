@@ -20,6 +20,8 @@
 #include "State.h"
 #include "kmeans.h"
 #include "miner_utils.h"
+#include "Loss.h"
+
 namespace pt = boost::property_tree;
 
 using namespace std;
@@ -52,7 +54,7 @@ public:
   */
     void mine()
     {
-        state = new State(params);
+        state = new State(params, loss);
         state->prd_values = generate_prd(params->tree_roots, initial_state);
         state->time_values = generate_time(params->unknown_time_set, initial_state);
 
@@ -79,11 +81,11 @@ public:
             cout << itr->first << " ";
             double loss_v = 0;
             int best = itr->second->value;
-            double best_loss = loss(state);
+            double best_loss = (*(state->loss))(state);
             while (itr->second->value > itr->second->range.first && itr->second->value < itr->second->range.second) {
                 itr->second->value -= itr->second->weight_sign;
                 cout << itr->second->value << ", ";
-                loss_v = loss(state);
+                loss_v = (*(state->loss))(state);
                 if (loss_v < best_loss) {
                     best = itr->second->value;
                     best_loss = loss_v;
@@ -91,7 +93,7 @@ public:
                 cout << loss_v << "| ";
             }
             itr->second->value = best;
-            loss(state);
+            (*(state->loss))(state);
             cout << endl
                  << endl;
             state->time_values[itr->first] = itr->second->value;
@@ -147,6 +149,7 @@ public:
     BltlChecker* bltlChecker;
     double dt;
     double end_time;
+    Loss* loss;
 
     map<string, string> initial_state;
 };
@@ -161,14 +164,14 @@ class FileMiner : public SingleMiner {
 public:
     FileMiner() {}
     FileMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs,
-        vector<string> constraint_inputs, vector<string> weight_inputs)
+        vector<string> constraint_inputs, vector<string> weight_inputs, bool ifAccuracy=false)
     {
         string filename = in.get<string>("input.filename");
         FileTrajectoryProvider trajProvider(filename);
         trajectories = trajProvider.getTrajectories(MAX_SIM);
 
         init_with_trajectories(in, bltl_input, prd_inputs, constraint_inputs,
-            weight_inputs);
+            weight_inputs, ifAccuracy);
 
         bltlChecker = new RecursiveBltlChecker(bltl, prds, trajectories[0]);
     }
@@ -176,8 +179,31 @@ public:
     void init_with_trajectories(pt::ptree in, string bltl_input,
         vector<string> prd_inputs,
         vector<string> constraint_inputs,
-        vector<string> weight_inputs)
+        vector<string> weight_inputs, bool ifAccuracy=false)
     {
+        if(ifAccuracy){
+            string labelname = in.get<string>("input.labelname");
+            std::ifstream input(labelname);
+            vector<int> labels;
+            int n_class;
+            int size=0;
+            input >> n_class;
+            vector<int> class_count;
+            int x;
+            for(int i = 0; i < n_class; i++){
+                input >> x;
+                class_count.push_back(x);
+                size+=x;
+            }
+            for(int i = 0 ; i < size; i++){
+                input >> x;
+                labels.push_back(x);
+            }
+            loss = new Se_Loss(labels, class_count);
+        } else {
+            loss = new Loss();
+        }
+
         input = in;
         prds = parse_prd(prd_inputs);
         bltl = parse_bltl(bltl_input);
@@ -199,14 +225,14 @@ public:
 class GPUMiner : public FileMiner {
 public:
     GPUMiner(pt::ptree in, string bltl_input, vector<string> prd_inputs,
-        vector<string> constraint_inputs, vector<string> weight_inputs)
+        vector<string> constraint_inputs, vector<string> weight_inputs, bool ifAccuracy=false)
     {
         string filename = in.get<string>("input.filename");
         GPUFileTrajectoryProvider* trajProvider = new GPUFileTrajectoryProvider(filename);
         trajectories = trajProvider->getTrajectories(MAX_SIM);
 
         init_with_trajectories(in, bltl_input, prd_inputs, constraint_inputs,
-            weight_inputs);
+            weight_inputs,ifAccuracy);
 
         bltlChecker = new GPUBltlChecker(bltl, prds, trajProvider);
     }
@@ -214,7 +240,7 @@ public:
 
 class MinerBuilder {
 public:
-    static vector<Miner*> buildMiner(string filename, bool isFileMiner)
+    static vector<Miner*> buildMiner(string filename, bool isFileMiner, bool isAccuracy=false)
     {
         vector<Miner*> miners;
         pt::ptree input;
@@ -249,7 +275,7 @@ public:
             return miners;
         }
     }
-    static vector<Miner*> buildGPUMiner(string filename)
+    static vector<Miner*> buildGPUMiner(string filename, bool isAccuracy=false)
     {
         vector<Miner*> miners;
         pt::ptree input;

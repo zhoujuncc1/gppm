@@ -73,7 +73,7 @@ void session(socket_ptr sock, State* state)
                     if (values.find(itr->first) != values.end())
                         itr->second->value = atoi(values[itr->first].c_str());
                 }
-                double score = loss(state);
+                double score = (*(state->loss))(state);
                 printf("score: %f\n", score);
                 boost::asio::write(*sock, boost::asio::buffer(&score, sizeof(double)));
             }
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
         f.close();
         vector<Miner*> miners = MinerBuilder::buildMiner(filename, true);
         Miner* miner = miners[0];
-        State* state = new State(miner->params);
+        State* state = new State(miner->params, new Loss());
         state->prd_values = generate_prd(miner->params->tree_roots, miner->initial_state);
         state->time_values = generate_time(miner->params->unknown_time_set, miner->initial_state);
 

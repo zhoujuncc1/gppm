@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "ParameterSet.h"
 #include "miner_utils.h"
+#include "State.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -21,19 +22,13 @@
 
 #define N_SIM 100
 #define MAX_SIM 1000
-#define BAYES_MIN 0.01
-#define BAYES_MAX 100
-#define RATE_MAX 0.9
-#define LOSS_MAX 1000000
+
 
 using namespace std;
 namespace pt = boost::property_tree;
 
-class State;
-vector<int> modelchecking(State* state);
-double loss(State* state);
+//class State;
 
-int count(vector<int> satArray);
 class ModelChecker {
 public:
     map<string, Prd*> prds;
