@@ -3,305 +3,244 @@
 #ifndef KMEANS_H
 #define KMEANS_H
 
+#include <algorithm>
 #include <iostream>
-#include <vector>
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
-#include <algorithm>
+#include <vector>
 
 using namespace std;
 
-class Point
-{
+class Point {
 private:
-	int id_point, id_cluster;
-	vector<double> values;
-	int total_values;
-	string name;
+    int id_point, id_cluster;
+    vector<double> values;
+    int total_values;
+    string name;
 
 public:
-	Point(int id_point, vector<double>& values, string name = "")
-	{
-		this->id_point = id_point;
-		total_values = values.size();
+    Point(int id_point, vector<double>& values, string name = "")
+    {
+        this->id_point = id_point;
+        total_values = values.size();
 
-		for(int i = 0; i < total_values; i++)
-			this->values.push_back(values[i]);
+        for (int i = 0; i < total_values; i++)
+            this->values.push_back(values[i]);
 
-		this->name = name;
-		id_cluster = -1;
-	}
+        this->name = name;
+        id_cluster = -1;
+    }
 
-	int getID()
-	{
-		return id_point;
-	}
+    int getID() { return id_point; }
 
-	void setCluster(int id_cluster)
-	{
-		this->id_cluster = id_cluster;
-	}
+    void setCluster(int id_cluster) { this->id_cluster = id_cluster; }
 
-	int getCluster()
-	{
-		return id_cluster;
-	}
+    int getCluster() { return id_cluster; }
 
-	double getValue(int index)
-	{
-		return values[index];
-	}
+    double getValue(int index) { return values[index]; }
 
-	int getTotalValues()
-	{
-		return total_values;
-	}
+    int getTotalValues() { return total_values; }
 
-	void addValue(double value)
-	{
-		values.push_back(value);
-	}
+    void addValue(double value) { values.push_back(value); }
 
-	string getName()
-	{
-		return name;
-	}
+    string getName() { return name; }
 };
 
-class Cluster
-{
+class Cluster {
 private:
-	int id_cluster;
-	vector<double> central_values;
-	vector<Point> points;
+    int id_cluster;
+    vector<double> central_values;
+    vector<Point> points;
 
 public:
-	Cluster(int id_cluster, Point point)
-	{
-		this->id_cluster = id_cluster;
+    Cluster(int id_cluster, Point point)
+    {
+        this->id_cluster = id_cluster;
 
-		int total_values = point.getTotalValues();
+        int total_values = point.getTotalValues();
 
-		for(int i = 0; i < total_values; i++)
-			central_values.push_back(point.getValue(i));
+        for (int i = 0; i < total_values; i++)
+            central_values.push_back(point.getValue(i));
 
-		points.push_back(point);
-	}
+        points.push_back(point);
+    }
 
-	void addPoint(Point point)
-	{
-		points.push_back(point);
-	}
+    void addPoint(Point point) { points.push_back(point); }
 
-	bool removePoint(int id_point)
-	{
-		int total_points = points.size();
+    bool removePoint(int id_point)
+    {
+        int total_points = points.size();
 
-		for(int i = 0; i < total_points; i++)
-		{
-			if(points[i].getID() == id_point)
-			{
-				points.erase(points.begin() + i);
-				return true;
-			}
-		}
-		return false;
-	}
+        for (int i = 0; i < total_points; i++) {
+            if (points[i].getID() == id_point) {
+                points.erase(points.begin() + i);
+                return true;
+            }
+        }
+        return false;
+    }
 
-	double getCentralValue(int index)
-	{
-		return central_values[index];
-	}
+    double getCentralValue(int index) { return central_values[index]; }
 
-	void setCentralValue(int index, double value)
-	{
-		central_values[index] = value;
-	}
+    void setCentralValue(int index, double value)
+    {
+        central_values[index] = value;
+    }
 
-	Point getPoint(int index)
-	{
-		return points[index];
-	}
+    Point getPoint(int index) { return points[index]; }
 
-	int getTotalPoints()
-	{
-		return points.size();
-	}
+    int getTotalPoints() { return points.size(); }
 
-	int getID()
-	{
-		return id_cluster;
-	}
+    int getID() { return id_cluster; }
 
-	vector<Point>& getPoints(){
-		return points;
-	}
-
+    vector<Point>& getPoints() { return points; }
 };
 
-class KMeans
-{
+class KMeans {
 private:
-	int K; // number of clusters
-	int total_values, total_points, max_iterations;
-	vector<Cluster> clusters;
-	vector<int> pivot_values;
+    int K; // number of clusters
+    int total_values, total_points, max_iterations;
+    vector<Cluster> clusters;
+    vector<int> pivot_values;
 
-	// return ID of nearest center (uses euclidean distance)
-	int getIDNearestCenter(Point point)
-	{
-		double sum = 0.0, min_dist;
-		int id_cluster_center = 0;
+    // return ID of nearest center (uses euclidean distance)
+    int getIDNearestCenter(Point point)
+    {
+        double sum = 0.0, min_dist;
+        int id_cluster_center = 0;
 
-		for(auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++)
-		{
-			sum += pow(clusters[0].getCentralValue(*itr) -
-					   point.getValue(*itr), 2.0);
-		}
+        for (auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++) {
+            sum += pow(clusters[0].getCentralValue(*itr) - point.getValue(*itr), 2.0);
+        }
 
-		min_dist = sqrt(sum);
+        min_dist = sqrt(sum);
 
-		for(int i = 1; i < K; i++)
-		{
-			double dist;
-			sum = 0.0;
+        for (int i = 1; i < K; i++) {
+            double dist;
+            sum = 0.0;
 
-			for(auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++)
-			{
-				sum += pow(clusters[i].getCentralValue(*itr) -
-						   point.getValue(*itr), 2.0);
-			}
+            for (auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++) {
+                sum += pow(clusters[i].getCentralValue(*itr) - point.getValue(*itr), 2.0);
+            }
 
-			dist = sqrt(sum);
+            dist = sqrt(sum);
 
-			if(dist < min_dist)
-			{
-				min_dist = dist;
-				id_cluster_center = i;
-			}
-		}
+            if (dist < min_dist) {
+                min_dist = dist;
+                id_cluster_center = i;
+            }
+        }
 
-		return id_cluster_center;
-	}
+        return id_cluster_center;
+    }
 
 public:
-	KMeans(int K, int total_points, int total_values, vector<int> pivot_values, int max_iterations)
-	{
-		this->K = K;
-		this->total_points = total_points;
-		this->pivot_values = pivot_values;
-		this->total_values = total_values;
-		this->max_iterations = max_iterations;
-	}
+    KMeans(int K, int total_points, int total_values, vector<int> pivot_values,
+        int max_iterations)
+    {
+        this->K = K;
+        this->total_points = total_points;
+        this->pivot_values = pivot_values;
+        this->total_values = total_values;
+        this->max_iterations = max_iterations;
+    }
 
-	vector<Cluster> getClusters(){
-		return clusters;
-	}
+    vector<Cluster> getClusters() { return clusters; }
 
-	void run(vector<Point> & points)
-	{
-		if(K > total_points)
-			return;
+    void run(vector<Point>& points)
+    {
+        if (K > total_points)
+            return;
 
-		vector<int> prohibited_indexes;
+        vector<int> prohibited_indexes;
 
-		// choose K distinct values for the centers of the clusters
-		for(int i = 0; i < K; i++)
-		{
-			while(true)
-			{
-				int index_point = rand() % total_points;
+        // choose K distinct values for the centers of the clusters
+        for (int i = 0; i < K; i++) {
+            while (true) {
+                int index_point = rand() % total_points;
 
-				if(find(prohibited_indexes.begin(), prohibited_indexes.end(),
-						index_point) == prohibited_indexes.end())
-				{
-					prohibited_indexes.push_back(index_point);
-					points[index_point].setCluster(i);
-					Cluster cluster(i, points[index_point]);
-					clusters.push_back(cluster);
-					break;
-				}
-			}
-		}
+                if (find(prohibited_indexes.begin(), prohibited_indexes.end(),
+                        index_point)
+                    == prohibited_indexes.end()) {
+                    prohibited_indexes.push_back(index_point);
+                    points[index_point].setCluster(i);
+                    Cluster cluster(i, points[index_point]);
+                    clusters.push_back(cluster);
+                    break;
+                }
+            }
+        }
 
-		int iter = 1;
+        int iter = 1;
 
-		while(true)
-		{
-			bool done = true;
+        while (true) {
+            bool done = true;
 
-			// associates each point to the nearest center
-			for(int i = 0; i < total_points; i++)
-			{
-				int id_old_cluster = points[i].getCluster();
-				int id_nearest_center = getIDNearestCenter(points[i]);
+            // associates each point to the nearest center
+            for (int i = 0; i < total_points; i++) {
+                int id_old_cluster = points[i].getCluster();
+                int id_nearest_center = getIDNearestCenter(points[i]);
 
-				if(id_old_cluster != id_nearest_center)
-				{
-					if(id_old_cluster != -1)
-						clusters[id_old_cluster].removePoint(points[i].getID());
+                if (id_old_cluster != id_nearest_center) {
+                    if (id_old_cluster != -1)
+                        clusters[id_old_cluster].removePoint(points[i].getID());
 
-					points[i].setCluster(id_nearest_center);
-					clusters[id_nearest_center].addPoint(points[i]);
-					done = false;
-				}
-			}
+                    points[i].setCluster(id_nearest_center);
+                    clusters[id_nearest_center].addPoint(points[i]);
+                    done = false;
+                }
+            }
 
-			// recalculating the center of each cluster
-			for(int i = 0; i < K; i++)
-			{
-				for(auto itr = pivot_values.begin(); itr != pivot_values.end(); itr++)
-				{
-					int total_points_cluster = clusters[i].getTotalPoints();
-					double sum = 0.0;
+            // recalculating the center of each cluster
+            for (int i = 0; i < K; i++) {
+                for (auto itr = pivot_values.begin(); itr != pivot_values.end();
+                     itr++) {
+                    int total_points_cluster = clusters[i].getTotalPoints();
+                    double sum = 0.0;
 
-					if(total_points_cluster > 0)
-					{
-						for(int p = 0; p < total_points_cluster; p++)
-							sum += clusters[i].getPoint(p).getValue(*itr);
-						clusters[i].setCentralValue(*itr, sum / total_points_cluster);
-					}
-				}
-			}
+                    if (total_points_cluster > 0) {
+                        for (int p = 0; p < total_points_cluster; p++)
+                            sum += clusters[i].getPoint(p).getValue(*itr);
+                        clusters[i].setCentralValue(*itr, sum / total_points_cluster);
+                    }
+                }
+            }
 
-			if(done == true || iter >= max_iterations)
-			{
-				cout << "Break in iteration " << iter << "\n\n";
-				break;
-			}
+            if (done == true || iter >= max_iterations) {
+                cout << "Break in iteration " << iter << "\n\n";
+                break;
+            }
 
-			iter++;
-		}
+            iter++;
+        }
 
-		// shows elements of clusters
-		for(int i = 0; i < K; i++)
-		{
-			int total_points_cluster =  clusters[i].getTotalPoints();
+        // shows elements of clusters
+        for (int i = 0; i < K; i++) {
+            int total_points_cluster = clusters[i].getTotalPoints();
 
-			cout << "Cluster " << clusters[i].getID() + 1 << endl;
-			for(int j = 0; j < total_points_cluster; j++)
-			{
-				cout << "Point " << clusters[i].getPoint(j).getID() + 1 << ": ";
-				for(int p = 0; p < total_values; p++)
-					cout << clusters[i].getPoint(j).getValue(p) << " ";
+            cout << "Cluster " << clusters[i].getID() + 1 << endl;
+            for (int j = 0; j < total_points_cluster; j++) {
+                cout << "Point " << clusters[i].getPoint(j).getID() + 1 << ": ";
+                for (int p = 0; p < total_values; p++)
+                    cout << clusters[i].getPoint(j).getValue(p) << " ";
 
-				string point_name = clusters[i].getPoint(j).getName();
+                string point_name = clusters[i].getPoint(j).getName();
 
-				if(point_name != "")
-					cout << "- " << point_name;
+                if (point_name != "")
+                    cout << "- " << point_name;
 
-				cout << endl;
-			}
+                cout << endl;
+            }
 
-			cout << "Cluster values: ";
+            cout << "Cluster values: ";
 
-			for(int j = 0; j < total_values; j++)
-				cout << clusters[i].getCentralValue(j) << " ";
+            for (int j = 0; j < total_values; j++)
+                cout << clusters[i].getCentralValue(j) << " ";
 
-			cout << "\n\n";
-		}
-	}
+            cout << "\n\n";
+        }
+    }
 };
 
 #endif

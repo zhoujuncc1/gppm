@@ -12,20 +12,19 @@
 #include <vector>
 class Parameter {
 public:
-	Parameter();
-	Parameter(std::string k);
-	Parameter(std::string k, double v);
+    Parameter();
+    Parameter(std::string k);
+    Parameter(std::string k, double v);
 
-	virtual ~Parameter();
-	std::string name;
-	double value;
-	bool isfix;
-	std::pair<double, double> range;
-	int varId;
+    virtual ~Parameter();
+    std::string name;
+    double value;
+    bool isfix;
+    std::pair<double, double> range;
+    int varId;
 
-	std::vector<Parameter*> parents;
-	std::vector<Parameter*> children;
-
+    std::vector<Parameter*> parents;
+    std::vector<Parameter*> children;
 };
 
 #endif /* PARAMETER_H_ */

@@ -8,12 +8,12 @@
 #ifndef BLTL_PARSER_H_
 #define BLTL_PARSER_H_
 
+#include "Bltl.h"
+#include "Prd.h"
 #include <iostream>
 #include <map>
-#include <vector>
 #include <string>
-#include "Prd.h"
-#include "Bltl.h"
+#include <vector>
 Bltl* parse_bltl(std::string str);
 
 std::map<std::string, Prd*> parse_prd(std::vector<std::string> inputs);

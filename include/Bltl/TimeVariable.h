@@ -7,20 +7,18 @@
 
 #include "Parameter.h"
 
-class TimeVariable: public Parameter
-{
+class TimeVariable : public Parameter {
 public:
     TimeVariable();
     TimeVariable(char* str);
     int value;
     std::pair<int, int> range;
     double weight_sign;
+
 private:
     std::string get_name();
     static std::unordered_set<std::string> pool;
 };
-
-
 
 #endif
 

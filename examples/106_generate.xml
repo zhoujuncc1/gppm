@@ -1,5 +1,6 @@
 <!-- Only constraint is optional-->
 <!-- Miner can be single or cluster-->
+	    <!--bltl>(G[k1](p0)&F[k2](p1&F[k3](p2&F[k4](p3&F[k5](G[k6](p4)&F[k7](p5))))))</bltl-->
 <input>
     <miner>single</miner>
     <filename>examples/106_N_train.txt</filename>
@@ -12,9 +13,9 @@
         <prd>p5:0::</prd>
     </prds>
     <bltls>
-	    <bltl>(G[25](p0)&F[48](p1&F[30](p2&F[11](p3&F[30](G[8](p4)&F[57](p5))))))</bltl>
+	    <bltl>(G[k1](p0)&F[48](p1&F[30](p2&F[11](p3&F[30](G[8](p4)&F[57](p5))))))</bltl>
     </bltls>
-    <init>p0.left:0.0000, p0.right:0.2574, p1.left:0.1198, p1.right:0.3902, p2.left:0.0000, p2.right:0.2252, p3.left:0.8, p3.right:1.0000, p4.left:0.0000, p4.right:0.1847, p5.left:0.0948, p5.right:0.5050</init>
+    <init>k1:25, k2:48, k3:30, k4:11, k5:30, k6:8, k7: 57, p0.left:0.0000, p0.right:0.2574, p1.left:0.1198, p1.right:0.3902, p2.left:0.0000, p2.right:0.2252, p3.left:0.8, p3.right:1.0000, p4.left:0.0000, p4.right:0.1847, p5.left:0.0948, p5.right:0.5050</init>
     <constraints>
     <constraint>p1>p2</constraint>
     <constraint>p3>p2</constraint>
@@ -36,7 +37,7 @@
         <STEP_SIZE>0.2</STEP_SIZE>
         <K>1.0</K>
         <T_INITIAL>0.008</T_INITIAL>
-        <MU_T>1.001</MU_T>
+        <MU_T>1.0005</MU_T>
         <T_MIN>0.001</T_MIN>
     </config>
 </input>

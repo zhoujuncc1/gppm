@@ -9,107 +9,95 @@
 
 #include <sstream>
 
-Bltl::Bltl(Operation op, TimeVariable *t){
-	operation=op;
-	time=t;
-    if(time!=NULL)
-	    set_weight_sign();
-	child1=child2=NULL;
+Bltl::Bltl(Operation op, TimeVariable* t)
+{
+    operation = op;
+    time = t;
+    if (time != NULL)
+        set_weight_sign();
+    child1 = child2 = NULL;
 }
 
-Bltl::Bltl(Operation op, char* p) :
-		prd_name(std::string(p)), operation(op) {
-	child1=child2=NULL;
-	time=NULL;
+Bltl::Bltl(Operation op, char* p)
+    : prd_name(std::string(p))
+    , operation(op)
+{
+    child1 = child2 = NULL;
+    time = NULL;
 }
 
-Bltl::~Bltl() {
-	// TODO Auto-generated destructor stub
+Bltl::~Bltl()
+{
+    // TODO Auto-generated destructor stub
 }
 
-void Bltl::setChild1(Bltl* c1) {
-	child1 = c1;
-}
-void Bltl::setChild2(Bltl* c2) {
-	child2 = c2;
-}
+void Bltl::setChild1(Bltl* c1) { child1 = c1; }
+void Bltl::setChild2(Bltl* c2) { child2 = c2; }
 
-void Bltl::setPrd(Prd* p){
-	prd=p;
-}
+void Bltl::setPrd(Prd* p) { prd = p; }
 
+std::string Bltl::getPrdName() { return prd_name; }
 
-std::string Bltl::getPrdName() {
-	return prd_name;
-}
+Prd* Bltl::getPrd() { return prd; }
 
-Prd* Bltl::getPrd() {
-	return prd;
-}
+Operation Bltl::getOperation() { return operation; }
 
-Operation Bltl::getOperation() {
-		return operation;
-	}
-
-std::string Bltl::getOpString() {
-	switch (operation) {
-	case op_PRD:
-		return "PRD";
-	case op_F:
-		return "F";
-	case op_G:
-		return "G";
-	case op_NOT:
-		return "~";
-	case op_X:
-		return "X";
-	case op_AND:
-		return "&";
-	case op_OR:
-		return "|";
-	case op_U:
-		return "U";
-	}
+std::string Bltl::getOpString()
+{
+    switch (operation) {
+    case op_PRD:
+        return "PRD";
+    case op_F:
+        return "F";
+    case op_G:
+        return "G";
+    case op_NOT:
+        return "~";
+    case op_X:
+        return "X";
+    case op_AND:
+        return "&";
+    case op_OR:
+        return "|";
+    case op_U:
+        return "U";
+    }
 }
 
-Bltl* Bltl::getChild1() {
-	return child1;
-}
-Bltl* Bltl::getChild2() {
-	return child2;
+Bltl* Bltl::getChild1() { return child1; }
+Bltl* Bltl::getChild2() { return child2; }
+
+TimeVariable* Bltl::getTime() { return time; }
+
+std::string Bltl::to_string()
+{
+    std::stringstream ss;
+    switch (operation) {
+    case op_PRD:
+        ss << prd_name;
+        break;
+    case op_F:
+    case op_G:
+    case op_NOT:
+    case op_X:
+        ss << getOpString();
+        ss << '(' << getChild1()->to_string() << ')';
+        break;
+    case op_AND:
+    case op_OR:
+    case op_U:
+        ss << '(' << getChild1()->to_string() << ')';
+        ss << getOpString();
+        ss << '(' << getChild2()->to_string() << ')';
+        break;
+    }
+    return ss.str();
 }
 
-TimeVariable* Bltl::getTime(){
-	return time;
-}
-
-std::string Bltl::to_string() {
-	std::stringstream ss;
-	switch (operation) {
-	case op_PRD:
-		ss << prd_name;
-		break;
-	case op_F:
-	case op_G:
-	case op_NOT:
-	case op_X:
-		ss << getOpString();
-		ss << '(' << getChild1()->to_string() << ')';
-		break;
-	case op_AND:
-	case op_OR:
-	case op_U:
-		ss << '(' << getChild1()->to_string() << ')';
-		ss << getOpString();
-		ss << '(' << getChild2()->to_string() << ')';
-		break;
-	}
-	return ss.str();
-}
-
-void Bltl::set_weight_sign(){
-	if(operation==op_G ||operation==op_U)
-		time->weight_sign=-1.0;
-	else
-		time->weight_sign=1.0;
+void Bltl::set_weight_sign()
+{
+    if (operation == op_G || operation == op_U)
+        time->weight_sign = -1.0;
+    else
+        time->weight_sign = 1.0;
 }

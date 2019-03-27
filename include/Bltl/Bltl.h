@@ -10,41 +10,47 @@
 
 #include <cstdlib>
 
-#include "TimeVariable.h"
 #include "Prd.h"
-enum Operation {op_F, op_G, op_U, op_X, op_NOT, op_AND, op_OR, op_PRD};
+#include "TimeVariable.h"
+enum Operation { op_F,
+    op_G,
+    op_U,
+    op_X,
+    op_NOT,
+    op_AND,
+    op_OR,
+    op_PRD };
 class Bltl {
 public:
-	Bltl(Operation op, TimeVariable *t=NULL);
-	Bltl(Operation op, char* p);
+    Bltl(Operation op, TimeVariable* t = NULL);
+    Bltl(Operation op, char* p);
 
-	virtual ~Bltl();
+    virtual ~Bltl();
 
-	void setChild1(Bltl* c1);
-	void setChild2(Bltl* c2);
-	void setPrd(Prd* p);
-	Bltl* getChild1();
-	Bltl* getChild2();
-	std::string getPrdName();
-	Prd* getPrd();
-	std::string getOpString();
-	TimeVariable* getTime();
-	std::string to_string();
+    void setChild1(Bltl* c1);
+    void setChild2(Bltl* c2);
+    void setPrd(Prd* p);
+    Bltl* getChild1();
+    Bltl* getChild2();
+    std::string getPrdName();
+    Prd* getPrd();
+    std::string getOpString();
+    TimeVariable* getTime();
+    std::string to_string();
 
-	Operation getOperation();
+    Operation getOperation();
 
-	Operation operation;
+    Operation operation;
     bool* value_array_device_default_true;
     bool* value_array_device_default_false;
+
 private:
-	TimeVariable *time;
-	Bltl* child1;
-	Bltl* child2;
-	std::string prd_name;
-  Prd* prd;
-	void set_weight_sign();
-
-
+    TimeVariable* time;
+    Bltl* child1;
+    Bltl* child2;
+    std::string prd_name;
+    Prd* prd;
+    void set_weight_sign();
 };
 
 #endif /* BLTL_BLTL_H_ */

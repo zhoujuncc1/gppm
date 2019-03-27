@@ -107,7 +107,12 @@ void GPUBltlChecker::eval_prd(Prd* prd) {
 
 bool* GPUBltlChecker::eval_bltl_recursive(Bltl *bltl) {
 	if (bltl->getOperation() == op_PRD) {
+		clock_t begin = clock();
 		eval_prd(bltl->getPrd());
+		clock_t end = clock();
+		long elapsed_secs = end - begin;
+		//printf("Prd Time: %ld\n", elapsed_secs);
+
 	}
 	else {
 		if (bltl->getChild1())
