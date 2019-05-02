@@ -94,19 +94,39 @@ Se_Loss::Se_Loss(vector<int> labels, vector<int> class_count){
     }
     double Se_Loss::operator()(State *state)
     {
-        double count[n_class];
+        vector<int> result = modelchecking(state);
+	double count[n_class];
         for(int i =0 ; i < n_class; i++){
             count[i]=0;
         }
-        vector<int> result = modelchecking(state);
         for (int i = 0; i < result.size(); i++){
             count[labels[i]]+=result[i];
         }
-        double se = count[0]/class_count[0];
-        for(int i = 1; i < n_class; i++){
-            se += (class_count[i]-count[i])/class_count[i];
+	/*for(int i =0 ; i < n_class; i++){
+            printf("count[%d]: %f;  ", i, count[i]);
         }
-        return 1.0/(se/n_class);
+	printf("\n");*/
+	
+	//avg
+	/* 
+        double se = count[0]/class_count[0];
+	if(se <0.8)
+		return 1.0;
+        for(int i = 1; i < n_class; i++){
+	    //if(se > (class_count[i]-count[i])/class_count[i])
+            //	se = (class_count[i]-count[i])/class_count[i];
+	    se += (class_count[i]-count[i])/class_count[i];
+        }
 
+        return 1.0-se/4;
+	*/
+
+	//all
+	double total = count[0];
+	for(int i = 1; i < n_class; i++)
+	    total+=(class_count[i]-count[i]);
+	//printf("\ntotal: %f\n", total);
+	return 1.0-(total/result.size());
+	
     }
 

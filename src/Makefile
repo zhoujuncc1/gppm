@@ -1,6 +1,6 @@
 CC=g++
 MAKE=make
-CPFLAGS= -O3 -std=c++11 -I../include 
+CPFLAGS= -g -O3 -std=c++11 -I../include 
 
 all: libbltl.a libmining.a
 	

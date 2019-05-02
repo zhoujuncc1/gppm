@@ -56,6 +56,18 @@ __global__ void eval_F_kernel(bool* value_arr_default_true,
 	value_arr_default_true[index] = value_arr_default_false[index];
 }
 
+__global__ void eval_NOT_kernel(bool* value_arr_default_true,
+		bool* value_arr_default_false, bool* sub_value_arr,
+		int *dim_array_device) {
+	int n = blockIdx.x;
+	int t = threadIdx.x;
+	int index = n * 2 * dim_array_device[TRAJ_END_TIME_I] + t;
+	value_arr_default_true[index] = !sub_value_arr[index];
+	value_arr_default_false[index] = value_arr_default_true[index];
+
+}
+
+
 __global__ void eval_AND_kernel(bool* value_arr_default_true,
 		bool* value_arr_default_false, bool* sub_value_arr1,
 		bool* sub_value_arr2, int *dim_array_device) {
@@ -149,6 +161,13 @@ bool* GPUBltlChecker::eval_bltl_recursive(Bltl *bltl) {
 					bltl->getChild1()->value_array_device_default_true,
 					bltl->getChild2()->value_array_device_default_true,
 					dim_array_device);
+		else if (bltl->getOperation() == op_NOT)
+			eval_NOT_kernel<<<block_number_prd, threadsPerBlock_prd>>>(
+					bltl->value_array_device_default_true,
+					bltl->value_array_device_default_false,
+					bltl->getChild1()->value_array_device_default_true,
+					dim_array_device);
+
 
 		cudaDeviceSynchronize();
 	}

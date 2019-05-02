@@ -1,6 +1,6 @@
 NVCC=nvcc
 CC=g++
-NVCCFLAGS=-O3 -std=c++11 -Iinclude -lgsl -lgslcblas -lm -lboost_system -lboost_thread
+NVCCFLAGS=-O3 -g -std=c++11 -Iinclude -lgsl -lgslcblas -lm -lboost_system -lboost_thread
 #-lgslcblas
 LIBS=src/libbltl.a src/libmining.a
 GPU_LIBS=src/libbltl.a src/libmining.a src/libbltl_gpu.a src/libmining_gpu.a
@@ -32,14 +32,6 @@ src/libbltl_gpu.a:
 
 src/libmining_gpu.a:
 	make -C src libmining_gpu.a
-
-src/se_loss.o:
-	make -C src se_loss.o
-
-
-src/my_loss.o:
-	make -C src my_loss.o
-
 
 clean:
 	$(MAKE) -C src clean

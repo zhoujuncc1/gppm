@@ -1,6 +1,6 @@
 CC=g++
 NVCC=nvcc
-CPFLAGS= -O3 -std=c++11 -I../../include 
+CPFLAGS= -O3 -g -std=c++11 -I../../include 
 
 CPP_SRCS = $(wildcard *.cpp)
 CPP_OBJS = $(patsubst %.cpp,%.o,$(CPP_SRCS))

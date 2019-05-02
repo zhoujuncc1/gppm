@@ -64,7 +64,7 @@ public:
             minePrd();
         else
             mineGeneral();
-        refine_time();
+        //refine_time();
     }
 
     void refine_time()
